@@ -1,13 +1,20 @@
+import { changeCardProperties } from "@/components/basicComponents/grid/module/cardApi";
 import {
   cardComponentType,
   gridCellMaker,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
+import { gridEditList } from "@/modules/main/PageConfigData/main";
 import {
   iotEventActionTypeObject,
   iotEventTemplate,
   iotEventTriggerTypeObject,
 } from "@/modules/moduleTower/types";
+import { ai表单填写 } from "@/modules/taskList/config/AiForm";
+import {
+  eventCenterCell,
+  eventTriggerType,
+} from "@/modules/userManage/component/eventCenter/eventCenter";
 import {
   btnMaker,
   dobuleCheckBtnMaker,
@@ -171,7 +178,7 @@ const openDrawerForIotEvent = async (that, data: iotEventTemplate = null) => {
       "id",
       "createTime",
       "updateTime",
-      "asd"
+      "asd",
     ]),
     btnList: [
       btnMaker(isEdit ? "保存" : "新增", btnActionTemplate.Function, {
@@ -183,6 +190,7 @@ const openDrawerForIotEvent = async (that, data: iotEventTemplate = null) => {
           repBackMessageShow(that, res);
         },
       }),
+      ai表单填写
     ],
   } as drawerProps;
   openDrawerFormEasy(that, drawerProps);
@@ -255,7 +263,100 @@ iotEventStorage.push(操作栏);
 
 // iot设备事件管理列表
 export const iotEventManage = async () => {
+  let { data } = await post("/admin/iot/iotEvent/sysInfo", {});
+  const { averageTime, eventCheck, eventDeal, publish } = JSON.parse(data);
+  const init = eventCenterCell(
+    eventTriggerType.onMounted,
+    async (that, data) => {
+      setInterval(async () => {
+        let { data } = await post("/admin/iot/iotEvent/sysInfo", {});
+        const { averageTime, eventCheck, eventDeal, publish } =
+          JSON.parse(data);
+        let dataa = {
+          averageTime: { data: averageTime },
+          eventCheck: { data: eventCheck / 5 },
+          eventDeal: { data: eventDeal / 5 },
+          publish: { data: publish / 5 },
+        };
+        changeCardProperties(that, dataa);
+      }, 2000);
+    }
+  );
   return [
+    init,
+    gridCellMaker(
+      "averageTime",
+      "averageTime",
+      {},
+      {
+        name: "TaskList_numberCard",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          label: "平均处理事件时间",
+          data: averageTime,
+          suffix: "ms",
+        },
+      }
+    )
+      .setSize(2, 1)
+      .setPosition(0, 0),
+
+    gridCellMaker(
+      "eventCheck",
+      "eventCheck",
+      {},
+      {
+        name: "TaskList_numberCard",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          label: "事件检查",
+          data: eventCheck / 5,
+          suffix: "/s",
+        },
+      }
+    )
+      .setSize(2, 1)
+      .setPosition(2, 0),
+    gridCellMaker(
+      "eventDeal",
+      "eventDeal",
+      {},
+      {
+        name: "TaskList_numberCard",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          label: "事件处理",
+          data: eventDeal / 5,
+          suffix: "/s",
+        },
+      }
+    )
+      .setSize(2, 1)
+      .setPosition(4, 0),
+    gridCellMaker(
+      "publish",
+      "publish",
+      {},
+      {
+        name: "TaskList_numberCard",
+        type: cardComponentType.componentList,
+      },
+      {
+        props: {
+          label: "推送",
+          data: publish / 5,
+          suffix: "/s",
+        },
+      }
+    )
+      .setSize(2, 1)
+      .setPosition(6, 0),
     gridCellMaker(
       "列表",
       "list",
@@ -286,7 +387,7 @@ export const iotEventManage = async () => {
         },
       }
     )
-      .setPosition(0, 0)
-      .setSize(12, 8),
+      .setPosition(0, 1)
+      .setSize(12, 7),
   ] as gridCellTemplate[];
 };

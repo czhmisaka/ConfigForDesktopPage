@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-24 13:04:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-12 22:54:22
+ * @LastEditTime: 2024-03-26 20:26:20
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotInfoList.ts
  */
 import {

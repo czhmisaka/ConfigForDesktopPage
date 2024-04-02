@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-08 14:12:24
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-13 21:31:11
+ * @LastEditTime: 2024-03-26 10:42:43
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/types.ts
  */
 

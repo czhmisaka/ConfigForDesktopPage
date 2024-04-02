@@ -1,5 +1,5 @@
 <template>
-    <div :style="isOpen ? '' : 'transform:translateX(410px);opactiy:0'" class="commandTool" ref="prevent">
+    <div :style="isOpen ? '' : 'transform:translateX(800px);opactiy:0'" class="commandTool" ref="prevent">
         <div class="codeHistoryBox">
             <div class="codeHistory" :style="history.length ? 'border: 4px rgba(0, 0, 0, 0.05) solid;' : ''">
                 <div v-for="(item, index) in history" v-bind:key="index + ':' + item" @dblclick="setCode(item)"
@@ -22,7 +22,7 @@ import { commandList } from "@/modules/taskList/config/taskAction";
 import { get, post } from "@/utils/api/requests";
 import { chat } from '../../../../utils/api/requests';
 import { ElMessage, ElLoading, ElNotification } from 'element-plus';
-import { useAbleWord, action } from '../../config/AiAction';
+import { useAbleWord, action, extractJSON } from '../../config/AiAction';
 
 let EnterNum = 0;
 export default defineComponent({
@@ -45,15 +45,21 @@ export default defineComponent({
             key: -1,
         };
     },
-    mounted() { },
+    mounted() {
+        const that = this
+        window.addEventListener('keyup', (e) => {
+            if (e.code == 'Backquote')
+                that.change(true, 'talk ')
+        })
+    },
     methods: {
         // 打开
-        async change(e) {
+        async change(e, preWord = "") {
             if (e) {
                 this.isOpen = e;
                 await this.$nextTick();
                 this.$refs.code.focus();
-                this.code = "";
+                this.code = preWord;
             } else {
                 this.$refs.code.blur();
                 this.isOpen = e;
@@ -81,13 +87,13 @@ export default defineComponent({
                 case "ArrowUp":
                     if (this.history.length != 0) {
                         this.key = this.history.length > this.key + 1 ? this.key + 1 : this.key;
-                        this.setCode(this.history[this.key]);
+                        this.setCode(this.history[this.key].split('--')[0]);
                     }
                     break;
                 case "ArrowDown":
                     if (this.history.length != 0) {
                         this.key = this.key >= 0 ? this.key - 1 : this.key;
-                        this.setCode(this.key === -1 ? "" : this.history[this.key]);
+                        this.setCode(this.key === -1 ? "" : this.history[this.key].split('--')[0]);
                     }
                     break;
                 case "Space":
@@ -122,22 +128,29 @@ export default defineComponent({
                         text: '思考中',
                         background: 'rgba(0, 0, 0, 0.7)',
                     })
-                    let res = await chat(useAbleWord + codeL[1])
+                    console.log('问：',await useAbleWord() + codeL[1])
+                    let res = await chat(await useAbleWord() + codeL[1])
                     const backWord = res.data.choices[0].message.content
                     let data = {} as any
+                    const tryData = extractJSON(backWord)
                     backWord.replaceAll('{', '').replaceAll('}', '').replaceAll('"', '').replaceAll(' ', '').split(",").map(x => {
                         const r = x.split(':')
                         if (r && r.length > 1)
                             data[r[0]] = r[1]
                     })
+                    if (!data.actionType)
+                        tryData.map(x => {
+                            if (x.actionType) data = x
+                        })
                     if (data && data.actionType) {
-                        action.map(x => {
+                        (await action()).map(x => {
+                            console.log('fuck cell', x, x.actionType == data.actionType)
                             if (x.actionType == data.actionType) {
                                 ElNotification({
                                     type: "success",
                                     title: "Tutu: ",
-                                    message: '指令执行中',
-                                    duration: 1,
+                                    message: `【${x.actionType}】指令执行中`,
+                                    duration: 2,
                                 })
                                 setTimeout(() => {
                                     x.action(this, data)
@@ -150,10 +163,9 @@ export default defineComponent({
                             title: 'Tutu: ',
                             message: backWord,
                             showClose: true,
-                            duration: 0,
+                            duration: 5,
                         });
                     }
-                    console.log(backWord,'s')
                     this.history.unshift(this.code + " -- Tutu: " + backWord);
                     loading.close()
                     break;

@@ -1,9 +1,14 @@
 /*
  * @Date: 2024-03-24 01:46:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-24 02:59:28
+ * @LastEditTime: 2024-03-31 14:43:54
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiAction.ts
  */
+
+import { useCacheHook } from "@/store/modules/cache";
+import { IotDeviceTemplate } from "@/modules/moduleTower/component/mqtt/iotCard";
+import { openDrawerForIotCardServiceDesktop } from "@/modules/moduleTower/component/mqtt/iotServiceDesktop";
+import { gridCell } from "../../userManage/component/searchTable/searchTable";
 
 export const preWord = `
 你是一个聪明的工具小管家，能够充分理解用户说的话，并判断用户需要使用哪个工具。
@@ -39,6 +44,7 @@ interface keyWordCellTemplate {
   range?: string[];
   // 是否必填
   required?: boolean;
+  other?: string;
 }
 
 // 单一事件节点
@@ -51,8 +57,9 @@ interface actionCellTemplate {
   // 案例
   example: string;
   // 对应行为
-  action?: (that, data) => any | void;
+  action?: (that: any, data: any) => any | void;
 }
+
 const actionCellMaker = (
   actionType: string,
   trigger: string[],
@@ -69,79 +76,143 @@ const actionCellMaker = (
   } as actionCellTemplate;
 };
 
-export const action = [
-  actionCellMaker(
-    "search",
-    ["查询xxyy", "搜索xxyy", "检索xxyy"],
-    [
-      {
-        key: "func",
-        label: "查询方式",
-        range: ["设备", "分组", "事件"],
-      },
-      {
-        key: "key",
-        label: "关键词",
-      },
-    ],
-    `"查询温控设备"=>{actionType:'search','func':'设备', 'key':'温控'}`
-  ),
-  actionCellMaker(
-    "go",
-    ["前往xx", "去xx"],
-    [
-      {
-        key: "pageName",
-        label: "页面名称",
-        range: [
-          "moduleTower_事件列表",
-          "moduleTower_分组列表",
-          "moduleTower_设备列表",
-        ],
-      },
-    ],
-    `"前往分组"=>{ actionType: "go", pageName: "moduleTower_分组列表"}
-    "前往设备"=>{ actionType: "go", pageName: "moduleTower_设备列表"}`,
-    (that, data) => {
-      const pageName = data.pageName;
-      that.$router.push({
-        path: "/" + pageName,
-      });
-    }
-  ),
-  actionCellMaker(
-    "openApp",
-    ["打开xx", "去xx"],
-    [
-      {
-        key: "appName",
-        label: "应用名称",
-        range: ["百度", "文档", "娱乐中心"],
-      },
-    ],
-    '"打开娱乐"=>{ actionType: "openApp", appName: "娱乐中心" }',
-    (that, data) => {
-      const pageName = data.appName;
-      const app = {
-        百度: "https://www.baidu.com",
-        文档: "http://guild.czht.top",
-        娱乐中心: "https://www.4399.com",
-      };
-      window.open(app[pageName]);
-    }
-  ),
-];
+export function extractJSON(text) {
+  console.log(text, "原始文本");
+  const jsonPattern = /({[\s\S]*?})/g; // 正则表达式匹配可能的JSON
+  let jsonMatches = text.match(jsonPattern);
+  console.log("jsonMatches", jsonMatches, text);
+  if (jsonMatches) {
+    return jsonMatches
+      .map((jsonStr) => {
+        try {
+          return JSON.parse(jsonStr.replaceAll("'", '"'));
+        } catch (e) {
+          console.error("Failed to parse JSON:", jsonStr);
+          return null;
+        }
+      })
+      .filter(Boolean); // 过滤掉解析失败的结果
+  }
+  return [];
+}
 
-export const useAbleWord = `
+export const action = async () => {
+  const allIot = (await useCacheHook().getDataByKey("allIot")).map((x) => {
+    return { ...x, fullName: x.groupName + "_" + x.name, id: x.id };
+  });
+  return [
+    actionCellMaker(
+      "formInput",
+      ["填写表单", "表单", "填写xxx"],
+      [],
+      ``,
+      () => {}
+    ),
+    actionCellMaker(
+      "iotDesktop",
+      ["查看{name}设备", "打开{name}", "{name}"],
+      [
+        {
+          key: "name",
+          label: "设备名称",
+          range: allIot.map((x) => x.fullName),
+          required: false,
+        },
+      ],
+      `"查看${allIot[0].name}设备"=>{'actionType':'iotDesktop','name':'${allIot[0].fullName}'}
+      "${allIot[1].name}"=>{'actionType':'iotDesktop','name':'${allIot[1].fullName}'}  
+      `,
+      (that, data) => {
+        console.log(data, "fuck");
+        for (let x = 0; x < allIot.length; x++) {
+          if (allIot[x].fullName === data.name) {
+            const iot = allIot[x];
+            openDrawerForIotCardServiceDesktop(that, {
+              ...iot,
+              gridCell: JSON.parse(iot.gridCell),
+              service: JSON.parse(iot.service),
+            });
+            break;
+          }
+        }
+      }
+    ),
+    actionCellMaker(
+      "search",
+      ["查询{func}{key}", "搜索{func}{key}", "检索{func}{key}"],
+      [
+        {
+          key: "func",
+          label: "查询方式",
+          range: ["设备", "分组", "事件"],
+        },
+        {
+          key: "key",
+          label: "关键词",
+        },
+      ],
+      `"查询温控设备"=>{actionType:'search','func':'设备', 'key':'温控'}`
+    ),
+    actionCellMaker(
+      "go",
+      ["前往{pageName}", "去{pageName}"],
+      [
+        {
+          key: "pageName",
+          label: "页面名称",
+          range: [
+            "moduleTower_事件列表",
+            "moduleTower_分组列表",
+            "moduleTower_设备列表",
+          ],
+        },
+      ],
+      `"前往分组"=>{ actionType: "go", pageName: "moduleTower_分组列表"}
+    "前往设备"=>{ actionType: "go", pageName: "moduleTower_设备列表"}`,
+      (that, data) => {
+        const pageName = data.pageName;
+        that.$router.push({
+          path: "/" + pageName,
+        });
+      }
+    ),
+    actionCellMaker(
+      "openApp",
+      ["打开{appName}", "去{appName}"],
+      [
+        {
+          key: "appName",
+          label: "应用名称",
+          range: ["百度", "文档", "娱乐中心"],
+        },
+      ],
+      '"打开娱乐"=>{ actionType: "openApp", appName: "娱乐中心" }',
+      (that, data) => {
+        const pageName = data.appName;
+        const app = {
+          百度: "https://www.baidu.com",
+          文档: "http://guild.czht.top",
+          娱乐中心: "https://www.4399.com",
+        };
+        window.open(app[pageName]);
+      }
+    ),
+  ];
+};
+
+export const useAbleWord = async () => {
+  let back = `
 你是一个聪明的工具小管家，能够充分理解用户说的话，并判断用户需要使用哪个工具。
 现有工具如下：
-${action
+${(await action())
   .map((x) => {
-    return `${x.trigger.join(",")};参数列表: ${x.keyWord
+    return `${x.trigger.join(",")};工具类型:${
+      x.actionType
+    },参数列表: ${x.keyWord
       .map((x) => {
-        return `${x.label}（别名为${x.key} ${
+        return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${
           x.range ? "可选项：" + x.range.join(",") : ""
-        })`;
+        }${x.other})`;
       })
       .join(",")}`;
   })
@@ -153,9 +224,9 @@ Skill：
 回复精确简短。
 
 Examples:
-${action.map((x) => x.example).join("\n")}
+${(await action()).map((x) => x.example).join("\n")}
 
 下面请你理解以下内容，并回答问题：
 `;
-
-console.log(useAbleWord);
+  return back;
+};

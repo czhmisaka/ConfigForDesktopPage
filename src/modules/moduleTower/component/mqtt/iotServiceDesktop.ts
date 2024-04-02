@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-08 13:58:12
+ * @LastEditTime: 2024-03-26 20:49:11
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -31,6 +31,8 @@ import { IotDeviceTemplate, iotCardGridCellMaker } from "./iotCard";
 import { iotServiceCardGridCellMaker } from "./service/service";
 import { getIotDeviceCellGridDesktopCardComponent } from "./iotGridCell/iotGridCell";
 import { gridEditList } from "@/modules/main/PageConfigData/main";
+import { useCacheHook } from "@/store/modules/cache";
+import { post } from "@/utils/api/requests";
 
 const wholeScreen = {
   size: {
@@ -39,6 +41,15 @@ const wholeScreen = {
   },
 };
 
+useCacheHook().setup(
+  "allIot",
+  async () => {
+    let res = await post("/admin/iot/iot/getAll", {});
+    return res.data;
+  },
+  true
+);
+export const getAllIotInfo = async () => {};
 
 export const iotCardServiceDesktop = async () => {
   return [] as gridCellTemplate[];
