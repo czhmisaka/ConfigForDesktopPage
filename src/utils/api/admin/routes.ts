@@ -43,6 +43,7 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
         }),
       };
     });
+    console.log(moduleList,'处理前')
     await module.init(moduleList);
     console.log(useModuleHook().moduleList,'asdasdas')
     return {

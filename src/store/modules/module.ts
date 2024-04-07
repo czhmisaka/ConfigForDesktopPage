@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-05 21:46:06
+ * @LastEditTime: 2024-04-03 17:22:02
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -140,8 +140,8 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
     }
   }
 
-   // 补充path
-   if (cell.urls && cell.urls.length > 0) {
+  // 补充path
+  if (cell.urls && cell.urls.length > 0) {
     cell["path"] = cell.urls[0];
     if (cell.type == 3) {
       if (isUrl(cell["path"])) {
@@ -150,7 +150,7 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
           frameSrc: cell.path,
         };
         if (cell.path[0] != "/") cell.path = "/" + cell.name;
-      } else{
+      } else {
         for (let i = 0; i < routerBackup.length; i++) {
           if (routerBackup[i].path == cell.path) {
             // 获取目标路由
@@ -162,13 +162,13 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
               (nameList.length > 1 ? "/" + nameList.join("/") : "") +
               "/" +
               cell.name;
-            console.log("cell.path", cell.path, "nameList", nameList);
             cell.meta = {
               ...backup.meta,
               ...cell.meta,
               PageName: cell.urls[0],
-              showLink: cell.showLink,
+              showLink: cell.showLink || backup.meta.showLink,
             };
+            console.log(cell);
             break;
           }
         }
