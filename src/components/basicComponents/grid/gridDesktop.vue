@@ -1,13 +1,14 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 22:56:39
+ * @LastEditTime: 2024-04-08 22:34:33
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
 <template>
   <div :ref="'screenId_' + idRandom" :id="'screenId_' + idRandom" :style="{
-    overflow: cusStyle.wholeScreen ? 'hidden' : '',
+    overflowY: cusStyle.wholeScreen ? 'hidden' : 'auto',
+    overflowX: 'hidden',
     ...(cusStyle['desktopStyle'] || {})
   }" class="baseGrid">
     <!-- <div style="position:fixed;top:0px;z-index: 10000000;">{{ gridList.map(x => x.label) }} </div>-->
@@ -56,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef,markRaw } from "vue";
+import { defineComponent, shallowRef, markRaw } from "vue";
 import { getAction } from "@/router/util";
 import { deepMerge } from "@/components/basicComponents/grid/module/cardApi";
 import cardEditModal from "@/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue";

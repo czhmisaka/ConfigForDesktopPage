@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 19:42:30
+ * @LastEditTime: 2024-04-08 22:20:21
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -51,6 +51,7 @@ export const pushData = async (topic, data) => {
 }
 
 export const iotCardTitleStyle = {
+    textAlign:'left',
     fontWeight: 600,
     fontSize: "1em",
     margin: '3px 6px'
@@ -98,7 +99,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                                 }}>
                                     {props.label}
                                 </div> : null}
-                                <div style="width:calc(100% - 12px);height:auto;margin:0px 6px">
+                                <div style="width:calc(100% - 12px);height:auto;margin:0px 6px;text-align: left;">
                                     <ElSwitch
                                         vModel={value1.value}
                                         size='large'

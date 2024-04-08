@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-02-14 23:16:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-25 01:30:36
+ * @LastEditTime: 2024-04-08 20:52:20
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/script/mqttService.ts
  */
 import { useUserStoreHook } from "@/store/modules/user";
@@ -36,9 +36,9 @@ export const mqttService = async (
   });
   client.on("connect", () => {
     // 成功连接后触发的回调
-    console.log("成功连接");
+    // console.log("成功连接");
     client.subscribe([key], () => {
-      console.log(`订阅成功 ${key}`);
+      // console.log(`订阅成功 ${key}`);
     });
   });
   return client;

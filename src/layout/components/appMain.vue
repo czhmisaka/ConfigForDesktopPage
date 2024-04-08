@@ -21,7 +21,7 @@ const transitions = computed(() => {
 });
 
 const hideTabs = computed(() => {
-  return $storage?.configure.hideTabs;
+  return $storage?.configure?.hideTabs;
 });
 
 const layout = computed(() => {
@@ -94,7 +94,11 @@ const transitionMain = defineComponent({
             <component v-else :is="Component" :key="route.fullPath" class="main-content" />
           </transitionMain>
         </el-scrollbar>
-        <div v-else>
+        <div style="
+        position: relative;
+        display: inline-block;
+        height: 100%;
+        width: 100%;" v-else>
           <transitionMain :route="route">
             <keep-alive v-if="keepAlive" :include="usePermissionStoreHook().cachePageList">
               <component :is="Component" :key="route.fullPath" class="main-content" />
@@ -107,7 +111,7 @@ const transitionMain = defineComponent({
   </section>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .app-main {
   width: 100%;
   height: 100vh;
@@ -120,7 +124,7 @@ const transitionMain = defineComponent({
   height: 100%;
   overflow: auto;
   position: relative;
-  background: #f0f2f5;
+  // background: #f0f2f5;
 }
 
 .main-content {

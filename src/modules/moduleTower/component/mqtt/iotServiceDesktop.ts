@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 15:06:55
+ * @LastEditTime: 2024-04-08 21:48:50
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -60,7 +60,7 @@ export const openDrawerForIotCardServiceDesktop = async (
   that,
   IotCardInfo: IotDeviceTemplate
 ) => {
-  // // 构建IotCard
+  // 构建IotCard
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
     .setSize(2, 2.5)
     .setPosition(0, 0);

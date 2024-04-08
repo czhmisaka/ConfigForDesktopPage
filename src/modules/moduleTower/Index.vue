@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-12-27 20:42:06
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-27 20:49:33
+ * @LastEditTime: 2024-04-08 22:31:41
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/Index.vue
 -->
 
@@ -11,7 +11,7 @@
     width: `calc(100% - ${desktopData.cusStyle.margin})`,
     height: 'calc(100%)',
     background: 'rgba(0,0,0,0)',
-    overflow: 'hidden',
+    overflow: 'auto',
   }">
     <gridDesktop v-if="Object.keys(componentList).length > 0" :grid-col-num="desktopData.gridColNum"
       :desktopData="desktopDataList" :component-lists="componentList" :cus-style="desktopData?.cusStyle"

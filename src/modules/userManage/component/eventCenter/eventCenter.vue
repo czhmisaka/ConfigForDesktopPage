@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-10-11 16:02:44
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-02 09:05:22
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/eventCenter/eventCenter.vue
+ * @LastEditTime: 2024-04-08 20:43:20
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/eventCenter/eventCenter.vue
 -->
 
 <script lang="ts">
@@ -41,7 +41,7 @@ export default defineComponent({
             type: inputType.boolean
         },
     } as propInfo,
-    props: ['baseData', 'gridList', 'event', 'triggerType', 'stop'],
+    props: ['baseData', 'gridList', 'event', 'triggerType', 'stop','sizeUnit'],
     watch: {
         baseData: {
             handler(val) {

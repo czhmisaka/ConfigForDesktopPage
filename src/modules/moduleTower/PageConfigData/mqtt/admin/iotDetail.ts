@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-03 17:03:45
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 19:56:53
+ * @LastEditTime: 2024-04-08 22:37:17
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotDetail.ts
  */
 
@@ -18,6 +18,7 @@ import {
   eventCenterCell,
   eventTriggerType,
 } from "@/modules/userManage/component/eventCenter/eventCenter";
+import { openDrawerFormEasy } from "@/modules/userManage/component/searchTable/drawerForm";
 import { getQuery } from "@/router/util";
 import { post } from "@/utils/api/requests";
 
@@ -35,11 +36,22 @@ export const iotDetailInit_Mobile = eventCenterCell(
 );
 
 // 自动排版
-export const checkSizeAndPosition = (gridCellList: gridCellTemplate[]) => {
-  console.log("checkSizeAndPosition", JSON.parse(JSON.stringify(gridCellList)));
+export const checkSizeAndPosition = (
+  gridCellList: gridCellTemplate[],
+  一行几个格子: number = 3
+) => {
+  const createRowList = (number) => {
+    let row = [];
+    for (let i = 0; i < number; i++) {
+      row.push(0);
+    }
+    return row;
+  };
+
   let back = [] as gridCellTemplate[];
   // 存放当前行中的布局状态，0表示填满
-  let rowList = [[0, 0, 0, 0]] as number[][];
+  let rowList = [] as number[][];
+  rowList.push(createRowList(一行几个格子));
 
   // 优先放最大的
   gridCellList.sort((a, b) => {
@@ -54,9 +66,11 @@ export const checkSizeAndPosition = (gridCellList: gridCellTemplate[]) => {
   // 不设置最小占用，理论上最小一个一格
   gridCellList = gridCellList.map((x) => {
     const xWidth = x.gridInfo.default.size.width;
-    if (xWidth > 4) {
-      const y = Math.round((x.gridInfo.default.size.height * 4) / xWidth);
-      x.gridInfo.default.size.width = 4;
+    if (xWidth > 一行几个格子) {
+      const y = Math.round(
+        (x.gridInfo.default.size.height * 一行几个格子) / xWidth
+      );
+      x.gridInfo.default.size.width = 一行几个格子;
       x.gridInfo.default.size.height = y;
     } else {
       x.gridInfo.default.size.width = Math.round(xWidth);
@@ -78,7 +92,7 @@ export const checkSizeAndPosition = (gridCellList: gridCellTemplate[]) => {
       size: gridSizeCell,
       position: gridPositionCell
     ): boolean => {
-      if (position.x + size.width > 4) return false;
+      if (position.x + size.width > 一行几个格子) return false;
       if (rowList.length < size.height + position.y) return false;
       for (let y = position.y; y < position.y + size.height; y++) {
         for (let x = position.x; x < position.x + size.width; x++) {
@@ -99,7 +113,6 @@ export const checkSizeAndPosition = (gridCellList: gridCellTemplate[]) => {
     for (let y = 0; y < rowList.length; y++) {
       const nowRow = rowList[y];
       for (let x = 0; x < nowRow.length; x++) {
-        console.log(canInRoom(size, { x, y }), size, { x, y }, "fuck");
         if (canInRoom(size, { x, y })) {
           inRoom = true;
           position = { x, y };
@@ -108,7 +121,7 @@ export const checkSizeAndPosition = (gridCellList: gridCellTemplate[]) => {
         }
       }
       if (y == rowList.length - 1 && !inRoom) {
-        rowList.push([0, 0, 0, 0]);
+        rowList.push(createRowList(一行几个格子));
         y = y - size.height > 0 ? y - size.height : 0;
       }
     }
@@ -130,14 +143,36 @@ export const checkSizeAndPosition = (gridCellList: gridCellTemplate[]) => {
   return back;
 };
 
-export const iotDetail = async () => {
-  const { id } = getQuery();
+export const openMobileDetailDrawer = (that, id) => {
+  openDrawerFormEasy(that, {
+    gridDesktop: true,
+    size: 30,
+    fullscreenGridDesktop: true,
+    bgColor: "rgba(0,0,0,0);box-shadow:none;",
+    gridDesktopConfig: {
+      gridColNum: 3,
+      desktopData: async () => await iotDetail(id),
+      cusStyle: {
+        wholeScreen: false,
+        Fullscreen: true,
+        margin: 6,
+        maxRows: 8,
+        allPeopleCanSee: true,
+        showLink: true,
+      },
+    },
+  });
+};
+
+export const iotDetail = async (id = "") => {
+  if (id == "") id = getQuery().id;
   const init = eventCenterCell(
     eventTriggerType.onMounted,
     async (that) => {
-      let res = await post("/admin/iot/iot/getIotInfo", { id: 103 }).catch(
-        (e) => e
-      );
+      let res = await post("/admin/iot/iot/getIotInfo", {
+        id,
+        // needReReg: true,
+      }).catch((e) => e);
       const iotInfo = {
         ...res,
         gridCell: res.gridCell,
@@ -145,14 +180,14 @@ export const iotDetail = async () => {
       // const gridCellList = JSON.parse(res.data.gridCell||'[]')
       let gridCellList = [] as gridCellTemplate[];
       iotInfo.gridCell.map((x) => {
-        gridCellList.push(getIotDeviceCellGridDesktopCardComponent(x, iotInfo));
+        gridCellList.push(
+          getIotDeviceCellGridDesktopCardComponent(
+            { ...x, data: JSON.parse(x.data + "") },
+            iotInfo
+          )
+        );
       });
-      console.log("处理之前", JSON.parse(JSON.stringify(gridCellList)));
-      gridCellList = checkSizeAndPosition(gridCellList);
-      console.log(
-        "asdasda",
-        gridCellList.map((x) => JSON.stringify(x.gridInfo.default))
-      );
+      gridCellList = checkSizeAndPosition(gridCellList, that.sizeUnit.colNum);
       gridCellList.map((x) => {
         addGridCell(that, x);
       });

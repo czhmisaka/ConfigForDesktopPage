@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-07 16:33:37
+ * @LastEditTime: 2024-04-08 20:36:25
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
  */
 import { isValidKey } from "@/utils/index";
@@ -27,7 +27,7 @@ let pageConfig = {
   ...MqttPageConfig,
   ...designDesktop,
   IotDetail: {
-    gridColNum: 4,
+    gridColNum: 3,
     cusStyle: {
       wholeScreen: false,
       Fullscreen: true,
