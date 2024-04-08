@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-26 20:49:11
+ * @LastEditTime: 2024-04-08 15:06:55
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -108,14 +108,10 @@ export const openDrawerForIotCardServiceDesktop = async (
           .setSize(
             0.5,
             0.5
-            // sizeGetter().closeDesktop.width,
-            // sizeGetter().closeDesktop.height
           )
           .setPosition(
             11.5,
             0
-            // positionGetter().closeDesktop.x,
-            // positionGetter().closeDesktop.y
           );
       };
       openDrawerFormEasy(that, {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-03 17:22:02
+ * @LastEditTime: 2024-04-07 16:35:12
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -168,7 +168,6 @@ function dealAsyncMenuList(cell, routerBackup, wholeCell) {
               PageName: cell.urls[0],
               showLink: cell.showLink || backup.meta.showLink,
             };
-            console.log(cell);
             break;
           }
         }

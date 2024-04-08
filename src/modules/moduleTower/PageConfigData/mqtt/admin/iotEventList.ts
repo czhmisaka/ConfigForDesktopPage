@@ -190,7 +190,7 @@ const openDrawerForIotEvent = async (that, data: iotEventTemplate = null) => {
           repBackMessageShow(that, res);
         },
       }),
-      ai表单填写
+      ai表单填写,
     ],
   } as drawerProps;
   openDrawerFormEasy(that, drawerProps);
@@ -274,12 +274,12 @@ export const iotEventManage = async () => {
           JSON.parse(data);
         let dataa = {
           averageTime: { data: averageTime },
-          eventCheck: { data: eventCheck / 5 },
-          eventDeal: { data: eventDeal / 5 },
-          publish: { data: publish / 5 },
+          eventCheck: { data: eventCheck },
+          eventDeal: { data: eventDeal },
+          publish: { data: publish },
         };
         changeCardProperties(that, dataa);
-      }, 2000);
+      }, 1000);
     }
   );
   return [

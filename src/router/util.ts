@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-03 17:23:48
+ * @LastEditTime: 2024-04-08 14:30:55
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -75,6 +75,27 @@ export const timeChecker = class {
 };
 
 export let timeConsole = new timeChecker("模块生成");
+
+// 获取当前地址中的query参数
+export const getQuery = (): { [key: string]: any } => {
+  const hash =
+    new URL(window.location.href).hash.split("?").length > 1
+      ? new URL(window.location.href).hash
+      : new URL(window.location.href).hash + "?";
+  const query = {};
+  hash
+    .split("?")[1]
+    .split("&")
+    .map((x) => {
+      const list = x.split("=");
+      if (list.length === 2) {
+        query[list[0]] = list[1];
+      }
+    });
+  return {
+    ...query,
+  };
+};
 
 /**
  * @name: metaInfoTemplate

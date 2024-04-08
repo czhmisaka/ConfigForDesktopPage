@@ -1,13 +1,13 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-18 23:04:32
+ * @LastEditTime: 2024-04-08 18:51:31
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
-import { cardUtil } from "./util";
+import { cardUtil, setSize, setPosition } from "./util";
 import { defineAsyncComponent, defineComponent, ref, h } from "vue";
-import { createApp,markRaw } from "vue";
+import { createApp, markRaw } from "vue";
 import { componentLists } from "./gridCard/module/componentLists";
 
 export enum cardOnChangeType {
@@ -112,6 +112,11 @@ export interface gridCellTemplate {
     methods: {};
     params: {};
   };
+  setSize: (
+    width: number | string,
+    height: number | string
+  ) => gridCellTemplate;
+  setPosition: (x: number | string, y: number | string) => gridCellTemplate;
   [key: string]: any;
 }
 
@@ -246,7 +251,7 @@ export const componentGetter = (
         component: createApp(eval("(()=>{return " + component.data + "})()")),
       };
     case cardComponentType.cusComponent:
-      return{  component: component.data}
+      return { component: component.data };
       break;
   }
 };

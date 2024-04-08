@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-24 01:46:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-31 14:43:54
+ * @LastEditTime: 2024-04-08 14:36:01
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiAction.ts
  */
 
@@ -123,7 +123,6 @@ export const action = async () => {
       "${allIot[1].name}"=>{'actionType':'iotDesktop','name':'${allIot[1].fullName}'}  
       `,
       (that, data) => {
-        console.log(data, "fuck");
         for (let x = 0; x < allIot.length; x++) {
           if (allIot[x].fullName === data.name) {
             const iot = allIot[x];

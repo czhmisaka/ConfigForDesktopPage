@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-08 14:17:45
+ * @LastEditTime: 2024-04-08 19:42:30
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -67,6 +67,8 @@ export function getIotDeviceCellGridDesktopCardComponent(
     let name = gridCell.preKey + sendKey + gridCell.type
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     let getKey = gridCell.getKey || '';
+    gridCell.gridInfo = typeof gridCell.gridInfo === 'string' ? JSON.parse(gridCell.gridInfo) : gridCell.gridInfo;
+    let gridCellData = JSON.parse(JSON.stringify(gridCell.data)) || {};
     getKey = getKey.replace('$|mainTopic|', IotCardInfo.mainTopic)
 
     switch (gridCell.type) {
@@ -109,7 +111,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                         },
                     })),
                 },
-                gridCell.data
+                gridCellData
             ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
         case IotDeviceCellGridDesktopType.buttonCard:
             return gridCellMaker('', '', {}, {
@@ -119,7 +121,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                         return () => []
                     },
                 }))
-            }, gridCell.data)
+            }, gridCellData)
         case IotDeviceCellGridDesktopType.inputCard:
             return gridCellMaker(name, name, {}, {
                 type: cardComponentType.cusComponent,
@@ -149,7 +151,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                         </CardBgVue>]
                     },
                 }))
-            }, gridCell.data).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
+            }, gridCellData).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
         case IotDeviceCellGridDesktopType.infoCard:
             return gridCellMaker(
                 name,

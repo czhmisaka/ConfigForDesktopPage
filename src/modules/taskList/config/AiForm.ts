@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-26 22:09:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-26 23:54:25
+ * @LastEditTime: 2024-04-08 14:36:39
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiForm.ts
  */
 
@@ -21,7 +21,6 @@ import { extractJSON } from "./AiAction";
 
 export const formGetter = async (that) => {
   const { schema } = that;
-  console.log(schema);
   const { properties } = schema;
   const backArr = Object.keys(properties).map((key) => {
     const cell = properties[key];

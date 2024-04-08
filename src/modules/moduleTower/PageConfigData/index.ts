@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-03 17:23:20
+ * @LastEditTime: 2024-04-07 16:33:37
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
  */
 import { isValidKey } from "@/utils/index";
@@ -34,7 +34,7 @@ let pageConfig = {
       margin: 6,
       maxRows: 8,
       allPeopleCanSee: true,
-      showLink: false,
+      showLink: true,
     },
     name: "设备详情",
     desktopData: iotDetail,

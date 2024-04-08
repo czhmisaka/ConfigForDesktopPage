@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-30 14:30:48
  * @LastEditors: CZH
- * @LastEditTime: 2022-05-07 20:34:04
- * @FilePath: /configforpagedemo/src/components/basicComponents/grid/module/util.ts
+ * @LastEditTime: 2024-04-08 18:51:08
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/util.ts
  */
 
 import { gridCellTemplate, gridSizeMaker } from "./dataTemplate";
@@ -72,14 +72,20 @@ export const outPutPositionAndGridSize = (gridCell: gridCellTemplate) => {
 };
 
 // 设置gridCell布局定位参数
-export const setPosition = function (x: number, y: number): any {
+export const setPosition = function (
+  x: number | string,
+  y: number | string
+): any {
   this.gridInfo.default.position.x = x;
   this.gridInfo.default.position.y = y;
   return this;
 };
 
 // 设置gridCell布局大小参数
-export const setSize = function (width: number, height: number): any {
+export const setSize = function (
+  width: number | string,
+  height: number | string
+): any {
   this.gridInfo.default.size.width = width;
   this.gridInfo.default.size.height = height;
   return this;
