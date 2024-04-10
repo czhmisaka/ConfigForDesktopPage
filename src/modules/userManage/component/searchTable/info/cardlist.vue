@@ -1,15 +1,15 @@
 <!--
  * @Date: 2023-09-08 15:59:49
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 14:49:12
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/searchTable/info/cardlist.vue
+ * @LastEditTime: 2024-04-08 23:24:57
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/cardlist.vue
 -->
 <template>
   <div class="cardBox" v-loading="loading">
     <div class="scroll" :height="height + 'px'">
       <div class="cardBoxList" v-if="!cardFunc">
         <!-- {{ data }} -->
-        <cardBg :class="'card'" v-for="(data, index) in  dataList" :cus-style="{}">
+        <cardBg :class="`card ${isMobile()?'card_Mobile':''}`" v-for="(data, index) in  dataList" :cus-style="{}">
           <el-form size="small">
             <span v-for="(item, index)  in  template ">
               <div v-if="index == 0" class="title">
@@ -75,6 +75,7 @@ import { stringAnyObj } from "@/modules/ApplicationManage/types";
 import { btnCellTemplate, btnActionTemplate } from "@/modules/userManage/types";
 import { showType } from '../../../types';
 import { translate } from 'element-plus';
+import { isMobile } from '../../../../../utils/api/user/header';
 export default defineComponent({
   name: "cardList",
   components: { cardBg },
@@ -84,6 +85,7 @@ export default defineComponent({
       loading: false,
       showType,
       loadingMap: {} as { [key: string]: boolean },
+      isMobile,
     }
   },
   methods: {
@@ -170,6 +172,7 @@ export default defineComponent({
       }
     }
 
+
     .el-form-item {}
 
     ::v-deep .el-form-item__content {
@@ -194,6 +197,10 @@ export default defineComponent({
       text-overflow: ellipsis;
       max-width: 100%;
     }
+  }
+
+  .card_Mobile{
+    width: calc(100% - 12px) !important;
   }
 
   .card:hover {

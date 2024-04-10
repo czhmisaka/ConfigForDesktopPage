@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-23 15:17:33
+ * @LastEditTime: 2024-04-09 08:50:38
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/main.ts
  */
 
@@ -152,7 +152,7 @@ export const mainDesktop = async (): Promise<gridCellTemplate[]> => {
 
 export const MqttPageConfig = {
   MAIN: {
-    name: "MQTT设备列表",
+    name: "设备展示",
     desktopData: mainDesktop,
     gridColNum: wholeScreen.size.width,
     cusStyle: {
@@ -160,6 +160,7 @@ export const MqttPageConfig = {
       wholeScreen: false,
       maxRows: wholeScreen.size.height,
       Fullscreen: false,
+      showLink: false,
     },
     menuId: "12",
   },

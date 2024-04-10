@@ -1,12 +1,12 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-08 14:43:52
+ * @LastEditTime: 2024-04-11 00:04:30
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
-  <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title"
-    :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`" :with-header="plugInData.title ? true : false"
+  <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title" class="drawerForm"
+    :size="`${isMobile() ? 90 : (plugInData.size || 50)}%`" :with-header="plugInData.title ? true : false"
     :append-to-body="true" :close-on-click-modal="true" :show-close="true" @close="fuckClose" :style="`border-radius: ${borderRadius
       }px;margin: ${plugInData['fullscreenGridDesktop'] ? 0 : margin
       }px;height: calc(100vh - ${2 * (plugInData['fullscreenGridDesktop'] ? 0 : margin)
@@ -80,23 +80,8 @@
       <div v-for="(item, index) in plugInData.btnList.filter((btn) =>
         btn && btn.isShow ? btn.isShow(formData, JSON.parse(JSON.stringify(btn))) : true
       )" style="float: left; margin-right: 6px" :key="index + 'btnlistitem'">
-        <el-upload ref="uploadRef" :headers="getDownLoadRequestHeaders()" class="upload-demo"
-          :action="actionUrl + (item.uploadInfo ? item.uploadInfo.action : '')"
-          :limit="item.uploadInfo ? item.uploadInfo.limit : 1"
-          :data="item.uploadInfo ? { ...item.uploadInfo.data, id: formData.id } : {}" :on-success="(response, file, fileList) => {
-            return btnClick(item, response);
-          }
-            " :on-error="(response, file, fileList) => {
-    return btnClick(item, response);
-  }
-    " :on-exceed="(response, file, fileList) => {
-    return btnClick(item, response);
-  }
-    " :show-file-list="false" v-if="item.type == btnActionTemplate.UploadFunction">
-          <el-button plain icon="plus" type="primary">{{ item.label }}</el-button>
-        </el-upload>
         <el-button plain :loading="item.isLoading" @click="btnClick(item)" :disabled="item.isDisable(formData)"
-          :type="item.elType" :icon="item.icon" v-else>
+          :type="item.elType" :icon="item.icon">
           {{ item.label }}
         </el-button>
       </div>
@@ -276,7 +261,7 @@ export default defineComponent({
     },
 
     fuckClose() {
-      localStorage.setItem("fuckThePJ", "true");
+      this.plugInData['afterClose'] && this.plugInData['afterClose'](this)
     },
 
     /**
@@ -313,7 +298,14 @@ export default defineComponent({
 
 </script>
 
-<style>
+<style lang="scss">
+.drawerForm {}
+
+.el-overlay {
+  background-color: rgba(0, 0, 0, 0);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)) !important;
+}
+
 .el-drawer__title::after {
   border-bottom: 1px solid var(--el-border-color);
   content: "";

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-24 13:04:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 22:30:33
+ * @LastEditTime: 2024-04-09 08:49:31
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotInfoList.ts
  */
 import {
@@ -27,6 +27,7 @@ import {
 import { btnActionTemplate } from "@/modules/userManage/types";
 import { post } from "@/utils/api/requests";
 import { openMobileDetailDrawer } from "./iotDetail";
+import { useCacheHook } from "@/store/modules/cache";
 
 let iot设备字段 = new SearchCellStorage([
   tableCellTemplateMaker("设备名称", "name"),
@@ -127,10 +128,8 @@ export const iotInfoList = async (groupId = 0): Promise<gridCellTemplate[]> => {
           searchItemTemplate: [],
           showItemTemplate: iot设备字段.getAll(),
           searchFunc: async (query, that) => {
-            let res = await post("/admin/iot/iot/list", {
-              groupId,
-            });
-            return res.data;
+            let res = await useCacheHook().getDataByKey("allIot")
+            return res;
           },
           defaultQuery: {
             showLink: null,

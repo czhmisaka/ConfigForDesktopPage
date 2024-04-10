@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 22:34:33
+ * @LastEditTime: 2024-04-11 00:06:24
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -39,12 +39,13 @@
           @onChange="(value, options) => cardOnChange(index, value, options)" />
       </grid-item>
     </grid-layout>
-    <componentsListModal :gridList="gridList" :componentLists="componentLists" ref="componentsListModal" @onChange="(index, value) =>
-      cardOnChange(index, value, {
-        type: [cardOnChangeType.gridCardListonChange],
-      })
-      " />
-    <cardEditModal :detail="baseData._componentDetail" ref="cardEdit" :gridList="gridList"
+    <componentsListModal v-if="needEdit" :gridList="gridList" :componentLists="componentLists" ref="componentsListModal"
+      @onChange="(index, value) =>
+        cardOnChange(index, value, {
+          type: [cardOnChangeType.gridCardListonChange],
+        })
+        " />
+    <cardEditModal v-if="needEdit" :detail="baseData._componentDetail" ref="cardEdit" :gridList="gridList"
       :componentIndex="baseData._componentIndex" :sizeUnit="gridRowNumAndUnit" :componentLists="componentLists" @onChange="(index, value) =>
         cardOnChange(index, value, {
           type: [cardOnChangeType.gridCardListonChange],
@@ -117,26 +118,6 @@ function fuck(that) {
   if (that.cusStyle.wholeScreen == true) {
     screen.rowNum = Math.floor(screen.width / (screen.height / that.gridColNum));
     screen.unit = "vh";
-    // function throttle(func, delay) {
-    //   let timer = null;
-    //   let lastTime = 0;
-    //   return function () {
-    //     const context = this;
-    //     const args = arguments;
-    //     const now = new Date().getTime();
-    //     if (now - lastTime >= delay) {
-    //       clearTimeout(timer);
-    //       func.apply(context, args);
-    //       lastTime = now;
-    //     } else {
-    //       clearTimeout(timer);
-    //       timer = setTimeout(function () {
-    //         func.apply(context, args);
-    //         lastTime = now;
-    //       }, delay);
-    //     }
-    //   };
-    // }
     let rowOrColKey = that.cusStyle.maxRows || that.gridColNum;
     screen.blockSize = (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
   } else {
@@ -183,6 +164,13 @@ export default defineComponent({
         };
       },
     },
+
+    // 是否需要编辑界面
+    needEdit: {
+      type: Boolean,
+      default: false
+    },
+
     // 可编辑状态 // 目前尚未实装功能
     editable: {
       type: Boolean,
@@ -509,7 +497,6 @@ export default defineComponent({
                     plugInComponent["close"]();
                   }
                 } else {
-
                   this.plugInData[refs] = value[refs];
                   if (plugInComponent && plugInComponent["open"]) {
                     plugInComponent["open"]();

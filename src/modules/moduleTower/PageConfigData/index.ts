@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 20:36:25
+ * @LastEditTime: 2024-04-09 08:56:45
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
  */
 import { isValidKey } from "@/utils/index";
@@ -24,21 +24,6 @@ export const base = {
   },
 };
 let pageConfig = {
-  ...MqttPageConfig,
-  ...designDesktop,
-  IotDetail: {
-    gridColNum: 3,
-    cusStyle: {
-      wholeScreen: false,
-      Fullscreen: true,
-      margin: 6,
-      maxRows: 8,
-      allPeopleCanSee: true,
-      showLink: true,
-    },
-    name: "设备详情",
-    desktopData: iotDetail,
-  },
   IotInfoList: {
     ...base,
     name: "设备列表",
@@ -54,6 +39,8 @@ let pageConfig = {
     name: "事件列表",
     desktopData: iotEventManage,
   },
+  ...MqttPageConfig,
+  ...designDesktop,
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

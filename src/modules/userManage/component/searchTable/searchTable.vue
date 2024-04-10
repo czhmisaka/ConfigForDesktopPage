@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-20 23:59:12
+ * @LastEditTime: 2024-04-08 23:47:07
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
  * @FuckToUi: 改这么多图啥呢，又不好看
 -->
@@ -65,6 +65,7 @@ import { setData } from "@/components/basicComponents/grid/module/cardApi/index"
 import { timeConsole } from "@/router/util";
 import { useUserStore, useUserStoreHook } from '../../../../store/modules/user';
 import { changeCardProperties } from '../../../../components/basicComponents/grid/module/cardApi/index';
+import { isMobile } from '../../../../utils/api/user/header';
 
 let useAble = 0;
 
@@ -265,6 +266,14 @@ export default defineComponent({
 
   async created() {
     timeConsole.checkTime("searchTable");
+    if (isMobile()!="PC") {
+      console.log('手机模式')
+      let data = {}
+      data[this.detail.label] = {
+        isCard: true
+      }
+      changeCardProperties(this, data)
+    }
     this.isReady = false;
     // await this.loadUserConfig();
     await this.initData();

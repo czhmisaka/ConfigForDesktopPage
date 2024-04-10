@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-03 17:03:45
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 22:37:17
+ * @LastEditTime: 2024-04-10 19:27:38
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotDetail.ts
  */
 
