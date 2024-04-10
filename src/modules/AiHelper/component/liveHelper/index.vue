@@ -1,12 +1,15 @@
 <!--
  * @Date: 2024-04-09 14:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-10 23:11:22
+ * @LastEditTime: 2024-04-11 03:00:07
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/liveHelper/index.vue
 -->
 <template>
-    <div class="mainBox" :class="[`${isShow ? '' : 'hide'}`]" @mouseover="mouseHover" @mouseleave="mouseLeave"
-        @click="click" v-if="isRealGridDesktop">
+    <div class="mainBox" :style="{
+        transform: `scale(${isMobile() ? 0.4 : 0.8})`
+
+    }" :class="[`${isShow ? '' : 'hide'}`]" @mouseenter="mouseenter" @mouseleave="mouseLeave" @click="click"
+        v-if="isRealGridDesktop">
         <div class="base body" :style="{
             transform: `translate(${status.bodyPosition.x}px,${status.bodyPosition.y}px)`
         }" alt=""></div>
@@ -14,14 +17,14 @@
             transform: `translate(${status.headPosition.x}px,${status.headPosition.y}px)`
         }">
             <div class="headBg" alt=""></div>
-            <div class="eye" :class="[`eye_status_${status.eye}`]" :style="{
+            <div :class="['eye', `eye_status_${status.eye}`]" :style="{
                 transform: `translate(${status.eyePosition.x}px,${status.eyePosition.y}px)`
             }" alt="">
             </div>
             <div class="info" v-if="showInfo.needShow">
                 <cardBg ref="mainBox" :cus-style="{
-                    borderRaidus: '12px',
-                    padding: '12px'
+                    borderRaidus: '24px',
+                    padding: '12px',
                 }
                     ">
                     <p v-if="showInfo.type == InfoType.word">
@@ -37,6 +40,7 @@
 import { defineComponent, Transition } from 'vue';
 import cardBg from '@/components/basicComponents/cell/card/cardBg.vue';
 import { AiTalkerDrawer, InfoType, InfoCellTemplate } from './TalkerDrawer';
+import { chat, isMobile } from '@/utils/api/requests';
 
 enum roleType {
     'robot' = 'robot',
@@ -59,7 +63,7 @@ function getAllParents(element) {
 export default defineComponent({
     name: 'liveHelper',
     components: { cardBg },
-    props: ["plugInData", "baseData", 'detail'],
+    props: ["plugInData", "baseData", 'detail', 'gridList'],
     data() {
         return {
             // 确认是否在正确的桌面上
@@ -92,6 +96,7 @@ export default defineComponent({
         }
     },
     methods: {
+        isMobile,
         // close gridDesktop 触发modelApi用的
         close(e) {
             this.isShow = false
@@ -130,8 +135,14 @@ export default defineComponent({
             AiTalkerDrawer(this)
         },
 
-        mouseHover(e) {
+        async mouseenter(e) {
             this.status.eye = 'open'
+            let back = await chat('已知当前页面的配置为' + JSON.stringify(this.gridList) + '。接下来请你用最简短的词汇描述：当前页面是干什么的?（只需要返回描述即可）')
+            this.setInfo({
+                type: InfoType.word,
+                data: `${back.data.choices[0].message.content}`,
+                timeOut: 3
+            })
         },
 
         mouseLeave(e) {
@@ -157,7 +168,28 @@ export default defineComponent({
         // this.isRealGridDesktop = false
 
         const that = this
-        window.addEventListener('mousemove', (e) => {
+
+        let focus = ''
+        let timeout = true
+        window.addEventListener('mousemove', async (e) => {
+            const srcEl = e.srcElement as any
+            // 遇到按钮时
+            if (srcEl.parentElement.className.indexOf('el-button') != -1 && srcEl.innerHTML && focus != srcEl.innerHTML && timeout) {
+                that.status.eye = 'help'
+                timeout = false
+                focus = srcEl.innerHTML
+                let back = await chat('已知当前页面的配置为' + JSON.stringify(that.gridList) + '。接下来请你用最简短的词汇描述：' + srcEl.innerHTML + '这个按钮是干什么的?（只需要返回描述即可）')
+                that.setInfo({
+                    type: InfoType.word,
+                    data: `【${srcEl.innerHTML}】:${back.data.choices[0].message.content}`,
+                    timeOut: 3
+                })
+                setTimeout(() => {
+                    that.status.eye = 'close'
+                    timeout = true
+                }, 2000)
+            }
+
             const windowWidth = window.screen.width
             const windowHeight = window.screen.height
             const EyeOffsetXY = {
@@ -188,7 +220,6 @@ export default defineComponent({
     z-index: 10000;
     width: 200px;
     height: 200px;
-    transform: scale(0.8);
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 
@@ -223,7 +254,7 @@ export default defineComponent({
             width: 80px;
             height: 20px;
             z-index: 30;
-            transition: background-size 0.1s ease-in-out;
+            transition: background-size 0.1s ease-in-out, background-image 0.3s ease-in-out;
         }
 
         .eye_status_open {
@@ -239,6 +270,25 @@ export default defineComponent({
             background-repeat: no-repeat;
         }
 
+        .eye_status_help {
+            background-image:
+                linear-gradient(white, white),
+                linear-gradient(rgb(0, 128, 255), rgb(0, 128, 255)),
+                linear-gradient(white, white),
+                linear-gradient(rgb(0, 128, 255), rgb(0, 128, 255));
+            background-position:
+                10px 10px,
+                0px 0px,
+                70px 10px,
+                60px 0px;
+            background-size:
+                10px 10px,
+                20px 20px,
+                10px 10px,
+                20px 20px;
+            background-repeat: no-repeat;
+        }
+
         .eye_status_close {
             background-image:
                 linear-gradient(#fff, #fff),
@@ -246,9 +296,9 @@ export default defineComponent({
                 linear-gradient(#fff, #fff),
                 linear-gradient(#fff, #fff);
             background-position:
-                5px 0px,
+                2px 0px,
                 0px 0px,
-                60px 0px,
+                57px 0px,
                 55px 0px;
             background-size:
                 10px 10px,
@@ -261,10 +311,12 @@ export default defineComponent({
 
     .info {
         position: absolute;
+        right: 0px;
         height: auto;
         transform: translateY(calc(-100% - 24px));
-        max-width: 430px;
-        width: auto;
+        width: 330px;
+        text-align: left;
+        line-height: 2em;
     }
 }
 
