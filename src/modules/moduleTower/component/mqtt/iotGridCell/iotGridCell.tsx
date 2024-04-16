@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 22:20:21
+ * @LastEditTime: 2024-04-14 15:03:00
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -51,21 +51,23 @@ export const pushData = async (topic, data) => {
 }
 
 export const iotCardTitleStyle = {
-    textAlign:'left',
+    textAlign: 'left',
     fontWeight: 600,
     fontSize: "1em",
     margin: '3px 6px'
 }
 
 import infoCard from '../iotGridCell/infoCard.vue'
+let num = 0
 
 // 获取各种iot设备控制面板
 export function getIotDeviceCellGridDesktopCardComponent(
     gridCell: IotDeviceGridDesktopCellTemplate,
-    IotCardInfo: IotDeviceTemplate
+    IotCardInfo: IotDeviceTemplate,
+    indexKey = num++,
 ) {
     let sendKey = gridCell.sendKey || IotCardInfo.mainTopic
-    let name = gridCell.preKey + sendKey + gridCell.type
+    let name = gridCell.preKey + sendKey + gridCell.type + indexKey
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     let getKey = gridCell.getKey || '';
     gridCell.gridInfo = typeof gridCell.gridInfo === 'string' ? JSON.parse(gridCell.gridInfo) : gridCell.gridInfo;
@@ -115,7 +117,7 @@ export function getIotDeviceCellGridDesktopCardComponent(
                 gridCellData
             ).setSize(gridCell.gridInfo.width, gridCell.gridInfo.height).setPosition(gridCell.gridInfo.x, gridCell.gridInfo.y);
         case IotDeviceCellGridDesktopType.buttonCard:
-            return gridCellMaker('', '', {}, {
+            return gridCellMaker(name, name, {}, {
                 type: cardComponentType.cusComponent,
                 data: markRaw(defineComponent({
                     setup(props, context) {

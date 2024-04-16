@@ -2,7 +2,7 @@
 /*
  * @Date: 2024-01-25 13:30:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-14 22:47:55
+ * @LastEditTime: 2024-04-14 15:04:08
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/gridCellComponent.tsx
  */
 import { gridCellMaker } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -14,9 +14,10 @@ import { defineComponent, markRaw, ref } from "vue";
 import { iotCardTitleStyle, pushData } from "./iotGridCell";
 
 
+let fuckNum = 0
 export const sliderComponent = (gridCell: IotDeviceGridDesktopCellTemplate, IotCardInfo: IotDeviceTemplate) => {
     let sendKey = gridCell.sendKey || IotCardInfo.mainTopic
-    let name = gridCell.preKey + sendKey + gridCell.type
+    let name = gridCell.preKey + sendKey + gridCell.type +(fuckNum++)
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     return gridCellMaker(name, name + gridCell.type, {}, {
         type: cardComponentType.cusComponent,
@@ -56,7 +57,7 @@ export const sliderComponent = (gridCell: IotDeviceGridDesktopCellTemplate, IotC
 
 export const gridLightControlComponent = (gridCell: IotDeviceGridDesktopCellTemplate, IotCardInfo: IotDeviceTemplate) => {
     let sendKey = gridCell.sendKey || IotCardInfo.mainTopic
-    let name = gridCell.preKey + sendKey + gridCell.type
+    let name = gridCell.preKey + sendKey + gridCell.type +(fuckNum++)
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     return gridCellMaker(name, name + gridCell.type, {}, {
         type: cardComponentType.componentList,

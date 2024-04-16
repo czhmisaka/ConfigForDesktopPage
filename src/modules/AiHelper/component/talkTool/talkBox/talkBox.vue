@@ -2,7 +2,7 @@ import { Development } from '../../wholeScreen/TJJHighEnergyLevelWholeScreen/dat
 <!--
  * @Date: 2024-03-25 15:24:36
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-11 00:13:00
+ * @LastEditTime: 2024-04-14 15:19:42
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/talkTool/talkBox/talkBox.vue
 -->
 
@@ -30,7 +30,7 @@ import { TalkCellTemplate, talkCellMaker, stringAnyObj } from './index';
 
 import { HistoryTemplate, HistoryManage } from '../menu/index';
 // import { action, extractJSON } from '../../config/AiAction';
-import { extractJSON, action } from '../../../../taskList/config/AiAction';
+import { extractJSON, action, useAbleWord } from '../../../../taskList/config/AiAction';
 import { changeCardProperties } from '../../../../../components/basicComponents/grid/module/cardApi/index';
 import { gridSizeMaker, componentInfo, propInfo, inputType } from '../../../../../components/basicComponents/grid/module/dataTemplate';
 import cardBg from '@/components/basicComponents/cell/card/cardBg.vue';
@@ -67,7 +67,7 @@ export default defineComponent({
 			type: inputType.obj
 		}
 	} as propInfo,
-	props: ['inputList', 'historyCell'],
+	props: ['inputList', 'historyCell','gridList'],
 	watch: {
 		inputList: {
 			handler(val) {
@@ -144,8 +144,31 @@ export default defineComponent({
 		},
 
 		async getAiChatBackOnce(userTalk: TalkCellTemplate) {
-			let res = await chat(userTalk.content)
-			this.talkCellList.push(talkCellMaker('ai', res.data.choices[0].message.content))
+			let res = await chat(await useAbleWord(true) + userTalk.content)
+			let backWord = res.data.choices[0].message.content
+			let data = {} as any
+			const tryData = extractJSON(backWord)
+			backWord.replaceAll('{', '').replaceAll('}', '').replaceAll('"', '').replaceAll(' ', '').split(",").map(x => {
+				const r = x.split(':')
+				if (r && r.length > 1)
+					data[r[0]] = r[1]
+			})
+			if (!data.actionType)
+				tryData.map(x => {
+					if (x.actionType) data = x
+				})
+			if (data && data.actionType) {
+				(await action(true)).map(x => {
+					if (x.actionType == data.actionType) {
+						setTimeout(() => {
+							x.action(this, data)
+						}, 200)
+					}
+				})
+				this.talkCellList.push(talkCellMaker('ai', '指令执行中'))
+			}
+			else
+				this.talkCellList.push(talkCellMaker('ai', backWord))
 		},
 
 		// 获取ai的回复

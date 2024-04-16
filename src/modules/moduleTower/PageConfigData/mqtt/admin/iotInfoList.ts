@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-24 13:04:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-09 08:49:31
+ * @LastEditTime: 2024-04-13 16:14:44
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotInfoList.ts
  */
 import {
@@ -128,7 +128,15 @@ export const iotInfoList = async (groupId = 0): Promise<gridCellTemplate[]> => {
           searchItemTemplate: [],
           showItemTemplate: iot设备字段.getAll(),
           searchFunc: async (query, that) => {
-            let res = await useCacheHook().getDataByKey("allIot")
+            let res = [];
+            useCacheHook().setRefresh("allIot");
+            if (groupId == 0) res = await useCacheHook().getDataByKey("allIot");
+            else
+              res = (
+                await post("/admin/iot/iot/list", {
+                  groupId: groupId,
+                })
+              ).data;
             return res;
           },
           defaultQuery: {

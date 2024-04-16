@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 21:48:50
+ * @LastEditTime: 2024-04-14 14:16:11
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -58,7 +58,8 @@ export const iotCardServiceDesktop = async () => {
 // Iot设备弹窗
 export const openDrawerForIotCardServiceDesktop = async (
   that,
-  IotCardInfo: IotDeviceTemplate
+  IotCardInfo: IotDeviceTemplate,
+  inDrawer = false
 ) => {
   // 构建IotCard
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
@@ -82,79 +83,75 @@ export const openDrawerForIotCardServiceDesktop = async (
       );
     });
   }
-  const init = eventCenterCell(
-    eventTriggerType.onMounted,
-    async (that, data) => {
-      const closeBtn = (th) => {
-        return gridCellMaker(
-          "closeDesktop",
-          "打开mqtt列表",
-          {},
-          {
-            type: cardComponentType.componentList,
-            name: "userManage_button",
-          },
-          {
-            isSettingTool: true,
-            props: {
-              icon: "Close",
-              onClickFunc: async ({ context, props }) => {
-                removeGridCell(th, ["openMqttDeviceList"]);
-                closeDrawerFormEasy(th);
-              },
+  if (!inDrawer) {
+    const init = eventCenterCell(
+      eventTriggerType.onMounted,
+      async (that, data) => {
+        const closeBtn = (th) => {
+          return gridCellMaker(
+            "closeDesktop",
+            "打开mqtt列表",
+            {},
+            {
+              type: cardComponentType.componentList,
+              name: "userManage_button",
             },
-          }
-        )
-          .setSize(
-            0.5,
-            0.5
-          )
-          .setPosition(
-            11.5,
-            0
-          );
-      };
-      openDrawerFormEasy(that, {
-        gridDesktop: true,
-        size: 100,
-        fullscreenGridDesktop: true,
-        bgColor: "rgba(0,0,0,0);box-shadow:none;",
-        gridDesktopConfig: {
-          name: "开放平台应用管理界面-应用信息和管理界面",
-          desktopData: async () => {
-            return [
-              iotInfoCardGridCell,
-              iotServiceCardGridCell,
-              ...(await iotCardServiceDesktop()),
-              ...gridCellList,
-              closeBtn(that),
-              gridCellMaker(
-                "editable",
-                "编辑",
-                {},
-                {
-                  name: "setting_editable",
-                  type: cardComponentType.componentList,
+            {
+              isSettingTool: true,
+              props: {
+                icon: "Close",
+                onClickFunc: async ({ context, props }) => {
+                  removeGridCell(th, ["openMqttDeviceList"]);
+                  closeDrawerFormEasy(th);
                 },
-                {
-                  isSettingTool: true,
-                }
-              )
-                .setPosition(11, 7)
-                .setSize(1, 1),
-            ];
+              },
+            }
+          )
+            .setSize(0.5, 0.5)
+            .setPosition(11.5, 0);
+        };
+        openDrawerFormEasy(that, {
+          gridDesktop: true,
+          size: 100,
+          fullscreenGridDesktop: true,
+          bgColor: "rgba(0,0,0,0);box-shadow:none;",
+          gridDesktopConfig: {
+            name: "开放平台应用管理界面-应用信息和管理界面",
+            desktopData: async () => {
+              return [
+                iotInfoCardGridCell,
+                iotServiceCardGridCell,
+                ...(await iotCardServiceDesktop()),
+                ...gridCellList,
+                closeBtn(that),
+                gridCellMaker(
+                  "editable",
+                  "编辑",
+                  {},
+                  {
+                    name: "setting_editable",
+                    type: cardComponentType.componentList,
+                  },
+                  {
+                    isSettingTool: true,
+                  }
+                )
+                  .setPosition(11, 7)
+                  .setSize(1, 1),
+              ];
+            },
+            gridColNum: wholeScreen.size.width,
+            cusStyle: {
+              wholeScreen: false,
+              Fullscreen: true,
+              maxRows: wholeScreen.size.height,
+              margin: 4,
+            },
           },
-          gridColNum: wholeScreen.size.width,
-          cusStyle: {
-            wholeScreen: false,
-            Fullscreen: true,
-            maxRows: wholeScreen.size.height,
-            margin: 4,
-          },
-        },
-      });
-    },
-    "openMqttDeviceList"
-  );
-  addGridCell(that, init);
+        });
+      },
+      "openMqttDeviceList"
+    );
+    addGridCell(that, init);
+  }
 };

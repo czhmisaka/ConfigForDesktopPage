@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-24 01:46:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 14:36:01
+ * @LastEditTime: 2024-04-14 15:42:28
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiAction.ts
  */
 
@@ -9,6 +9,16 @@ import { useCacheHook } from "@/store/modules/cache";
 import { IotDeviceTemplate } from "@/modules/moduleTower/component/mqtt/iotCard";
 import { openDrawerForIotCardServiceDesktop } from "@/modules/moduleTower/component/mqtt/iotServiceDesktop";
 import { gridCell } from "../../userManage/component/searchTable/searchTable";
+import {
+  checkSizeAndPosition,
+  iotDetail,
+} from "@/modules/moduleTower/PageConfigData/mqtt/admin/iotDetail";
+import { getIotDeviceCellGridDesktopCardComponent } from "@/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell";
+import {
+  addGridCell,
+  changeVisible,
+  removeGridCell,
+} from "@/components/basicComponents/grid/module/cardApi";
 
 export const preWord = `
 你是一个聪明的工具小管家，能够充分理解用户说的话，并判断用户需要使用哪个工具。
@@ -96,11 +106,11 @@ export function extractJSON(text) {
   return [];
 }
 
-export const action = async () => {
+export const action = async (inDrawer = false) => {
   const allIot = (await useCacheHook().getDataByKey("allIot")).map((x) => {
     return { ...x, fullName: x.groupName + "_" + x.name, id: x.id };
   });
-  return [
+  let back = [
     actionCellMaker(
       "formInput",
       ["填写表单", "表单", "填写xxx"],
@@ -119,18 +129,41 @@ export const action = async () => {
           required: false,
         },
       ],
-      `"查看${allIot[0].name}设备"=>{'actionType':'iotDesktop','name':'${allIot[0].fullName}'}
-      "${allIot[1].name}"=>{'actionType':'iotDesktop','name':'${allIot[1].fullName}'}  
+      `
+      ${allIot.map((x, i) => {
+        return `${["查看", "", "打开", "开", "看一下"][i % 5]}${
+          x.name
+        }=>{'actionType':'iotDesktop','name':'${x.fullName}'};`;
+      })}
       `,
-      (that, data) => {
+      async (that, data) => {
         for (let x = 0; x < allIot.length; x++) {
           if (allIot[x].fullName === data.name) {
             const iot = allIot[x];
-            openDrawerForIotCardServiceDesktop(that, {
-              ...iot,
-              gridCell: JSON.parse(iot.gridCell),
-              service: JSON.parse(iot.service),
-            });
+            if (!inDrawer)
+              openDrawerForIotCardServiceDesktop(that, {
+                ...iot,
+                gridCell: JSON.parse(iot.gridCell),
+                service: JSON.parse(iot.service),
+              });
+            else {
+              let gridCellList = JSON.parse(iot.gridCell).map((x) => {
+                return getIotDeviceCellGridDesktopCardComponent({ ...x }, iot);
+              });
+              gridCellList = gridCellList.map((x) => {
+                x.options.showInGridDesktop = false;
+                return x;
+              });
+              gridCellList = checkSizeAndPosition(gridCellList, 8);
+              gridCellList.map((x, i) => {
+                addGridCell(that, x);
+                setTimeout(() => {
+                  let data = {};
+                  data[x.label] = true;
+                  changeVisible(that, data);
+                }, i * 50);
+              });
+            }
             break;
           }
         }
@@ -166,8 +199,9 @@ export const action = async () => {
           ],
         },
       ],
-      `"前往分组"=>{ actionType: "go", pageName: "moduleTower_分组列表"}
-    "前往设备"=>{ actionType: "go", pageName: "moduleTower_设备列表"}`,
+      `"前往分组"=>{ actionType: "go", pageName: "moduleTower_分组列表"};
+      "前往分组列表"=>{ actionType: "go", pageName: "moduleTower_分组列表"};
+    "去设备列表"=>{ actionType: "go", pageName: "moduleTower_设备列表"};`,
       (that, data) => {
         const pageName = data.pageName;
         that.$router.push({
@@ -175,35 +209,43 @@ export const action = async () => {
         });
       }
     ),
-    actionCellMaker(
-      "openApp",
-      ["打开{appName}", "去{appName}"],
-      [
-        {
-          key: "appName",
-          label: "应用名称",
-          range: ["百度", "文档", "娱乐中心"],
-        },
-      ],
-      '"打开娱乐"=>{ actionType: "openApp", appName: "娱乐中心" }',
-      (that, data) => {
-        const pageName = data.appName;
-        const app = {
-          百度: "https://www.baidu.com",
-          文档: "http://guild.czht.top",
-          娱乐中心: "https://www.4399.com",
-        };
-        window.open(app[pageName]);
-      }
-    ),
-  ];
+    inDrawer
+      ? actionCellMaker(
+          "closeComp",
+          ["关闭组件", "关闭", "关闭组件"],
+          [],
+          `"关闭组件"=>{actionType:"closeComp"};
+          "关闭"=>{actionType:"closeComp"};
+          `,
+          (that, data) => {
+            console.log(that.gridList, that);
+            let needClose = that.gridList.filter((x) => {
+              return ["inputBox", "talkBox"].indexOf(x.label) == -1;
+            });
+            needClose.map((x, i) => {
+              setTimeout(() => {
+                let data = {};
+                data[x.label] = false;
+                changeVisible(that, data);
+              }, i * 50);
+              if (i == needClose.length - 1)
+                setTimeout(() => {
+                  removeGridCell(that, needClose);
+                }, 500);
+            });
+            // removeGridCell(that,)
+          }
+        )
+      : false,
+  ].filter(Boolean);
+  return back as actionCellTemplate[];
 };
 
-export const useAbleWord = async () => {
+export const useAbleWord = async (inDrawer = false) => {
   let back = `
 你是一个聪明的工具小管家，能够充分理解用户说的话，并判断用户需要使用哪个工具。
 现有工具如下：
-${(await action())
+${(await action(inDrawer))
   .map((x) => {
     return `${x.trigger.join(",")};工具类型:${
       x.actionType
@@ -219,13 +261,16 @@ ${(await action())
 
 Skill：
 如果在已有工具中找不到合适的工具，使用自己的话回答。
-如果在已有工具中找到合适的工具，判断是否缺少必填参数，如果有提供使用补充；如果不缺少参数则以json格式返回工具的id和参数的别名。
+不要输出的代码。
+请检查用户的输入是否能正确的找到对应工具，并符合工具需要的参数。
+如果不缺少参数则以json格式返回工具的id和参数的别名。
+缺少参数时，用文本直接提醒用户。
 回复精确简短。
 
 Examples:
-${(await action()).map((x) => x.example).join("\n")}
+${(await action(inDrawer)).map((x) => x.example).join("\n")}
 
-下面请你理解以下内容，并回答问题：
+下面请你回答来自用户的问题：
 `;
   return back;
 };

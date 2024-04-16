@@ -1,14 +1,12 @@
 <!--
  * @Date: 2024-04-09 14:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-11 03:00:07
+ * @LastEditTime: 2024-04-14 13:02:15
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/liveHelper/index.vue
 -->
 <template>
-    <div class="mainBox" :style="{
-        transform: `scale(${isMobile() ? 0.4 : 0.8})`
-
-    }" :class="[`${isShow ? '' : 'hide'}`]" @mouseenter="mouseenter" @mouseleave="mouseLeave" @click="click"
+    <div class="mainBox" :style="{}"
+     :class="[`${isShow ? '' : 'hide'}`]" @mouseenter="mouseenter" @mouseleave="mouseLeave" @click="click"
         v-if="isRealGridDesktop">
         <div class="base body" :style="{
             transform: `translate(${status.bodyPosition.x}px,${status.bodyPosition.y}px)`
@@ -47,7 +45,6 @@ enum roleType {
     'command' = 'command',
     'talkBox' = 'talkBox'
 }
-
 
 function getAllParents(element) {
     let parents = [];
@@ -100,7 +97,7 @@ export default defineComponent({
         // close gridDesktop 触发modelApi用的
         close(e) {
             this.isShow = false
-            this.initRobotStatus()
+            console.log('触发 live helper')
         },
 
         // open gridDesktop 触发modelApi用的
@@ -163,50 +160,52 @@ export default defineComponent({
     },
     async mounted() {
         const parents = getAllParents(this.$el)
-        if (parents.length != 10 || parents.map(item => item.className).join().indexOf('drawerForm') != -1)
+        if (parents.length != 10 || parents.map(item => item.className).join().indexOf('drawerForm') != -1) {
             this.isRealGridDesktop = false
+            return false
+        }
         // this.isRealGridDesktop = false
-
         const that = this
-
         let focus = ''
         let timeout = true
         window.addEventListener('mousemove', async (e) => {
-            const srcEl = e.srcElement as any
-            // 遇到按钮时
-            if (srcEl.parentElement.className.indexOf('el-button') != -1 && srcEl.innerHTML && focus != srcEl.innerHTML && timeout) {
-                that.status.eye = 'help'
-                timeout = false
-                focus = srcEl.innerHTML
-                let back = await chat('已知当前页面的配置为' + JSON.stringify(that.gridList) + '。接下来请你用最简短的词汇描述：' + srcEl.innerHTML + '这个按钮是干什么的?（只需要返回描述即可）')
-                that.setInfo({
-                    type: InfoType.word,
-                    data: `【${srcEl.innerHTML}】:${back.data.choices[0].message.content}`,
-                    timeOut: 3
-                })
-                setTimeout(() => {
-                    that.status.eye = 'close'
-                    timeout = true
-                }, 2000)
-            }
+            if (that.isShow) {
+                const srcEl = e.srcElement as any
+                // 遇到按钮时
+                if (srcEl.parentElement.className.indexOf('el-button') != -1 && srcEl.innerHTML && focus != srcEl.innerHTML && timeout) {
+                    that.status.eye = 'help'
+                    timeout = false
+                    focus = srcEl.innerHTML
+                    let back = await chat('已知当前页面的配置为' + JSON.stringify(that.gridList) + '。接下来请你用最简短的词汇描述：' + srcEl.innerHTML + '这个按钮是干什么的?（只需要返回描述即可）')
+                    that.setInfo({
+                        type: InfoType.word,
+                        data: `【${srcEl.innerHTML}】:${back.data.choices[0].message.content}`,
+                        timeOut: 3
+                    })
+                    setTimeout(() => {
+                        that.status.eye = 'close'
+                        timeout = true
+                    }, 2000)
+                }
 
-            const windowWidth = window.screen.width
-            const windowHeight = window.screen.height
-            const EyeOffsetXY = {
-                x: -5 + (e.clientX / windowWidth) * 5,
-                y: -5 + (e.clientY / windowHeight) * 5,
+                const windowWidth = window.screen.width
+                const windowHeight = window.screen.height
+                const EyeOffsetXY = {
+                    x: -5 + (e.clientX / windowWidth) * 5,
+                    y: -5 + (e.clientY / windowHeight) * 5,
+                }
+                const HeadOffsetXY = {
+                    x: -3 + (e.clientX / windowWidth) * 6,
+                    y: -3 + (e.clientY / windowHeight) * 6,
+                }
+                const BodyOffsetXY = {
+                    x: -2 + (e.clientX / windowWidth) * 4,
+                    y: 0
+                }
+                that.status.eyePosition = EyeOffsetXY
+                that.status.headPosition = HeadOffsetXY
+                that.status.bodyPosition = BodyOffsetXY
             }
-            const HeadOffsetXY = {
-                x: -3 + (e.clientX / windowWidth) * 6,
-                y: -3 + (e.clientY / windowHeight) * 6,
-            }
-            const BodyOffsetXY = {
-                x: -2 + (e.clientX / windowWidth) * 4,
-                y: 0
-            }
-            that.status.eyePosition = EyeOffsetXY
-            that.status.headPosition = HeadOffsetXY
-            that.status.bodyPosition = BodyOffsetXY
         })
     }
 })

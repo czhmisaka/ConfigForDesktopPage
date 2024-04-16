@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-03 17:03:45
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-10 19:27:38
+ * @LastEditTime: 2024-04-14 14:17:47
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/mqtt/admin/iotDetail.ts
  */
 
@@ -164,7 +164,7 @@ export const openMobileDetailDrawer = (that, id) => {
   });
 };
 
-export const iotDetail = async (id = "") => {
+export const iotDetail = async (id = "", col = null) => {
   if (id == "") id = getQuery().id;
   const init = eventCenterCell(
     eventTriggerType.onMounted,
@@ -187,7 +187,10 @@ export const iotDetail = async (id = "") => {
           )
         );
       });
-      gridCellList = checkSizeAndPosition(gridCellList, that.sizeUnit.colNum);
+      gridCellList = checkSizeAndPosition(
+        gridCellList,
+        col || that.sizeUnit.colNum
+      );
       gridCellList.map((x) => {
         addGridCell(that, x);
       });

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-02-17 00:19:21
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-17 00:23:13
+ * @LastEditTime: 2024-04-14 15:03:58
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/chartCardComponent.tsx
  */
 import { gridCellMaker, cardComponentType } from "@/components/basicComponents/grid/module/dataTemplate";
@@ -16,9 +16,10 @@ import { IotDeviceGridDesktopCellTemplate, IotDeviceTemplate } from "../iotCard"
  * @param {IotDeviceGridDesktopCellTemplate} gridCell
  * @param {IotDeviceTemplate} IotCardInfo
  */
+let fuckNum = 0
 export const chartCardComponent = (gridCell: IotDeviceGridDesktopCellTemplate, IotCardInfo: IotDeviceTemplate) => {
     let sendKey = gridCell.sendKey || IotCardInfo.mainTopic
-    let name = gridCell.preKey + sendKey + gridCell.type
+    let name = gridCell.preKey + sendKey + gridCell.type + (fuckNum++)
     let preKey = gridCell.preKey ? gridCell.preKey + '_' : ''
     return gridCellMaker(name, name + gridCell.type, {}, {
         type:cardComponentType.componentList,

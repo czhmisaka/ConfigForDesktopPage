@@ -1,9 +1,9 @@
 
 <!--
  * @Date: 2022-11-09 11:19:57
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-12-01 14:44:19
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/formPage/formPage.vue
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-04-14 14:19:00
+ * @FilePath: /ConfigForDesktopPage/src/modules/ApplicationManage/component/formPage/formPage.vue
 -->
 <template>
   <cardBg :cusStyle="{
@@ -111,10 +111,8 @@ import {
   uiSchemaMaker,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import VueForm from "@lljj/vue3-form-element";
-import { btnList } from "@/modules/knowledge/PageConfigData/template/templateDetail";
 import { showType, tableCellTemplate, btnCellTemplate, btnActionTemplate } from "@/modules/userManage/types";
 import { stringAnyObj } from '../../types';
-import { queryItemTemplateLocal } from '../../../knowledge/PageConfigData/template/templateDetail';
 import { deepClone } from "@/utils";
 import { marginKey } from '../../../../components/basicComponents/grid/GridLayout/helpers/utils';
 import { ElTag } from 'element-plus';

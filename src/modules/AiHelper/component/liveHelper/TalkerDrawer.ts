@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-10 20:53:37
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-11 00:08:29
+ * @LastEditTime: 2024-04-14 14:03:35
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/liveHelper/TalkerDrawer.ts
  */
 
@@ -16,6 +16,7 @@ import { drawerProps } from "@/modules/userManage/types";
 import { stringAnyObj, talkCellMaker } from "../talkTool/talkBox";
 import { checkContext } from "@/components/basicComponents/grid/module/cardApi";
 import data from "@iconify-icons/ep/edit";
+import { isMobile } from "@/utils/Env";
 
 export enum InfoType {
   word = "word",
@@ -53,6 +54,43 @@ export const AiTalkerDesktop = async () => {
           inputList: [talkCellMaker("user", "你好啊")],
         },
       }
+    )
+      .setSize(4, 6)
+      .setPosition(8, 0),
+    gridCellMaker(
+      "inputBox",
+      "inputBox",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "AiHelper_inputBox",
+      },
+      {
+        props: {
+          inputList: [talkCellMaker("user", "你好啊")],
+        },
+      }
+    )
+      .setSize(4, 2)
+      .setPosition(8, 6),
+  ] as gridCellTemplate[];
+};
+
+export const AiTalkerDesktop_mobile = async () => {
+  return [
+    gridCellMaker(
+      "talkBox",
+      "talkBox",
+      {},
+      {
+        type: cardComponentType.componentList,
+        name: "AiHelper_talkBox",
+      },
+      {
+        props: {
+          inputList: [talkCellMaker("user", "你好啊")],
+        },
+      }
     ).setSize(4, 6),
     gridCellMaker(
       "inputBox",
@@ -74,15 +112,19 @@ export const AiTalkerDesktop = async () => {
 };
 
 export const AiTalkerDrawer = (that) => {
+  console.log(isMobile());
   closeAiHelperEasy(that);
   let drawer = {
     gridDesktop: true,
-    size: 30,
+    size: isMobile() ? 100 : 100,
     fullscreenGridDesktop: true,
     bgColor: "rgba(0,0,0,0);box-shadow:none;",
     gridDesktopConfig: {
-      gridColNum: 4,
-      desktopData: async () => await AiTalkerDesktop(),
+      gridColNum: isMobile() ? 4 : 12,
+      desktopData: async () => {
+        if (isMobile()) return await AiTalkerDesktop_mobile();
+        else return await AiTalkerDesktop();
+      },
       cusStyle: {
         wholeScreen: true,
         Fullscreen: true,
