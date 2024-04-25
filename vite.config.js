@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-31 08:52:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-27 09:39:10
+ * @LastEditTime: 2024-04-25 21:51:27
  * @FilePath: /ConfigForDesktopPage/vite.config.js
  */
 import { loadEnv } from "vite";
@@ -140,7 +140,7 @@ export default ({ mode, command }) => {
         },
         "/api": {
           name: "dev",
-          target: VITE_PROXY_DOMAIN,
+          target: 'http://desktop.czht.top/api',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(/^\/api/, "/"),
