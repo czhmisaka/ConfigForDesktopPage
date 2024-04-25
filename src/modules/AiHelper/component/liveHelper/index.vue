@@ -1,13 +1,12 @@
 <!--
  * @Date: 2024-04-09 14:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-14 13:02:15
+ * @LastEditTime: 2024-04-23 23:50:23
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/liveHelper/index.vue
 -->
 <template>
-    <div class="mainBox" :style="{}"
-     :class="[`${isShow ? '' : 'hide'}`]" @mouseenter="mouseenter" @mouseleave="mouseLeave" @click="click"
-        v-if="isRealGridDesktop">
+    <div class="mainBox" :style="{}" :class="[`${isShow ? '' : 'hide'}`]" @mouseenter="mouseenter" @mouseleave="mouseLeave"
+        @click="click" v-if="isRealGridDesktop">
         <div class="base body" :style="{
             transform: `translate(${status.bodyPosition.x}px,${status.bodyPosition.y}px)`
         }" alt=""></div>
@@ -35,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Transition } from 'vue';
+import { defineComponent, Transition, nextTick } from 'vue';
 import cardBg from '@/components/basicComponents/cell/card/cardBg.vue';
 import { AiTalkerDrawer, InfoType, InfoCellTemplate } from './TalkerDrawer';
 import { chat, isMobile } from '@/utils/api/requests';
@@ -56,6 +55,12 @@ function getAllParents(element) {
     }
     return parents;
 }
+import { mainControl } from '@/modules/AiHelper/component/funasr/main.js'
+import { useCacheHook } from '../../../../store/modules/cache';
+import { ElNotification } from 'element-plus';
+import { message } from '@pureadmin/components';
+import { baseAction, aiCacheKey, refreshAllAiProps } from '../../config/aiCommond';
+import { extractJSON } from '../../../taskList/config/AiAction';
 
 export default defineComponent({
     name: 'liveHelper',
@@ -90,6 +95,11 @@ export default defineComponent({
                 timeOut: 0,
                 setTimeOutId: null
             },
+
+
+            talkSendList: [],
+            audioTalker: null,
+            isTalk: false
         }
     },
     methods: {
@@ -134,16 +144,99 @@ export default defineComponent({
 
         async mouseenter(e) {
             this.status.eye = 'open'
-            let back = await chat('已知当前页面的配置为' + JSON.stringify(this.gridList) + '。接下来请你用最简短的词汇描述：当前页面是干什么的?（只需要返回描述即可）')
-            this.setInfo({
-                type: InfoType.word,
-                data: `${back.data.choices[0].message.content}`,
-                timeOut: 3
-            })
+            // let back = await chat('已知当前页面的配置为' + JSON.stringify(this.gridList) + '。接下来请你用最简短的词汇描述：当前页面是干什么的?（只需要返回描述即可）')
+            // this.setInfo({
+            //     type: InfoType.word,
+            //     data: `${back.data.choices[0].message.content}`,
+            //     timeOut: 3
+            // })
+            if (!this.isTalk) {
+                const that = this
+                this.audioTalker.start()
+                this.isTalk = true
+                this.talkSendList = []
+                setTimeout(() => {
+                    that.audioTalker.record()
+                }, 100)
+            }
         },
 
         mouseLeave(e) {
             this.status.eye = 'close'
+            if (this.isTalk) {
+                this.audioTalker.stop()
+                this.isTalk = false
+            }
+        },
+
+        async command(word: string) {
+            refreshAllAiProps()
+            await baseAction(this)
+            const that = this
+            const preWord = await useCacheHook().getDataByKey(aiCacheKey.aiPreWord)
+            console.log('fuck 用户：', preWord + word)
+            let res = await chat(preWord + word, 'glm-4')
+            let backWord = res.data.choices[0].message.content
+            let data = {} as any
+            const tryData = extractJSON(backWord)
+            backWord.replaceAll('{', '').replaceAll('}', '').replaceAll('"', '').replaceAll(' ', '').split(",").map(x => {
+                const r = x.split(':')
+                if (r && r.length > 1)
+                    data[r[0]] = r[1]
+            })
+            if (!data.actionType)
+                tryData.map(x => {
+                    if (x.actionType) data = x
+                })
+            useCacheHook().setRefresh(aiCacheKey.aiAction)
+            const action = await useCacheHook().getDataByKey(aiCacheKey.aiAction)
+            if (data && data.actionType) {
+                action.map(x => {
+                    console.log(x, 'xfuck', data)
+                    if (x.actionType == data.actionType) {
+                        ElNotification({
+                            type: "success",
+                            title: "Tutu: ",
+                            message: `【${x.actionType}】指令执行中`,
+                            duration: 2000,
+                        })
+                        setTimeout(() => {
+                            x.action(that, data)
+                        }, 200)
+                    }
+                })
+            } else
+                ElNotification({
+                    title: '来自AI',
+                    message: backWord,
+                    showClose: true,
+                    duration: 10000
+                })
+        },
+
+        msgInput(msg) {
+            let msgList = msg.split('\n')
+            let needSend = msgList.filter(item => {
+                return item.indexOf(':') > -1
+            })
+            console.log(needSend, 'needSend')
+            let sendMsg = needSend[needSend.length - 1] ? needSend[needSend.length - 1] : ''
+            if (this.talkSendList.indexOf(sendMsg) == -1 && sendMsg != '') {
+                this.talkSendList.push(sendMsg)
+                this.setInfo({
+                    type: InfoType.word,
+                    data: sendMsg.split(':')[1],
+                })
+                this.command(sendMsg.split(':')[1])
+            } else {
+                const word = msgList[msgList.length - 1]
+                if (word)
+                    this.setInfo({
+                        type: InfoType.word,
+                        data: word,
+                    })
+            }
+            this.text = msgList.join('\n')
         },
 
         initRobotStatus() {
@@ -159,6 +252,7 @@ export default defineComponent({
         }
     },
     async mounted() {
+        this.audioTalker = mainControl(this.msgInput)
         const parents = getAllParents(this.$el)
         if (parents.length != 10 || parents.map(item => item.className).join().indexOf('drawerForm') != -1) {
             this.isRealGridDesktop = false
@@ -172,21 +266,21 @@ export default defineComponent({
             if (that.isShow) {
                 const srcEl = e.srcElement as any
                 // 遇到按钮时
-                if (srcEl.parentElement.className.indexOf('el-button') != -1 && srcEl.innerHTML && focus != srcEl.innerHTML && timeout) {
-                    that.status.eye = 'help'
-                    timeout = false
-                    focus = srcEl.innerHTML
-                    let back = await chat('已知当前页面的配置为' + JSON.stringify(that.gridList) + '。接下来请你用最简短的词汇描述：' + srcEl.innerHTML + '这个按钮是干什么的?（只需要返回描述即可）')
-                    that.setInfo({
-                        type: InfoType.word,
-                        data: `【${srcEl.innerHTML}】:${back.data.choices[0].message.content}`,
-                        timeOut: 3
-                    })
-                    setTimeout(() => {
-                        that.status.eye = 'close'
-                        timeout = true
-                    }, 2000)
-                }
+                // if (srcEl.parentElement.className.indexOf('el-button') != -1 && srcEl.innerHTML && focus != srcEl.innerHTML && timeout) {
+                //     that.status.eye = 'help'
+                //     timeout = false
+                //     focus = srcEl.innerHTML
+                //     let back = await chat('已知当前页面的配置为' + JSON.stringify(that.gridList) + '。接下来请你用最简短的词汇描述：' + srcEl.innerHTML + '这个按钮是干什么的?（只需要返回描述即可）')
+                //     that.setInfo({
+                //         type: InfoType.word,
+                //         data: `【${srcEl.innerHTML}】:${back.data.choices[0].message.content}`,
+                //         timeOut: 3
+                //     })
+                //     setTimeout(() => {
+                //         that.status.eye = 'close'
+                //         timeout = true
+                //     }, 2000)
+                // }
 
                 const windowWidth = window.screen.width
                 const windowHeight = window.screen.height
@@ -207,7 +301,10 @@ export default defineComponent({
                 that.status.bodyPosition = BodyOffsetXY
             }
         })
-    }
+    },
+    async unmounted() {
+        this.audioTalker.stop()
+    },
 })
 </script>
 
@@ -220,6 +317,7 @@ export default defineComponent({
     width: 200px;
     height: 200px;
     cursor: pointer;
+    transform: scale(.8);
     transition: transform 0.2s ease-in-out;
 
     .body {

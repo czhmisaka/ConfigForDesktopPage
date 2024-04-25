@@ -1,14 +1,17 @@
 /*
  * @Date: 2024-03-24 01:46:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-14 15:42:28
+ * @LastEditTime: 2024-04-24 00:02:51
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiAction.ts
  */
 
 import { useCacheHook } from "@/store/modules/cache";
 import { IotDeviceTemplate } from "@/modules/moduleTower/component/mqtt/iotCard";
 import { openDrawerForIotCardServiceDesktop } from "@/modules/moduleTower/component/mqtt/iotServiceDesktop";
-import { gridCell } from "../../userManage/component/searchTable/searchTable";
+import {
+  actionCell,
+  gridCell,
+} from "../../userManage/component/searchTable/searchTable";
 import {
   checkSizeAndPosition,
   iotDetail,
@@ -45,7 +48,7 @@ Examples:
 下面请你理解以下内容，并回答问题：
 `;
 
-interface keyWordCellTemplate {
+export interface keyWordCellTemplate {
   // 接口用
   key: string;
   // 用户提示用
@@ -58,7 +61,7 @@ interface keyWordCellTemplate {
 }
 
 // 单一事件节点
-interface actionCellTemplate {
+export interface actionCellTemplate {
   actionType: string;
   // 触发词
   trigger: string[];
@@ -70,7 +73,7 @@ interface actionCellTemplate {
   action?: (that: any, data: any) => any | void;
 }
 
-const actionCellMaker = (
+export const actionCellMaker = (
   actionType: string,
   trigger: string[],
   keyWord: keyWordCellTemplate[],
@@ -87,7 +90,6 @@ const actionCellMaker = (
 };
 
 export function extractJSON(text) {
-  console.log(text, "原始文本");
   const jsonPattern = /({[\s\S]*?})/g; // 正则表达式匹配可能的JSON
   let jsonMatches = text.match(jsonPattern);
   console.log("jsonMatches", jsonMatches, text);
@@ -112,13 +114,6 @@ export const action = async (inDrawer = false) => {
   });
   let back = [
     actionCellMaker(
-      "formInput",
-      ["填写表单", "表单", "填写xxx"],
-      [],
-      ``,
-      () => {}
-    ),
-    actionCellMaker(
       "iotDesktop",
       ["查看{name}设备", "打开{name}", "{name}"],
       [
@@ -129,13 +124,11 @@ export const action = async (inDrawer = false) => {
           required: false,
         },
       ],
-      `
-      ${allIot.map((x, i) => {
+      `${allIot.map((x, i) => {
         return `${["查看", "", "打开", "开", "看一下"][i % 5]}${
           x.name
         }=>{'actionType':'iotDesktop','name':'${x.fullName}'};`;
-      })}
-      `,
+      })}`,
       async (that, data) => {
         for (let x = 0; x < allIot.length; x++) {
           if (allIot[x].fullName === data.name) {
@@ -170,22 +163,6 @@ export const action = async (inDrawer = false) => {
       }
     ),
     actionCellMaker(
-      "search",
-      ["查询{func}{key}", "搜索{func}{key}", "检索{func}{key}"],
-      [
-        {
-          key: "func",
-          label: "查询方式",
-          range: ["设备", "分组", "事件"],
-        },
-        {
-          key: "key",
-          label: "关键词",
-        },
-      ],
-      `"查询温控设备"=>{actionType:'search','func':'设备', 'key':'温控'}`
-    ),
-    actionCellMaker(
       "go",
       ["前往{pageName}", "去{pageName}"],
       [
@@ -212,11 +189,10 @@ export const action = async (inDrawer = false) => {
     inDrawer
       ? actionCellMaker(
           "closeComp",
-          ["关闭组件", "关闭", "关闭组件"],
+          ["关闭组件", "关闭", "关闭界面"],
           [],
-          `"关闭组件"=>{actionType:"closeComp"};
-          "关闭"=>{actionType:"closeComp"};
-          `,
+          `"关闭界面"=>{actionType:"closeComp"};
+          "关闭"=>{actionType:"closeComp"};`,
           (that, data) => {
             console.log(that.gridList, that);
             let needClose = that.gridList.filter((x) => {
@@ -237,6 +213,15 @@ export const action = async (inDrawer = false) => {
           }
         )
       : false,
+    inDrawer
+      ? actionCellMaker(
+          "taskList",
+          ["任务列表"],
+          [],
+          `"打开任务列表"=>{actionType:"taskList"}`,
+          (that, data) => {}
+        )
+      : false,
   ].filter(Boolean);
   return back as actionCellTemplate[];
 };
@@ -247,9 +232,9 @@ export const useAbleWord = async (inDrawer = false) => {
 现有工具如下：
 ${(await action(inDrawer))
   .map((x) => {
-    return `${x.trigger.join(",")};工具类型:${
-      x.actionType
-    },参数列表: ${x.keyWord
+    return `${x.trigger.join(",")};工具类型:${x.actionType},${
+      x.keyWord.length > 0 ? "参数列表:" : ""
+    } ${x.keyWord
       .map((x) => {
         return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${
           x.range ? "可选项：" + x.range.join(",") : ""
@@ -262,15 +247,53 @@ ${(await action(inDrawer))
 Skill：
 如果在已有工具中找不到合适的工具，使用自己的话回答。
 不要输出的代码。
-请检查用户的输入是否能正确的找到对应工具，并符合工具需要的参数。
+请检查用户的输入是否能正确的找到对应工具，并判断是否符合工具需要的参数。
 如果不缺少参数则以json格式返回工具的id和参数的别名。
-缺少参数时，用文本直接提醒用户。
+如果缺少参数时，用文本直接提醒用户。
 回复精确简短。
 
 Examples:
 ${(await action(inDrawer)).map((x) => x.example).join("\n")}
-
 下面请你回答来自用户的问题：
 `;
   return back;
 };
+
+export const aiWordMaker = async (action, preWord = "") => {
+  let back = `你是一个聪明的工具小管家，能够充分理解用户说的话，并判断用户需要使用哪个工具。
+  ${preWord}
+  现有工具如下：
+  ${(await action())
+    .map((x) => {
+      return `${x.trigger.join(",")};工具类型:${x.actionType},${
+        x.keyWord.length > 0 ? "参数列表:" : ""
+      } ${x.keyWord
+        .map((x) => {
+          return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${
+            x.range ? "可选项：" + x.range.join(",") : ""
+          }${x.other})`;
+        })
+        .join(",")}`;
+    })
+    .join("。\n")}
+  
+  Skill：
+如果在已有工具中找不到合适的工具，使用自己的话回答。
+不要输出的代码。
+请检查用户的输入是否能正确的找到对应工具，并判断是否符合工具需要的参数。
+如果不缺少参数则以json格式返回工具的id和参数的别名。
+如果缺少参数时，用文本直接提醒用户。
+回复精确简短。
+  
+  Examples:
+  ${(await action()).map((x) => x.example).join("\n")}
+  下面请你回答来自用户的问题：
+  `;
+  return back;
+};
+
+// 如果在已有工具中找不到合适的工具，使用自己的话回答。
+// 不要输出的代码。
+// 请检查用户的输入是否能正确的找到对应工具，并判断是否符合工具需要的参数。
+// 如果不缺少参数则以json格式返回工具的id和参数的别名。
+// 如果缺少参数时，用文本直接提醒用户。

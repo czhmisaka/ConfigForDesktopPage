@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-11 00:04:30
+ * @LastEditTime: 2024-04-24 00:15:11
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
@@ -80,8 +80,8 @@
       <div v-for="(item, index) in plugInData.btnList.filter((btn) =>
         btn && btn.isShow ? btn.isShow(formData, JSON.parse(JSON.stringify(btn))) : true
       )" style="float: left; margin-right: 6px" :key="index + 'btnlistitem'">
-        <el-button plain :loading="item.isLoading" @click="btnClick(item)" :disabled="item.isDisable(formData)"
-          :type="item.elType" :icon="item.icon">
+        <el-button :id="item.label + '_drawerForm'" plain :loading="item.isLoading" @click="btnClick(item)"
+          :disabled="item.isDisable(formData)" :type="item.elType" :icon="item.icon">
           {{ item.label }}
         </el-button>
       </div>
@@ -114,6 +114,8 @@ import gridDesktop from "@/components/basicComponents/grid/gridDesktop.vue";
 import { getPreUrl } from "@/utils/api/requests";
 import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi";
 import { useCardStyleConfigHook } from "@/store/modules/cardStyleConfig";
+import { useCacheHook } from "@/store/modules/cache";
+import { aiCacheKey } from "@/modules/AiHelper/config/aiCommond";
 const VITE_PROXY_DOMAIN_REAL = getPreUrl();
 let formDataForCheck = {};
 export default defineComponent({
@@ -258,6 +260,12 @@ export default defineComponent({
       this.formData = {};
       // this.$emit("onChange", {}, { type: [cardOnChangeType.forceRefresh] });
       refreshDesktop(this)
+      try {
+        const that = this
+        useCacheHook().setup(aiCacheKey.aiForm, async () => {
+          return null
+        },true)
+      } catch { }
     },
 
     fuckClose() {
@@ -271,7 +279,7 @@ export default defineComponent({
      * @Date: 2022-12-02 09:28:12
      */
     async open() {
-      this.isReady = false;
+      this.isReady = false; 1
       await this.$nextTick();
       if (this.plugInData["gridDesktop"] && this.plugInData["gridDesktopConfig"]) {
         this.desktopDataList = await this.plugInData["gridDesktopConfig"].desktopData(this);
@@ -285,6 +293,12 @@ export default defineComponent({
             ...this.plugInData["formProps"],
           };
         await this.initForm(this.queryItemTemplate);
+        try {
+          const that = this
+          useCacheHook().setup(aiCacheKey.aiForm, async () => {
+            return that
+          })
+        } catch { }
       }
       this.isReady = true;
       if (this.plugInData["data"]) this.formData = this.plugInData["data"];

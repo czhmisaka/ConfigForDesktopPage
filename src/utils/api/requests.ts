@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-24 01:25:24
+ * @LastEditTime: 2024-04-22 22:41:55
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -163,8 +163,11 @@ export function post(url: string, data: object) {
 }
 
 // 聊天专用
-export const chat = async (word: string) => {
-  const tokenRes = await post("/admin/iot/iot/getChatToken", { word });
+export const chat = async (
+  word: string,
+  model: "glm-4" | "glm-3-turbo" = "glm-3-turbo"
+) => {
+  const tokenRes = await post("/admin/iot/iot/getChatToken", { word, model });
   return tokenRes;
 };
 

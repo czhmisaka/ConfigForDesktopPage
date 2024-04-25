@@ -55,7 +55,6 @@ export function mainControl(messageGetter) {
 	}
 	// 语音识别结果; 对jsonMsg数据解析,将识别结果附加到编辑框中
 	function getJsonMessage(jsonMsg) {
-
 		var rectxt = "" + JSON.parse(jsonMsg.data)['text'];
 		var asrmodel = JSON.parse(jsonMsg.data)['mode'];
 		var timestamp = JSON.parse(jsonMsg.data)['timestamp'];
@@ -114,7 +113,6 @@ export function mainControl(messageGetter) {
 		};
 		if (sampleBuf.length > 0) {
 			wsconnecter.wsSend(sampleBuf);
-
 			sampleBuf = new Int16Array();
 		}
 		wsconnecter.wsSend(JSON.stringify(request));

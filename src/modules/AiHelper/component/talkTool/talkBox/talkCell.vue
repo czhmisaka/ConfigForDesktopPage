@@ -1,13 +1,13 @@
 <!--
  * @Date: 2024-03-25 17:20:28
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-10 23:30:22
+ * @LastEditTime: 2024-04-19 22:50:56
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/talkTool/talkBox/talkCell.vue
 -->
 <template>
 	<div v-if="cell.from == 'ai'" :class="`aiChat_cardBg cardBg ${cell.needShow ? '' : 'hide'} 
 		${(preCell && preCell.from == cell.from && preCell.needShow == true) ? 'noMargin' : ''}`" :style="cusStyle">
-		<div class="avater" v-if="!preCell || preCell.from != 'ai' || preCell.needShow == false">
+		<div class="avater" v-if="r">
 			<span class="icon iconfont" style="vertical-align: 0em;">&#xe613;</span>
 			智能助理：
 		</div>

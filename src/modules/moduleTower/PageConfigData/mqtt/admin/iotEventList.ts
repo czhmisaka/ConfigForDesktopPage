@@ -190,7 +190,7 @@ const openDrawerForIotEvent = async (that, data: iotEventTemplate = null) => {
           repBackMessageShow(that, res);
         },
       }),
-      ai表单填写,
+      // ai表单填写,
     ],
   } as drawerProps;
   openDrawerFormEasy(that, drawerProps);

@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-26 22:09:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 14:36:39
+ * @LastEditTime: 2024-04-23 23:31:10
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiForm.ts
  */
 
@@ -53,31 +53,31 @@ example:
 主题：${topic}
 `;
 
-export const ai表单填写 = btnMaker("AI 填写", btnActionTemplate.Function, {
-  icon: "Cpu",
-  elType: "warning",
-  function: async (that, data) => {
-    ElMessageBox.prompt("用一句话描述要填写的内容", "AI 填写", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      showCancelButton: true,
-    }).then(async ({ value }) => {
-      const loading = ElLoading.service({
-        lock: true,
-        text: "思考中",
-        background: "rgba(0, 0, 0, 0.7)",
-      });
-      let res = await chat(await AiFormPreWord(that, value));
-      loading.close();
-      let back = res.data.choices[0].message.content;
-      const tryData = extractJSON(back);
-      if (tryData && tryData.length > 0) {
-        const ai_data = tryData[0];
-        that.formData = {
-          ...that.formData,
-          ...ai_data,
-        };
-      }
-    });
-  },
-});
+// export const ai表单填写 = btnMaker("自动填写", btnActionTemplate.Function, {
+//   icon: "Cpu",
+//   elType: "warning",
+//   function: async (that, data) => {
+//     ElMessageBox.prompt("用一句话描述要填写的内容", "AI 填写", {
+//       confirmButtonText: "确定",
+//       cancelButtonText: "取消",
+//       showCancelButton: true,
+//     }).then(async ({ value }) => {
+//       const loading = ElLoading.service({
+//         lock: true,
+//         text: "思考中",
+//         background: "rgba(0, 0, 0, 0.7)",
+//       });
+//       let res = await chat(await AiFormPreWord(that, value));
+//       loading.close();
+//       let back = res.data.choices[0].message.content;
+//       const tryData = extractJSON(back);
+//       if (tryData && tryData.length > 0) {
+//         const ai_data = tryData[0];
+//         that.formData = {
+//           ...that.formData,
+//           ...ai_data,
+//         };
+//       }
+//     });
+//   },
+// });

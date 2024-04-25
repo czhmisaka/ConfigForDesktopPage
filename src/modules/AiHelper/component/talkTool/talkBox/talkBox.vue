@@ -2,7 +2,7 @@ import { Development } from '../../wholeScreen/TJJHighEnergyLevelWholeScreen/dat
 <!--
  * @Date: 2024-03-25 15:24:36
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-14 15:19:42
+ * @LastEditTime: 2024-04-23 19:42:27
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/talkTool/talkBox/talkBox.vue
 -->
 
@@ -13,12 +13,17 @@ import { Development } from '../../wholeScreen/TJJHighEnergyLevelWholeScreen/dat
 			{{ isLoading ? '【思考中】' : '' }}
 		</div>
 		<div class="mainBox">
-			<div v-for="(item, index) in talkCellList" :key="index" style="width:100%;display: inline-block;
+			<el-scrollbar ref="mainBox">
+				<div ref="innerRef">
+					<div v-for="(item, index) in talkCellList" :key="index" style="width:100%;display: inline-block;
 			height: auto;">
-				<talkCell :ref="'talkCell_' + index" :cell="item" :preCell="index < 2 ? {} : talkCellList[index - 1]"
-					:cusStyle="talkCellStyleMap['talkCell_' + (index + 1)]">
-				</talkCell>
-			</div>
+						<talkCell :ref="'talkCell_' + index" :cell="item"
+							:preCell="index < 2 ? {} : talkCellList[index - 1]"
+							:cusStyle="talkCellStyleMap['talkCell_' + (index + 1)]">
+						</talkCell>
+					</div>
+				</div>
+			</el-scrollbar>
 		</div>
 	</div>
 </template>
@@ -67,7 +72,7 @@ export default defineComponent({
 			type: inputType.obj
 		}
 	} as propInfo,
-	props: ['inputList', 'historyCell','gridList'],
+	props: ['inputList', 'historyCell', 'gridList'],
 	watch: {
 		inputList: {
 			handler(val) {
@@ -144,9 +149,12 @@ export default defineComponent({
 		},
 
 		async getAiChatBackOnce(userTalk: TalkCellTemplate) {
-			let res = await chat(await useAbleWord(true) + userTalk.content)
+			let res = await chat(await useAbleWord(true) + userTalk.content,'glm-4')
 			let backWord = res.data.choices[0].message.content
 			let data = {} as any
+			const that = this
+			const mainBox = that.$refs['mainBox']
+			const innerRef = that.$refs['innerRef']
 			const tryData = extractJSON(backWord)
 			backWord.replaceAll('{', '').replaceAll('}', '').replaceAll('"', '').replaceAll(' ', '').split(",").map(x => {
 				const r = x.split(':')
@@ -169,12 +177,17 @@ export default defineComponent({
 			}
 			else
 				this.talkCellList.push(talkCellMaker('ai', backWord))
+			mainBox.setScrollTop(innerRef.clientHeight)
+			setTimeout(()=>{
+				mainBox.setScrollTop(innerRef.clientHeight)
+			},50)
 		},
 
 		// 获取ai的回复
 		async getAiChatBack(userTalk: TalkCellTemplate) {
 			this.isLoading = true
 			const that = this
+
 			return new Promise((r, j) => {
 				fetch(`/ai/qa?sessionId=${that.sessionId}&query=${userTalk.content}`, {
 					method: "POST",

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-20 23:58:52
+ * @LastEditTime: 2024-04-23 22:30:29
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -29,8 +29,8 @@
         }">
           <el-button class="btn" type="default" v-if="!noTableEdit" @click="btnClick(editFuncBtn)"
             :icon="'Setting'"></el-button>
-          <el-button class="btn" v-if="!autoSearch && modeChange"
-            @click="btnClick(changeFuncBtn)" :icon="isCard ? 'Document' : 'Grid'"></el-button>
+          <el-button class="btn" v-if="!autoSearch && modeChange" @click="btnClick(changeFuncBtn)"
+            :icon="isCard ? 'Document' : 'Grid'"></el-button>
           <el-button class="btn" v-if="!autoSearch && queryItemTemplate && queryItemTemplate.length > 0"
             @click="refreshData(-1)" icon="RefreshRight">重置</el-button>
           <el-button class="btn" v-if="!autoSearch" type="primary" @click="handleSubmit(formData)"
@@ -51,8 +51,9 @@
               v-if="item.type == btnActionTemplate.UploadFunction">
               <el-button plain icon="plus" type="primary">{{ item.label }}</el-button>
             </el-upload>
-            <el-button v-else :loading="item.isLoading" @click="btnClick(item)" :disabled="item.isDisable({ ...formData, _selectedList: selectedList }, item)
-              " :type="item.elType
+            <el-button v-else :id="item.label + '_' + 'inputForm'" :loading="item.isLoading" @click="btnClick(item)"
+              :disabled="item.isDisable({ ...formData, _selectedList: selectedList }, item)
+                " :type="item.elType
     ? typeof item.elType != 'string'
       ? item.elType(formData)
       : item.elType
