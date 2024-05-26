@@ -221,7 +221,7 @@ export default defineComponent({
     },
 
     hightLight(value = true) {
-      // hightLightComponent(this, value ? [this.detail.label] : []);
+      // highLightComponent(this, value ? [this.detail.label] : []);
       // this.isHover = value;
     },
     /**

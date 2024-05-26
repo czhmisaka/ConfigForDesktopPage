@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-21 00:08:11
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-15 15:14:31
- * @FilePath: /lcdp_fe_setup/src/components/basicComponents/grid/module/cardApi/index.ts
+ * @LastEditTime: 2024-04-26 01:09:34
+ * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/cardApi/index.ts
  */
 
 import { stringAnyObj } from "@/modules/ApplicationManage/types";
@@ -246,7 +246,7 @@ export const refreshDesktop = (content: { [key: string]: any }) => {
 };
 
 /**
- * @name: hightLightComponent
+ * @name: highLightComponent
  * @description: 高亮组件
  * @authors: CZH
  * @Date: 2022-12-05 19:32:21
@@ -262,7 +262,7 @@ export const highLightComponent = (
       type: [cardOnChangeType.highLightCard],
     });
   } catch (err) {
-    console.error("hightLightComponent 错误:", err, content, value);
+    console.error("highLightComponent 错误:", err, content, value);
   }
 };
 
@@ -283,7 +283,7 @@ export const addGridCell = (
       type: [cardOnChangeType.cardAdd],
     });
   } catch (err) {
-    console.error("hightLightComponent 错误:", err, content, value);
+    console.error("highLightComponent 错误:", err, content, value);
   }
 };
 
@@ -303,7 +303,7 @@ export const removeGridCell = (
       type: [cardOnChangeType.cardDelete],
     });
   } catch (err) {
-    console.error("hightLightComponent 错误:", err, content, value);
+    console.error("highLightComponent 错误:", err, content, value);
   }
 };
 

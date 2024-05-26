@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-01-12 15:14:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-14 15:03:00
+ * @LastEditTime: 2024-05-08 14:12:13
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/iotGridCell.tsx
  */
 
@@ -27,6 +27,8 @@ export enum IotDeviceCellGridDesktopType {
     sliderCard = "sliderCard",
     // 按钮控制器
     buttonCard = "buttonCard",
+    // 电源控制
+    powerCard = "powerCard",
     // 开关控制器
     switchCard = "switchCard",
     // 文本输入

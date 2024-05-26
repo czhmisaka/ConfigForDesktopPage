@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 14:30:55
+ * @LastEditTime: 2024-04-26 01:13:04
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -501,7 +501,7 @@ export const getAction = () => {
   action["getAllPluginComponent"] = () => {
     let back = {};
     moduleList.map((module) => {
-      if (module.output.CardApiInjectComponent) {
+      if (module.output && module.output.CardApiInjectComponent) {
         for (let componentName in module.output.CardApiInjectComponent) {
           back[`${module.name}_${componentName}`] =
             module.output.CardApiInjectComponent[componentName];

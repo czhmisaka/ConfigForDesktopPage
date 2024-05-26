@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-11 00:06:24
+ * @LastEditTime: 2024-04-26 01:08:26
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -16,10 +16,10 @@
       :responsive="false" :isDraggable="baseData.editable" :isResizable="false" :vertical-compact="false"
       :prevent-collision="false" :use-css-transforms="true" :maxRows="cusStyle.maxRows || 30"
       :margin="[gridRowNumAndUnit.margin, gridRowNumAndUnit.margin]">
-      <div :class="'grayBg ' + (hightLightComponentsList.length > 0 ? 'grayBg_Active' : '')" :style="{
-        zIndex: hightLightComponentsList.length > 0 ? 20000 : -1,
-        width: hightLightControler.show ? '100vw' : '0px',
-        height: hightLightControler.show ? '100vh' : '0px',
+      <div :class="'grayBg ' + (highLightComponentsList.length > 0 ? 'grayBg_Active' : '')" :style="{
+        zIndex: highLightComponentsList.length > 0 ? 20000 : -1,
+        width: highLightController.show ? '100vw' : '0px',
+        height: highLightController.show ? '100vh' : '0px',
       }"></div>
       <grid-item v-for="(item, index) in gridListComputed()" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i"
         :key="item.i" @move="gridItemOnMove" @resize="gridItemOnResize" class="grid-item" :style="{
@@ -277,8 +277,8 @@ export default defineComponent({
       idRandom: (useAble += Math.random()),
 
       // 高光组件列表
-      hightLightComponentsList: [] as string[],
-      hightLightControler: {
+      highLightComponentsList: [] as string[],
+      highLightController: {
         show: false,
         timeOut: null,
       },
@@ -435,25 +435,25 @@ export default defineComponent({
             console.error("输入数据有误", value);
           }
         } else if (type == cardOnChangeType.highLightCard) {
-          if (this.hightLightControler.timeOut)
-            clearTimeout(this.hightLightControler.timeOut);
+          if (this.highLightController.timeOut)
+            clearTimeout(this.highLightController.timeOut);
           if (typeof value == "object" && value.length > 0) {
             const cardLabelList = this.gridList.map((card: gridCellTemplate) => {
               return card.label;
             });
-            this.hightLightControler.show = true;
+            this.highLightController.show = true;
             value.map((cardLabel) => {
               if (
                 cardLabelList.indexOf(cardLabel) > -1 &&
-                this.hightLightComponentsList.indexOf(cardLabel) == -1
+                this.highLightComponentsList.indexOf(cardLabel) == -1
               )
-                this.hightLightComponentsList.push(cardLabel);
+                this.highLightComponentsList.push(cardLabel);
             });
           } else {
-            this.hightLightComponentsList = [];
+            this.highLightComponentsList = [];
             const that = this;
-            this.hightLightControler.timeOut = setTimeout(() => {
-              that.hightLightControler.show = false;
+            this.highLightController.timeOut = setTimeout(() => {
+              that.highLightController.show = false;
             }, 300);
           }
         } else if (type == cardOnChangeType.cardEdit) {
@@ -533,7 +533,7 @@ export default defineComponent({
           style = {
             maxWidth: "10000px",
             zIndex:
-              this.hightLightComponentsList.indexOf(gridCell.label) > -1
+              this.highLightComponentsList.indexOf(gridCell.label) > -1
                 ? "20001"
                 : "100",
             opacity: "1",

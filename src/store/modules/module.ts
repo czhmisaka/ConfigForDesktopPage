@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-07 16:35:12
+ * @LastEditTime: 2024-04-26 01:17:32
  * @FilePath: /ConfigForDesktopPage/src/store/modules/module.ts
  */
 import { defineStore } from "pinia";
@@ -273,6 +273,7 @@ export const moduleStore = defineStore({
             : baseModuleRouterList.push(route);
         });
       });
+      console.log(moduleList,'模块')
       this.routerBackup = baseModuleRouterList;
     },
 
