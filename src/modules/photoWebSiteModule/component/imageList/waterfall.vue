@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-24 03:36:27
+ * @LastEditTime: 2024-05-26 23:43:06
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -24,57 +24,30 @@
             .reduce((a, b) => a + b)
         }}
       </div> -->
-      <div
-        :id="'scroll_' + MathRandom"
-        :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'"
-      >
-        <div
-          class="row"
-          v-for="(imgList, rowIndex) in rowList"
-          :style="{ height: row.height + 40 + 'px' }"
-        >
-          <waterFallItem
-            v-for="(item, colIndex) in imgList"
-            :url="item.url"
-            :width="item.width - row.margin * 2"
-            :height="row.height"
-            :item="item"
-            :cusStyle="{
+      <div :id="'scroll_' + MathRandom" :class="nowShowType == showType.waterFall ? 'active' : 'hideIn'">
+        <div class="row" v-for="(imgList, rowIndex) in rowList" :style="{ height: row.height + 40 + 'px' }">
+          <waterFallItem v-for="(item, colIndex) in imgList" :url="item.url" :width="item.width - row.margin * 2"
+            :height="row.height" :item="item" :cusStyle="{
               margin: row.margin + 'px',
-            }"
-            :class="
-              selected.id == item.id || selecteds.map((x) => x.id).indexOf(item.id) > -1
-                ? ' normal selectedIn'
-                : 'normal'
-            "
-            @click="
-              selected.id == item.id
-                ? (nowShowType = showType.list)
-                : setImage(item, rowIndex, colIndex)
-            "
-            @mouseover="setImages(item)"
-            @dblclick="nowShowType = showType.list"
-            :noPreview="true"
-          ></waterFallItem>
+            }" :class="selected.id == item.id || selecteds.map((x) => x.id).indexOf(item.id) > -1
+  ? ' normal selectedIn'
+  : 'normal'
+  " @click="
+    selected.id == item.id
+      ? (nowShowType = showType.list)
+      : setImage(item, rowIndex, colIndex)
+    " @mouseover="setImages(item)" @dblclick="nowShowType = showType.list" :noPreview="true"></waterFallItem>
         </div>
       </div>
-      <div
-        :class="nowShowType == showType.list ? 'active' : 'hideIn'"
-        @click="nowShowType = showType.waterFall"
-      >
-        <waterFallItem
-          :cusStyle="{
-            position: 'absolute',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            left: '0%',
-            height: 'calc(100% - 100px)',
-          }"
-          :fit="'contain'"
-          :url="`/imageserver/` + selected?.data?.origin?.path"
-          :item="selected.data"
-          :noPreview="true"
-        ></waterFallItem>
+      <div :class="nowShowType == showType.list ? 'active' : 'hideIn'" @click="nowShowType = showType.waterFall">
+        <waterFallItem :cusStyle="{
+          position: 'absolute',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          left: '0%',
+          height: 'calc(100% - 100px)',
+        }" :fit="'contain'" :url="`/imageserver/` + selected?.data?.origin?.path" :item="selected.data"
+          :noPreview="true"></waterFallItem>
       </div>
     </div>
   </cardBg>
@@ -172,11 +145,16 @@ export default defineComponent({
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "watchKey", "imageList", "getFunc", "startSearch"],
+  props: ["baseData", "sizeUnit", "watchKey", "imageList", "getFunc", "startSearch", 'rowHeight'],
   components: { cardBg, waterFallItem },
   watch: {
     nowShowType(val: showType) {
       if (val == showType.waterFall) fuckk(this);
+    },
+    rowHeight: {
+      handler: function (val) {
+        this.row.height = val
+      }
     },
     baseData: {
       handler: async function (val) {
@@ -393,6 +371,8 @@ export default defineComponent({
     },
 
     async getImgList(val = getBaseDataByWatchKey(this.baseData, this.watchKey)) {
+      this.row.height = this.rowHeight
+      // console.log(this.row.height,this.rowHeight,'rowHeight')
       const that = this;
       if (that.isLoading) return null;
       if (!val) return null;
@@ -507,6 +487,7 @@ export default defineComponent({
     top: 0px;
     left: 0px;
   }
+
   .hideIn {
     opacity: 0.2;
     width: 100%;
@@ -518,14 +499,17 @@ export default defineComponent({
     z-index: -1;
   }
 }
+
 #waterfall {
   min-height: 100%;
 }
+
 .row {
   width: 100%;
   display: flex;
   justify-content: flex-start;
 }
+
 .selectedIn {
   box-shadow: 0px 0px 2.5px rgba(9, 13, 255, 0.812), 0px 0px 2.7px rgba(9, 13, 255, 0.922),
     0px 0px 2.6px rgba(9, 13, 255, 0.934), 0px 0px 2.3px rgba(9, 13, 255, 0.906),
@@ -533,6 +517,7 @@ export default defineComponent({
     0px 0px 1.4px rgba(9, 13, 255, 0.794), 0px 0px 1.3px rgba(9, 13, 255, 0.797),
     0px 0px 1.5px rgba(9, 13, 255, 0.852), 0px 0px 4px rgba(9, 13, 255, 1);
 }
+
 .normal {
   transition: all 0.1s;
   border-radius: 2px;
@@ -544,6 +529,7 @@ export default defineComponent({
     transform: translateX(-30px);
     backdrop-filter: blur(10px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0px);
@@ -556,6 +542,7 @@ export default defineComponent({
     transform: translateX(0px);
     display: block;
   }
+
   100% {
     opacity: 0;
     transform: translateX(30px);

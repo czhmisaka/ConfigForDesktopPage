@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-25 22:38:30
+ * @LastEditTime: 2024-05-26 23:33:44
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -22,7 +22,7 @@ import { useCartHook } from "@/store/modules/cart";
 import axios from "axios";
 import FileSaver from "file-saver";
 import JSZip from "jszip";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import {
   changeCardProperties,
   changeVisible,
@@ -72,26 +72,25 @@ function download(currentChooseImgList, that: any) {
   }
   changeVisible(that, { loadingProgress: true });
   changeCardProperties(that, { loadingProgress: { percentage: 0 } });
-  Promise.all(promises)
-    .then(() => {
-      zip.generateAsync({ type: "blob" }).then((content) => {
-        // 生成二进制流
-        FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
-        changeCardProperties(that, {
-          loadingProgress: { percentage: 100 },
-        });
-        ElMessage.success("图片下载完成");
-        changeVisible(that, { loadingProgress: false });
-        setTimeout(() => {
-          changeCardProperties(that, {
-            loadingProgress: { percentage: 0 },
-          });
-        }, 299);
+  Promise.all(promises).then(() => {
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      // 生成二进制流
+      FileSaver.saveAs(content, "图片"); // 利用file-saver保存文件  自定义文件名
+      changeCardProperties(that, {
+        loadingProgress: { percentage: 100 },
       });
-    })
-    .catch((res) => {
-      ElMessage.warning("文件下载失败!");
+      ElMessage.success("图片下载完成");
+      changeVisible(that, { loadingProgress: false });
+      setTimeout(() => {
+        changeCardProperties(that, {
+          loadingProgress: { percentage: 0 },
+        });
+      }, 299);
     });
+  });
+  // .catch((res) => {
+  //   ElMessage.warning("文件下载失败!");
+  // });
 }
 
 const 提交 = btnMaker("确定", btnActionTemplate.Function, {
@@ -331,7 +330,37 @@ export const 下载多张 = btnMaker("下载", btnActionTemplate.Function, {
   },
 });
 
+export const 打包成册 = btnMaker("打包成册", btnActionTemplate.Function, {
+  icon: "Files",
+  elType: "primary",
+  isShow: (data) => {
+    return data && data["length"] && data["length"] > 0;
+  },
+  function: async (that, data) => {
+    ElMessageBox.prompt("输入主题", "Tip", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+    }).then(async ({ value }) => {
+      let res1 = await piwigoMethod({
+        method: "pwg.collections.create",
+        name: value,
+      });
+      console.log(res1);
+      let res = await piwigoMethod({
+        method: "pwg.collections.addImages",
+        col_id: res1.result.id,
+        image_ids: data.id ? [data.id] : data.map((x) => x.id),
+      });
+      if (res["message"] == "成功" || res["stat"] == "ok") {
+        that.$message.success(res["message"] || "操作成功");
+        that.close(true);
+      }
+    });
+  },
+});
+
 export const InfoCardBtnList = [
+  打包成册,
   收藏按钮,
   添加标签按钮,
   添加到处理区,

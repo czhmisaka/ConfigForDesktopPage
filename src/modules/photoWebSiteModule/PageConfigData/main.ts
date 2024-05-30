@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2023-10-16 21:13:16
+ * @LastEditTime: 2024-05-26 23:43:13
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -63,6 +63,7 @@ export const getFunc = async function (that, data) {
       file_size_max,
       file_size_min,
       color,
+      colorRange
     } = data.query;
     let colors = color
       .replace("rgb(", "")
@@ -105,6 +106,7 @@ export const getFunc = async function (that, data) {
       colorR: colors[0],
       colorG: colors[1],
       colorB: colors[2],
+      colorRange,
       date_available_start: data?.date_available_start,
       date_available_end: data?.date_available_end,
     });
@@ -125,6 +127,7 @@ export const getFunc = async function (that, data) {
       height_min,
       height_max,
       color,
+      colorRange,
     } = query;
     if (!color) {
       let res = await post(
@@ -390,6 +393,7 @@ export const mainDesktop = async () => {
       },
       {
         props: {
+          rowHeight:100,
           watchKey: ["category", "collection", "query"],
           getFunc: getFunc,
         },
