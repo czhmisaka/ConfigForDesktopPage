@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-27 13:38:11
+ * @LastEditTime: 2024-05-30 21:37:43
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -23,7 +23,7 @@ import {
   changeCardPosition,
   changeCardProperties,
 } from "@/components/basicComponents/grid/module/cardApi/index";
-import { get, post} from "@/utils/api/requests";
+import { get, post } from "@/utils/api/requests";
 import { ITEM_RENDER_EVT } from "element-plus/es/components/virtual-list/src/defaults";
 import { xor } from "lodash";
 import { openDrawerFormEasy } from "../../userManage/component/searchTable/drawerForm";
@@ -128,28 +128,22 @@ export const getFunc = async function (that, data) {
     } = query;
     if (!color) {
       let res = await post(
-        `/images?offset=${offset}&limit=${limit}${
-          Object.keys(query).length == 0 && category?.id
-            ? "&catrgory=" + category?.id
-            : ""
-        }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}${
-          file_size_max ? "&file_size_max=" + file_size_max : ""
-        }${
-          date_available_start
-            ? "&date_available_start=" + date_available_start
-            : ""
-        }${file_size_min ? "&file_size_min=" + file_size_min : ""}${
-          date_available_end
-            ? "&date_available_end=" +
-              new Date(date_available_end[1]).toLocaleString() +
-              "&date_available_start=" +
-              new Date(date_available_end[0]).toLocaleString()
-            : ""
+        `/images?offset=${offset}&limit=${limit}${Object.keys(query).length == 0 && category?.id
+          ? "&catrgory=" + category?.id
+          : ""
+        }${tags ? "&tags=" + tags : ""}${name ? "&name=" + name : ""}${file_size_max ? "&file_size_max=" + file_size_max : ""
+        }${date_available_start
+          ? "&date_available_start=" + date_available_start
+          : ""
+        }${file_size_min ? "&file_size_min=" + file_size_min : ""}${date_available_end
+          ? "&date_available_end=" +
+          new Date(date_available_end[1]).toLocaleString() +
+          "&date_available_start=" +
+          new Date(date_available_end[0]).toLocaleString()
+          : ""
         }
-      ${width_min ? "&width_min=" + width_min : ""}${
-          width_max ? "&width_max=" + width_max : ""
-        }${height_min ? "&height_min=" + height_min : ""}${
-          height_max ? "&height_max=" + height_max : ""
+      ${width_min ? "&width_min=" + width_min : ""}${width_max ? "&width_max=" + width_max : ""
+        }${height_min ? "&height_min=" + height_min : ""}${height_max ? "&height_max=" + height_max : ""
         }`,
         []
       );
@@ -161,7 +155,7 @@ export const getFunc = async function (that, data) {
   const getCollection = async (data) => {
     console.log("asdqwefuck");
     let { limit, offset, query } = data;
-    let resp = await post('/piwigo',{
+    let resp = await post('/piwigo', {
       col_id: data["collection"].id,
       method: "pwg.collections.getImages",
       per_page: limit,
@@ -219,16 +213,34 @@ export const getFunc = async function (that, data) {
 };
 
 export const mainDesktop = async () => {
-  // let res = await post('/piwigo',{
-  //   method: "pwg.tags.getAdminList",
-  // });
-  // let tagList = res.result.tags.map((x) => {
-  //   return {
-  //     ...x,
-  //     label: x.name,
-  //   };
-  // });
+  const photoInfoStorage = new SearchCellStorage([
+
+  ])
   return [
+    gridCellMaker('searchTable', 'searchTable', {}, {
+      name: "userManage_searchTable",
+      type: cardComponentType.componentList,
+    }, {
+      props: {
+        searchItemTemplate: [],
+        showItemTemplate: photoInfoStorage.getAll([
+          "id",
+          "createTime",
+          "updateTime",
+        ]),
+        searchFunc: async (query, that) => {
+          let res = await post("/admin/picture/pictureInfo/search", {});
+          return res.data;
+        },
+        defaultQuery: {
+          showLink: null,
+        },
+        btnList: [],
+        autoSearch: false,
+        modeChange: true,
+        isCard: false,
+      }
+    }).setPosition(0, 1).setSize(12, 12),
     gridCellMaker(
       "upload",
       "上传",
@@ -239,8 +251,8 @@ export const mainDesktop = async () => {
       },
       {}
     )
-      .setPosition(0, 10)
-      .setSize(2, 2),
+      .setPosition(0, 0)
+      .setSize(1, 1),
 
     // gridCellMaker(
     //   "categoryList",

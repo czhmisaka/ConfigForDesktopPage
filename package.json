@@ -29,7 +29,7 @@
         "@vueuse/core": "^9.4.0",
         "@vueuse/motion": "^2.0.0-beta.12",
         "@vueuse/shared": "^9.4.0",
-        "@wangeditor/editor-for-vue": "^5.1.12",
+        "@wangeditor/editor-for-vue": "5.1.12",
         "3d-force-graph": "^1.72.2",
         "animate.css": "^4.1.1",
         "axios": "^1.1.3",

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-01-27 21:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-20 21:01:56
+ * @LastEditTime: 2024-05-30 19:23:04
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotGridCell/gridLightControl.vue
 -->
 <template>
@@ -44,7 +44,6 @@ import { defineComponent } from 'vue'
 import cardBg from '@/components/basicComponents/cell/card/cardBg.vue';
 import { ElDivider, ElUpload, ElButton } from 'element-plus';
 import { pushData } from './iotGridCell';
-import { Toolbar } from '@wangeditor/editor-for-vue';
 
 export default defineComponent({
     componentInfo: {

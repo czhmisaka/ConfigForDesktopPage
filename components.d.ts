@@ -79,7 +79,7 @@ declare module '@vue/runtime-core' {
     GridItem: typeof import('./src/components/basicComponents/grid/GridLayout/GridItem.vue')['default']
     GridLayout: typeof import('./src/components/basicComponents/grid/GridLayout/GridLayout.vue')['default']
     Header: typeof import('./src/components/header/header.vue')['default']
-    Icon: typeof import('./src/components/ReIcon/src/icon.vue')['default']
+    Icon: typeof import('./src/components/basicComponents/cell/icon/icon.vue')['default']
     IconCell: typeof import('./src/components/basicComponents/cell/icon/iconCell.vue')['default']
     Iframe: typeof import('./src/components/basicComponents/cell/info/iframe.vue')['default']
     InfoCard: typeof import('./src/components/basicComponents/cell/info/infoCard.vue')['default']
@@ -98,7 +98,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TableCell: typeof import('./src/components/basicComponents/cell/table/tableCell.vue')['default']
-    TableList: typeof import('./src/components/basicComponents/list/table/tableList.vue')['default']
+    TableList: typeof import('./src/components/basicComponents/lowCodeLocalStorage/tableControler/tableList.vue')['default']
   }
 }
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-26 01:26:13
+ * @LastEditTime: 2024-05-30 22:19:08
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
  */
 
@@ -13,9 +13,33 @@ import { PageConfig as ManageOnlyPageConfig } from "./managerOnly";
 import { chosSearch, chosSearchMobile } from "./chosSearch";
 // import { myPicture } from "./myPicture";
 import { desktopDataTemplate } from '../../userManage/types';
+import { PictureListManage } from "./managerOnly/pictureListManage";
+import { CategoryManage } from "./managerOnly/newCategoryManage";
 
 
 const pageConfig = {
+  categoryManage:{
+    name: "相册管理",
+    desktopData: CategoryManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink:true,
+      wholeScreen: true,
+      maxRows: 12,
+      margin: 6,
+    },
+  },
+  pictureListManage:{
+    name: "图片管理",
+    desktopData: PictureListManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink:true,
+      wholeScreen: true,
+      maxRows: 12,
+      margin: 6,
+    },
+  },
   main: {
     name: "图库",
     desktopData: mainDesktop,

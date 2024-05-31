@@ -1,83 +1,82 @@
 <!--
  * @Date: 2023-03-20 14:36:17
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-16 23:24:58
+ * @LastEditTime: 2024-05-30 19:23:36
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/baseToolComponents/editor.vue
 -->
 <script setup lang="ts">
-import "@wangeditor/editor/dist/css/style.css"; // 引入 css
-import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
-import { onBeforeUnmount, ref, shallowRef, onMounted, watchEffect } from "vue";
-import Edit from "@iconify-icons/ep/edit";
-import { getDownLoadRequestHeaders } from "@/utils/api/user/header";
-import { loadEnv } from "@build/index";
-import { getPreUrl } from "@/utils/api/requests";
-import { nextTick } from "process";
+// import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+// import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+// import { onBeforeUnmount, ref, shallowRef, onMounted, watchEffect } from "vue";
+// import Edit from "@iconify-icons/ep/edit";
+// import { getDownLoadRequestHeaders } from "@/utils/api/user/header";
+// import { loadEnv } from "@build/index";
+// import { getPreUrl } from "@/utils/api/requests";
+// import { nextTick } from "process";
 
-defineOptions({
-  name: "Editor",
-});
-const mode = "default";
-// 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef();
-// 内容 HTML
-const valueHtml = ref("");
-const toolbarConfig: any = { excludeKeys: "fullScreen" };
-const editorConfig = {
-  placeholder: "请输入内容...",
-} as { [key: string]: any };
-editorConfig["MENU_CONF"] = {};
-editorConfig["MENU_CONF"]["uploadImage"] = {
-  fieldName: "file",
-  server: getPreUrl() + "/web/sys/file/upload",
-  headers: {
-    ...getDownLoadRequestHeaders(),
-  },
-  data: {
-    returnPath: true,
-  },
-  customInsert(res: any, insertFn: any) {
-    if (res.data) insertFn(res.data, "", res.data);
-  },
-};
-const props = defineProps({
-  modelValue: {
-    type: String,
-    default: "",
-  },
-});
-onMounted(() => {
-  if (props.modelValue) {
-    const editor = editorRef.value;
-    editor && editor.setHtml(props.modelValue);
-  }
-});
-// 组件销毁时，也及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value;
-  if (editor == null) return;
-  editor.destroy();
-});
+// defineOptions({
+//   name: "Editor",
+// });
+// const mode = "default";
+// // 编辑器实例，必须用 shallowRef
+// const editorRef = shallowRef();
+// // 内容 HTML
+// const valueHtml = ref("");
+// const toolbarConfig: any = { excludeKeys: "fullScreen" };
+// const editorConfig = {
+//   placeholder: "请输入内容...",
+// } as { [key: string]: any };
+// editorConfig["MENU_CONF"] = {};
+// editorConfig["MENU_CONF"]["uploadImage"] = {
+//   fieldName: "file",
+//   server: getPreUrl() + "/web/sys/file/upload",
+//   headers: {
+//     ...getDownLoadRequestHeaders(),
+//   },
+//   data: {
+//     returnPath: true,
+//   },
+//   customInsert(res: any, insertFn: any) {
+//     if (res.data) insertFn(res.data, "", res.data);
+//   },
+// };
+// const props = defineProps({
+//   modelValue: {
+//     type: String,
+//     default: "",
+//   },
+// });
+// onMounted(() => {
+//   if (props.modelValue) {
+//     const editor = editorRef.value;
+//     editor && editor.setHtml(props.modelValue);
+//   }
+// });
+// // 组件销毁时，也及时销毁编辑器
+// onBeforeUnmount(() => {
+//   const editor = editorRef.value;
+//   if (editor == null) return;
+//   editor.destroy();
+// });
 
-watchEffect(() => {
-  const editor = editorRef.value;
-  if (!editor) return;
-  if (props.modelValue) editor.setHtml(props.modelValue);
-  else editor.setHtml(" ");
-});
-const handleCreated = (editor) => {
-  editorRef.value = editor; // 记录 editor 实例，重要！
-};
+// watchEffect(() => {
+//   const editor = editorRef.value;
+//   if (!editor) return;
+//   if (props.modelValue) editor.setHtml(props.modelValue);
+//   else editor.setHtml(" ");
+// });
+// const handleCreated = (editor) => {
+//   editorRef.value = editor; // 记录 editor 实例，重要！
+// };
 
-const emit = defineEmits(["update:modelValue"]);
-const handleChange = (editor) => {
-  emit("update:modelValue", editor.getHtml());
-};
+// const emit = defineEmits(["update:modelValue"]);
+// const handleChange = (editor) => {
+//   emit("update:modelValue", editor.getHtml());
+// };
 </script>
 
 <template>
-  <cardBg
+  <!-- <cardBg
     :cus-style="{
       width: 'calc(100% - 12px)',
     }"
@@ -101,7 +100,7 @@ const handleChange = (editor) => {
       </div>
       
     </div>
-  </cardBg>
+  </cardBg> -->
 </template>
 <style>
 .wangeditor {
