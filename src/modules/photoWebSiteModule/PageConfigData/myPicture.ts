@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-06-20 16:46:31
  * @LastEditors: CZH
- * @LastEditTime: 2023-08-09 00:25:58
+ * @LastEditTime: 2024-06-03 00:09:04
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/myPicture.ts
  */
 import {
@@ -10,7 +10,7 @@ import {
   gridCellMaker,
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
-import { InfoCardBtnList, 批量下载, 移出处理区 } from "./InfoCardBtnList";
+import { InfoCardBtnList, 打包成册, 批量下载, 移出处理区 } from "./InfoCardBtnList";
 import { piwigoMethod, post } from "@/utils/api/requests";
 import { useCartHook } from "@/store/modules/cart";
 import { setPosition } from "@/components/basicComponents/grid/module/util";
@@ -82,6 +82,7 @@ export const myPicture = async () => {
       },
       {
         props: {
+          rowHeight:100,
           watchKey: ["category", "collection", "query"],
           startSearch: true,
           getFunc: async (that, data) => {
@@ -142,7 +143,7 @@ export const myPicture = async () => {
       },
       {
         props: {
-          btnList: [移出处理区, 批量下载, 批量删除, 删除],
+          btnList: [打包成册,移出处理区, 批量下载, 批量删除, 删除],
           watchKeyForCategory: "category",
         },
       }

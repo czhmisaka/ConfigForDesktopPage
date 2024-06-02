@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2024-05-26 23:33:44
+ * @LastEditTime: 2024-06-02 23:20:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
