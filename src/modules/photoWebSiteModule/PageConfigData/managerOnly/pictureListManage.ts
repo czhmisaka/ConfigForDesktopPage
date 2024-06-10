@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-05-30 21:36:02
+ * @LastEditTime: 2024-06-11 00:28:41
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/pictureListManage.ts
  */
 
@@ -66,19 +66,19 @@ export const PictureListManage = async () => {
                 modeChange: true,
                 isCard: false,
             }
-        }).setPosition(0, 1).setSize(12, 11),
-        gridCellMaker(
-            "upload",
-            "上传",
-            {},
-            {
-                type: cardComponentType.componentList,
-                name: "photoWebSiteModule_upload",
-            },
-            {}
-        )
-            .setPosition(0, 0)
-            .setSize(1, 1),
+        }).setPosition(0, 0).setSize(12, 12),
+        // gridCellMaker(
+        //     "upload",
+        //     "上传",
+        //     {},
+        //     {
+        //         type: cardComponentType.componentList,
+        //         name: "photoWebSiteModule_upload",
+        //     },
+        //     {}
+        // )
+        //     .setPosition(0, 0)
+        //     .setSize(1, 1),
 
     ] as gridCellTemplate[];
 };

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-04 08:44:53
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-22 13:56:23
+ * @LastEditTime: 2024-06-11 00:27:29
  * @FilePath: /ConfigForDesktopPage/src/utils/api/admin/routes.ts
  */
 import { useModuleHook } from "@/store/modules/module";
@@ -30,6 +30,9 @@ export const getAsyncRoutes = async (noRefresh: boolean = false) => {
         return x.routers[0].children.length > 0 ? x.routers[0] : false;
       })
       .filter(Boolean);
+      moduleList.sort((a, b) => {
+          return  b.name.indexOf('photo') - a.name.indexOf('photo') 
+      })
     moduleList = moduleList.map((module) => {
       return {
         ...module,

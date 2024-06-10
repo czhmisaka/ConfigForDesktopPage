@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-10 23:39:03
+ * @LastEditTime: 2024-06-11 00:31:58
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
@@ -129,6 +129,8 @@ export const getFunc = async function (that, data) {
     } = query;
     // if (!color) {
     let searchData = {
+      pageSize: limit,
+      pageNumber: offset
     } as stringAnyObj
     if (category) {
       searchData = {
