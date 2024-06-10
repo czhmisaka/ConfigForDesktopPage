@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-01-22 18:59:01
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-22 22:41:55
+ * @LastEditTime: 2024-06-09 20:44:17
  * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
  */
 
@@ -120,7 +120,7 @@ request.interceptors.response.use(
       const nowRoute = route.filter((x) => {
         return (
           window.location.hash.split("#")[1].indexOf(x.path.split("/:")[0]) >
-            -1 && x.path != "/"
+          -1 && x.path != "/"
         );
       })[0];
       if (
@@ -165,7 +165,7 @@ export function post(url: string, data: object) {
 // 聊天专用
 export const chat = async (
   word: string,
-  model: "glm-4" | "glm-3-turbo" = "glm-3-turbo"
+  model: 'glm-4-0520' | 'glm-4 ' | 'glm-4-air' | 'glm-4-airx' | 'glm-4-flash' | 'glm-3-turbo' = 'glm-4-flash'
 ) => {
   const tokenRes = await post("/admin/iot/iot/getChatToken", { word, model });
   return tokenRes;
@@ -267,15 +267,15 @@ export function download(url, filename = "hahahha", params, config = {}) {
   return request
     .post(
       getPreUrl() +
-        url +
-        (url == "/cult/sysFile/download"
-          ? "?" +
-            Object.keys(params)
-              .map((x) => {
-                return x + "=" + params[x];
-              })
-              .join("&")
-          : ""),
+      url +
+      (url == "/cult/sysFile/download"
+        ? "?" +
+        Object.keys(params)
+          .map((x) => {
+            return x + "=" + params[x];
+          })
+          .join("&")
+        : ""),
       params,
       {
         ...(data as stringAnyObj),
@@ -309,15 +309,15 @@ export function previewFile(url, params, config = {}) {
   };
   return request.get(
     getPreUrl() +
-      url +
-      (url == "/cult/sysFile/download"
-        ? "?" +
-          Object.keys(params)
-            .map((x) => {
-              return x + "=" + params[x];
-            })
-            .join("&")
-        : ""),
+    url +
+    (url == "/cult/sysFile/download"
+      ? "?" +
+      Object.keys(params)
+        .map((x) => {
+          return x + "=" + params[x];
+        })
+        .join("&")
+      : ""),
     {
       ...(data as stringAnyObj),
     }
@@ -335,15 +335,15 @@ export function downloadget(url, filename = "hahahha", params, config = {}) {
   return request
     .get(
       getPreUrl() +
-        url +
-        (url == "/cult/sysFile/download"
-          ? "?" +
-            Object.keys(params)
-              .map((x) => {
-                return x + "=" + params[x];
-              })
-              .join("&")
-          : ""),
+      url +
+      (url == "/cult/sysFile/download"
+        ? "?" +
+        Object.keys(params)
+          .map((x) => {
+            return x + "=" + params[x];
+          })
+          .join("&")
+        : ""),
       {
         ...(data as stringAnyObj),
       }

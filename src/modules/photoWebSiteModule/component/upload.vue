@@ -1,14 +1,17 @@
 <!--
  * @Date: 2022-10-20 21:59:36
  * @LastEditors: CZH
- * @LastEditTime: 2024-05-14 22:14:24
+ * @LastEditTime: 2024-06-11 00:23:29
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/upload.vue
 -->
 <template>
   <cardBg>
+    <!-- 
+        :data="{ ...data, ...optionsData, categoryId: baseData?.category?.id }" 
+     -->
     <div class="box">
       <el-upload style="width:100%;height;100%" v-model:file-list="fileList" :on-change="handleChange" :auto-upload="true"
-        :data="data" :action="action" :on-success="success" multiple :headers="headers">
+        :show-file-list="false" :action="action" :on-success="success" multiple :headers="headers">
         <el-button :icon="Upload" circle size="large" class="center"> </el-button>
       </el-upload>
     </div>
@@ -52,18 +55,20 @@ export default defineComponent({
   baseProps: {},
 
   components: { cardBg },
-  props: ["action", "sizeUnit", "onClickFunc", "tips", "detail", "baseData"],
+  props: ["action", "sizeUnit", "onClickFunc", "tips", "detail", "baseData", 'optionsData'],
   data() {
     return {
       Upload,
       fileList: [],
-      data: { },
+      data: {
+
+      },
       timeCheckToRestore: null,
       action: getPreUrl() + '/admin/picture/pictureInfo/upload',
       // action:getPreUrl()+'/admin/base/comm/upload',
       headers: {
         ...getHeaders(),
-        'Content-Type':'multipart/form-data; boundary=----WebKitFormBoundary6gdw9ktqWd9RaXF9' 
+        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary6gdw9ktqWd9RaXF9'
       }
     };
   },
@@ -73,7 +78,11 @@ export default defineComponent({
 
   methods: {
     async success(e) {
-      ElMessage.success("上传成功" + JSON.stringify(e));
+      const category = this.baseData.category
+      let res = await post('/admin/picture/categories/addPicture', {
+        pictureIds: [e.data.id],
+        categoryId: category.id
+      })
       if (this.timeCheckToRestore) clearTimeout(this.timeCheckToRestore);
     },
 

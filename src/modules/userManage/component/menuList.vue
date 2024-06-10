@@ -1,15 +1,15 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2023-11-29 17:32:09
- * @FilePath: /lcdp_fe_setup/src/modules/userManage/component/menuList.vue
+ * @LastEditTime: 2024-06-09 21:18:13
+ * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
   <cardBg :cusStyle="{
     padding: '12px',
   }">
     <div :class="`menuBox box_${random}`">
-      <div class="searchBar">
+      <div class="searchBar" v-if="searchBtn">
         <el-input :style="{
           width: '100%',
           marginRight: searchBtn || selectedKey != '' ? '6px' : '',

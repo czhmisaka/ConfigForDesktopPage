@@ -10,7 +10,6 @@ import {
   iotEventTemplate,
   iotEventTriggerTypeObject,
 } from "@/modules/moduleTower/types";
-import { ai表单填写 } from "@/modules/taskList/config/AiForm";
 import {
   eventCenterCell,
   eventTriggerType,

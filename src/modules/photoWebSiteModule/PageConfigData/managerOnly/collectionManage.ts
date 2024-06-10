@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-21 01:06:06
+ * @LastEditTime: 2024-06-09 22:05:33
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/collectionManage.ts
  */
 import {
@@ -34,7 +34,7 @@ import { ElMessage } from "element-plus";
 
 const categorysStorage = new SearchCellStorage([
   tableCellTemplateMaker("收藏夹名", "name"),
-  tableCellTemplateMaker("描述", "comment"),
+  tableCellTemplateMaker("描述", "description"),
   tableCellTemplateMaker("图片数量", "nb_images"),
   tableCellTemplateMaker("所有者", "username"),
   tableCellTemplateMaker("最近编辑时间", "date_creation"),
@@ -64,16 +64,17 @@ export const 新增收藏夹 = btnMaker("新增收藏夹", btnActionTemplate.Fun
   function: async (that, data) => {
     const submit = btnMaker("提交", btnActionTemplate.Function, {
       function: async (that, data) => {
-        let res = await post('/piwigo',{
-          method: "pwg.collections.create",
-          ...data,
-        });
+        let res = await post('/admin/picture/categories/add',data)
+        // let res = await post('/piwigo',{
+        //   method: "pwg.collections.create",
+        //   ...data,
+        // });
         repBackMessageShow(that, res);
       },
     });
     openDrawerFormEasy(that, {
       title: "新增收藏夹",
-      queryItemTemplate: categorysStorage.getByKeyArr(["name", "comment"]),
+      queryItemTemplate: categorysStorage.getByKeyArr(["name", "description"]),
       btnList: [submit],
     });
   },

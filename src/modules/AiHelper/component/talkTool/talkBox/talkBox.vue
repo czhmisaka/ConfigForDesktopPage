@@ -2,7 +2,7 @@ import { Development } from '../../wholeScreen/TJJHighEnergyLevelWholeScreen/dat
 <!--
  * @Date: 2024-03-25 15:24:36
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-23 19:42:27
+ * @LastEditTime: 2024-06-09 21:12:09
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/talkTool/talkBox/talkBox.vue
 -->
 
@@ -149,7 +149,7 @@ export default defineComponent({
 		},
 
 		async getAiChatBackOnce(userTalk: TalkCellTemplate) {
-			let res = await chat(await useAbleWord(true) + userTalk.content,'glm-4')
+			let res = await chat(await useAbleWord(true) + userTalk.content,'glm-4-flash')
 			let backWord = res.data.choices[0].message.content
 			let data = {} as any
 			const that = this
