@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-21 01:42:28
+ * @LastEditTime: 2024-06-16 22:59:41
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
  */
 import {
@@ -20,7 +20,7 @@ import {
   tableCellTemplateMaker,
 } from "@/modules/userManage/component/searchTable/searchTable";
 import { searchCell } from "@/modules/userManage/component/searchTable/searchTable";
-import { post} from "@/utils/api/requests";
+import { post } from "@/utils/api/requests";
 import { openDrawerFormEasy } from "@/modules/userManage/component/searchTable/drawerForm";
 import { SearchCellStorage } from "../../../userManage/component/searchTable/searchTable";
 import { dobuleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
@@ -32,12 +32,14 @@ import {
   gridCellTemplate,
 } from "@/components/basicComponents/grid/module/dataTemplate";
 import { ElMessage } from "element-plus";
+import { transformDataFromCool } from "./newCategoryManage";
 
 export const tagManage = async () => {
   const tagsStorage = new SearchCellStorage([
     tableCellTemplateMaker("标签名", "name"),
-    tableCellTemplateMaker("图片数量", "counter"),
-    tableCellTemplateMaker("最近编辑时间", "lastmodified"),
+    tableCellTemplateMaker('简介', 'description'),
+    // tableCellTemplateMaker("图片数量", "counter"),
+    tableCellTemplateMaker("最近编辑时间", "updateTime"),
   ]);
 
   const 查看图片 = btnMaker("查看图片", btnActionTemplate.Function, {
@@ -46,20 +48,10 @@ export const tagManage = async () => {
     function: async (that, dataa) => {
       const getFunc = async (that, data) => {
         let { limit, offset } = data;
-        let tags = dataa.id;
-        let res = await post(
-          `/images?offset=${offset}&limit=${limit}${
-            tags ? "&tags=" + tags : ""
-          }`,
-          []
-        );
-        return res.data.list.map((x) => {
-          let path = x.path.replace("./", "/");
-          return {
-            ...x,
-            url: `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
-          };
-        });
+        let res = await post('/admin/picture/pictureInfo/search', {
+          tags:[dataa.id]
+        })
+        return res.data.list
       };
       let drawerProps = {
         gridDesktop: true,
@@ -100,15 +92,14 @@ export const tagManage = async () => {
     icon: "Plus",
     drawerProps: {
       title: "添加标签",
-      queryItemTemplate: tagsStorage.getByKeyArr(["name"]),
+      queryItemTemplate: tagsStorage.getByKeyArr(["name", 'description']),
       btnList: [
         btnMaker("提交", btnActionTemplate.Function, {
           icon: "Position",
           function: async (that, data) => {
-            let res = await post('/piwigo',{
-              method: "pwg.tags.add",
-              name: data.name,
-            });
+            let res = await post('/admin/picture/tags/add', {
+              ...data
+            })
             repBackMessageShow(that, res);
           },
         }),
@@ -123,10 +114,8 @@ export const tagManage = async () => {
       if (await dobuleCheckBtnMaker("删除标签", data.name).catch(() => false))
         repBackMessageShow(
           that,
-          await post('/piwigo',{
-            method: "pwg.tags.delete",
-            tag_id: data.id,
-            pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
+          await post('/admin/picture/tags/delete', {
+            ids: [data.id]
           })
         );
     },
@@ -217,11 +206,11 @@ export const tagManage = async () => {
                   `即将修改标签名称为【${data.newName}】`
                 ).catch((x) => false)
               ) {
-                let res = await post('/piwigo',{
+                let res = await post('/piwigo', {
                   method: "pwg.tags.rename",
                   "pwg_token": (await useUserStoreHook().getOptions())["pwg_token"],
-                  "new_name":data.newName,
-                  "tag_id":data.id,
+                  "new_name": data.newName,
+                  "tag_id": data.id,
                 });
                 repBackMessageShow(that, res);
               }
@@ -232,6 +221,7 @@ export const tagManage = async () => {
       openDrawerFormEasy(that, drawerForm);
     },
   });
+
   tagsStorage.push(
     tableCellTemplateMaker(
       "操作",
@@ -258,14 +248,9 @@ export const tagManage = async () => {
         ).catch(() => false)
       ) {
         let res = {};
-        for (let x in selectedList) {
-          const { id } = selectedList[x];
-          res = await post('/piwigo',{
-            method: "pwg.tags.delete",
-            tag_id: id,
-            pwg_token: (await useUserStoreHook().getOptions())["pwg_token"],
-          });
-        }
+        res = await post('/admin/picture/tags/delete', {
+          ids: selectedList.map(x => x.id)
+        })
         repBackMessageShow(that, res);
       }
     },
@@ -285,21 +270,8 @@ export const tagManage = async () => {
           searchItemTemplate: [tableCellTemplateMaker("关键词", "search")],
           showItemTemplate: tagsStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post('/piwigo',{
-              method: "pwg.tags.getList",
-              // method: "pwg.tags.getAdminList" ,
-              ...query,
-            });
-            return res && res.result
-              ? res.result.tags.filter((x) => {
-                  if (query.search)
-                    return (
-                      x.name.toUpperCase().indexOf(query.search.toUpperCase()) >
-                      -1
-                    );
-                  else return true;
-                })
-              : [];
+            let res = await post('/admin/picture/tags/page', {})
+            return transformDataFromCool(res.data)
           },
           btnList: [添加标签, 批量删除标签],
         },

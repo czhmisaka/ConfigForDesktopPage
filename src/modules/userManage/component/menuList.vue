@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 11:19:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-09 21:18:13
+ * @LastEditTime: 2024-06-16 01:02:42
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/menuList.vue
 -->
 <template>
@@ -212,17 +212,20 @@ export default defineComponent({
      * @param {*} node
      */
     nodeClick(node) {
-      let outputKey = this.outputKey || "menuList_output";
-      let data = {};
       const that = this;
-      data[outputKey] = JSON.parse(JSON.stringify(node));
+      let data = {};
+
+      if (this.outputKey) {
+        let outputKey = this.outputKey;
+        data[outputKey] = JSON.parse(JSON.stringify(node));
+        setData(this, data);
+      }
       if (this.clickItemFunc) {
         this.clickItemFunc(that, node);
       }
       // if (that.expandedKey.indexOf(node.id)) {
       //   that.expandedKey = that.expandedKey.filter((x) => x != node.id);
       // } else that.expandedKey.push(node.id)
-      setData(this, data);
     },
 
     /**

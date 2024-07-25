@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-01 01:04:59
+ * @LastEditTime: 2024-06-29 00:52:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/newCategoryManage.ts
  */
 
@@ -32,6 +32,31 @@ import { btnActionTemplate, drawerProps, formInputType, showType } from "@/modul
 import { SearchCellStorage, actionCell, searchCell, showCell, tableCellTemplateMaker } from "@/modules/userManage/component/searchTable/searchTable";
 import { repBackMessageShow } from "@/modules/userManage/component/searchTable/drawerForm";
 
+
+export const 上级相册 = tableCellTemplateMaker("上级相册", "parent", searchCell(formInputType.treeSelect, {
+    funcInputOptionsLoader: async (that) => {
+        let attr = {
+            props: {
+                isLeaf: "children",
+                label: 'name',
+                value: 'id'
+            },
+            showCheckbox: false,
+            multiple: false,
+            type: "number",
+            nodeKey: "value",
+            checkStrictly: false,
+        };
+        let res = await post("/admin/picture/categories/tree", {});
+        // return topic.triggerTopic;
+        let data = res.data
+        return {
+            ...attr,
+            data,
+        };
+    }
+}))
+
 const Storage = new SearchCellStorage([
     tableCellTemplateMaker('相册名称', 'name', showCell(showType.dataKey, {
         width: '300px'
@@ -42,29 +67,7 @@ const Storage = new SearchCellStorage([
     tableCellTemplateMaker("状态", "status"),
     tableCellTemplateMaker("图片数量", "count"),
     tableCellTemplateMaker("private_user", "private_user"),
-    tableCellTemplateMaker("上级相册", "parent", searchCell(formInputType.treeSelect, {
-        funcInputOptionsLoader: async (that) => {
-            let attr = {
-                props: {
-                    isLeaf: "children",
-                    label: 'name',
-                    value: 'id'
-                },
-                showCheckbox: false,
-                multiple: false,
-                type: "number",
-                nodeKey: "value",
-                checkStrictly: false,
-            };
-            let res = await post("/admin/picture/categories/tree", {});
-            // return topic.triggerTopic;
-            let data = res.data
-            return {
-                ...attr,
-                data,
-            };
-        }
-    })),
+    上级相册,
     tableCellTemplateMaker("创建时间", "createTime"),
     tableCellTemplateMaker("updateTime", "updateTime"),
 ])
@@ -109,7 +112,7 @@ const 批量删除相册 = btnMaker('批量删除相册', btnActionTemplate.Func
     isShow: (data) => {
         return data._selectedList && data._selectedList.length > 0
     },
-    elType:'danger',    
+    elType: 'danger',
     function: async (that, data) => {
         if (await dobuleCheckBtnMaker('批量删除相册', '确认删除选中相册吗？').catch(x => false)) {
             let res = await post("/admin/picture/categories/delete", {
@@ -148,8 +151,6 @@ export const CategoryManage = async () => {
                 searchFunc: async (query, that) => {
                     let res = await post("/admin/picture/categories/tree", {});
                     return res.data;
-                    // let res = await post("/admin/picture/categories/page", {});
-                    // return transformDataFromCool(res.data);
                 },
                 defaultQuery: {
                     showLink: null,

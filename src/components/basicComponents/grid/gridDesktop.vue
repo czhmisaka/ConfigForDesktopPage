@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-26 01:08:26
+ * @LastEditTime: 2024-06-16 14:20:03
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -364,7 +364,8 @@ export default defineComponent({
               ? "组件「" + this.gridList[index].labelNameCN + "」"
               : "桌面组件",
             "请求执行事件<" + type + ">",
-            value
+            value,
+            this.baseData
           );
         else
           console.log(

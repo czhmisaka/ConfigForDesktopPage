@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-24 03:36:27
+ * @LastEditTime: 2024-06-16 00:22:43
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
 -->
 <template>
@@ -71,7 +71,7 @@
             height: 'calc(100% - 100px)',
           }"
           :fit="'contain'"
-          :url="`/imageserver/` + selected?.data?.origin?.path"
+          :url="selected?.data?.url"
           :item="selected.data"
           :noPreview="true"
         ></waterFallItem>

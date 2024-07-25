@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-27 13:18:07
+ * @LastEditTime: 2024-06-16 22:53:06
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cart.ts
  */
 import { defineStore } from "pinia";
@@ -43,48 +43,31 @@ export const cartStore = defineStore({
   actions: {
     // 获取暂存区
     async getCart() {
-      const options = await useUserStoreHook().getOptions();
-      let res = await post("/my/picture", { user_id: options.id });
+      let res = await post("/admin/picture/workSpace/getPictureList", {})
       this.count = res.data.length;
-      this.image_id = res.data.map((x) => x.image_id);
+      this.image_id = res.data.map((x) => x.id);
+      return res.data
     },
 
     // 获取暂存区域的图片列表
-    async getCartImage(offset = 0, limit = 100, image_id = []) {
-      await this.getCart();
-      const options = await useUserStoreHook().getOptions();
-      if (image_id.length == 0)
-        image_id = JSON.parse(JSON.stringify(this.image_id));
-      const res = await post("/my/picture/images", {
-        user_id: options.id,
-        image_id,
-        offset,
-        limit,
-      });
-      return res.data.list.map((x) => {
-        let path = x.path.replace("./", "/");
-        return {
-          ...x,
-          url: `/imageserver/i.php?` + path.replace(".", "-sm.") + "",
-        };
+    async getCartImage(image_id = []) {
+      return (await this.getCart()).filter(x => {
+        return image_id.indexOf(x.id) > -1
       });
     },
 
     // 删除暂存区图片
     async deleteCart(data: string[] = []) {
-      const options = await useUserStoreHook().getOptions();
-      const res = await post("/my/picture/delete", {
-        user_id: options.id,
-        image_id: data,
+      const res = await post("/admin/picture/workSpace/deletePicture", {
+        PictureIds: data,
       });
       await this.getCart();
-      ElMessage.success("删除成功");
+      ElMessage.success("移除成功");
     },
 
     // 清空暂存区的所有图片
     async clearCart() {
-      const options = await useUserStoreHook().getOptions();
-      let res = await post("/my/picture/clear", { user_id: options.id });
+      await post("/admin/picture/workSpace/clear", {})
       await this.getCart();
       ElMessage.success("清空成功");
     },
@@ -97,10 +80,8 @@ export const cartStore = defineStore({
         else return true;
       });
       if (data.length == 0) return ElMessage.error("可存入图片数量为0");
-      const options = await useUserStoreHook().getOptions();
-      let res = await post("/my/picture/add", {
-        user_id: options.id,
-        image_id: data,
+      await post("/admin/picture/workSpace/addPicture", {
+        PictureIds: data
       });
       await this.getCart();
       ElMessage.success(`当前暂存图片数量【${this.count}】`);

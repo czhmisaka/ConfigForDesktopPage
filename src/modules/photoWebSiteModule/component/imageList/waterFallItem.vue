@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-26 09:47:29
  * @LastEditors: CZH
- * @LastEditTime: 2023-03-20 06:57:52
+ * @LastEditTime: 2024-06-16 22:42:46
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterFallItem.vue
 -->
 
@@ -52,12 +52,13 @@ export default defineComponent({
               borderRadius: "3px",
             },
             draggable: false,
-            src: props.url,
+            // src: props.url.replace('http://127.0.0.1:8001', window.location.origin+'/api/'),
+            src: props.width && props.item && props.item.thumbnailUrl ? props.item.thumbnailUrl.replace('http://127.0.0.1:8001', window.location.origin + '/api/') : (props.url || '').replace('http://127.0.0.1:8001', window.location.origin + '/api/'),
             teleported: true,
             fit: props.fit ? props.fit : "cover",
             previewSrcList: props.noPreview
               ? []
-              : [`/imageserver/` + props.item.origin.path],
+              : [props.item.url],
             onLoad: (e) => {
               isLoading.value = false;
               if (load.value) {
@@ -67,49 +68,49 @@ export default defineComponent({
           }),
           !props.noTitle
             ? h(
-                "div",
-                {
-                  style: {
-                    height: "40px",
-                    width: "calc(100% - 12px)",
-                    position: "relative",
-                    marginTop: "-8px",
-                    color: isDark.value ? "white" : "#333",
-                    padding: "0px 6px ",
-                  },
+              "div",
+              {
+                style: {
+                  height: "40px",
+                  width: "calc(100% - 12px)",
+                  position: "relative",
+                  marginTop: "-8px",
+                  color: isDark.value ? "white" : "#333",
+                  padding: "0px 6px ",
                 },
-                [
-                  h(
-                    "div",
-                    {
-                      style: {
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      },
+              },
+              [
+                h(
+                  "div",
+                  {
+                    style: {
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
                     },
-                    props.item.file
-                  ),
-                  h(
-                    "div",
-                    {
-                      style: {
-                        color: "#666",
-                        lineHeight: "12px",
-                        fontSize: "10px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      },
+                  },
+                  props.item.file
+                ),
+                h(
+                  "div",
+                  {
+                    style: {
+                      color: "#666",
+                      lineHeight: "12px",
+                      fontSize: "10px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
                     },
-                    [
-                      props.item?.origin
-                        ? `${props.item.origin.width}px * ${props.item.origin.height}px`
-                        : "",
-                    ]
-                  ),
-                ]
-              )
+                  },
+                  [
+                    props.item?.origin
+                      ? `${props.item.origin.width}px * ${props.item.origin.height}px`
+                      : "",
+                  ]
+                ),
+              ]
+            )
             : [],
         ]
       );

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-09 19:26:59
  * @LastEditors: CZH
- * @LastEditTime: 2024-05-31 00:11:03
+ * @LastEditTime: 2024-06-28 22:44:31
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
  * @FuckToUi: 改这么多图啥呢，又不好看
 -->
@@ -266,7 +266,7 @@ export default defineComponent({
 
   async created() {
     timeConsole.checkTime("searchTable");
-    if (isMobile()!="PC") {
+    if (isMobile() != "PC") {
       console.log('手机模式')
       let data = {}
       data[this.detail.label] = {
@@ -391,7 +391,7 @@ export default defineComponent({
       if (btn.type == btnActionTemplate.OpenDrawer) {
         this.$modules.getModuleApi()["userManage_openDrawerForm"](this, btn.drawerProps);
       } else if (
-        (btn.type == btnActionTemplate.Function) &&
+        (btn.type == btnActionTemplate.Function || btn.type == btnActionTemplate.UploadFunction) &&
         btn.function
       ) {
         let that = this;

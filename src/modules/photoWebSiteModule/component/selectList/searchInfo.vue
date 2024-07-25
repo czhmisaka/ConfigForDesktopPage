@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-20 23:35:00
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-10 23:22:20
+ * @LastEditTime: 2024-06-16 14:37:43
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfo.vue
 -->
 <template>
@@ -22,7 +22,7 @@
       padding-top: 25px;
       " />
       <el-input v-model="query['name']" placeholder="图片名字" class="item"></el-input>
-      <el-select v-model="query['tags']" :placeholder="'标签'" style="width: auto" class="item" multiple clearable
+      <el-select v-model="query['tags']" :placeholder="'标签'" style="width: 120px" class="item" multiple clearable
         collapse-tags>
         <el-option v-for="tag in tagList" :value="tag.id" :label="tag.name"></el-option>
       </el-select>
@@ -237,6 +237,21 @@ export default defineComponent({
       deep: true,
       immediate: true,
     },
+    'baseData.query': {
+      handler(val) {
+        console.log(val, 'asd')
+        if (val) {
+          Object.keys(val).map(key => {
+            // 不相等时更新
+            console.log(key, val[key], this.query[key])
+            if (this.query[key] != val[key])
+              this.query[key] = val[key]
+          })
+        }
+      },
+      deep: true,
+      immediate: true,
+    }
   },
   props: ["baseData", "sizeUnit", "onClickFunc", "tagList", "outputKey", "searchByImage"],
   data() {

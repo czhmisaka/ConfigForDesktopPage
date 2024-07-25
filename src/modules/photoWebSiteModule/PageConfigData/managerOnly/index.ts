@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-26 01:20:58
+ * @LastEditTime: 2024-06-15 15:01:10
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/index.ts
  */
 
@@ -26,43 +26,43 @@ const pageConfig = {
     },
   },
 
-  categoryManage: {
-    name: "相册管理",
-    desktopData: categoryManage,
-    gridColNum: 12,
-    cusStyle: {
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-      needGroupName: "管理员",
-    },
-  },
+  // categoryManage: {
+  //   name: "相册管理",
+  //   desktopData: categoryManage,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6,
+  //     needGroupName: "管理员",
+  //   },
+  // },
 
-  userManage: {
-    name: "用户管理",
-    desktopData: userManage,
-    gridColNum: 12,
-    cusStyle: {
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-      needGroupName: "管理员",
-    },
-  },
+  // userManage: {
+  //   name: "用户管理",
+  //   desktopData: userManage,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6,
+  //     needGroupName: "管理员",
+  //   },
+  // },
 
-  collectionManage: {
-    name: "收藏夹管理",
-    desktopData: collectionManage,
-    gridColNum: 12,
-    cusStyle: {
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-    },
-  },
+  // collectionManage: {
+  //   name: "收藏夹管理",
+  //   desktopData: collectionManage,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6,
+  //   },
+  // },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

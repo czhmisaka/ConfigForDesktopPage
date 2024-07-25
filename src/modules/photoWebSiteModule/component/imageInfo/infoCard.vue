@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-01-21 21:10:09
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-10 23:14:54
+ * @LastEditTime: 2024-06-16 21:33:00
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageInfo/infoCard.vue
 -->
 <template>
@@ -62,7 +62,8 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-card>
-      <el-card v-if="categoryInfo.length > 0" title="相册信息" :style="elCardInfo.style" :body-style="elCardInfo.bodyStyle">
+      <el-card v-if="categoryInfo.length > 0" title="相册信息" :style="elCardInfo.style"
+        :body-style="{ ...elCardInfo.bodyStyle, padding: '3px' }">
         <el-tag class="floatTag" v-for="item in categoryInfo" effect="dark" type="info">相册【{{ item.name }}】</el-tag>
       </el-card>
       <el-card title="标签信息" :style="elCardInfo.style" :body-style="{ ...elCardInfo.bodyStyle, padding: '0px' }"
@@ -134,12 +135,15 @@ export default defineComponent({
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "image", "watchKeyForCategory", "btnList"],
+  props: ["baseData", "sizeUnit", "image", "watchKeyForCategory", "btnList", 'sendSearch'],
   components: { cardBg, waterFallItem },
   watch: {
     "baseData.image": {
       handler(val) {
-        this.initImageInfo(val);
+        if (JSON.stringify(val) != JSON.stringify(this.preVal)) {
+          this.preVal = val;
+          this.initImageInfo(val);
+        }
       },
     },
   },
@@ -149,6 +153,7 @@ export default defineComponent({
 
   data: () => {
     return {
+      preVal: {},
       data: {},
       tagList: [],
       colorList: [] as string[],
@@ -168,7 +173,7 @@ export default defineComponent({
           marginRight: "0px",
         },
         bodyStyle: {
-          padding: "3px",
+          padding: "0px",
         },
       },
     };
@@ -176,11 +181,11 @@ export default defineComponent({
 
   methods: {
     async rate(e) {
-      await post("/piwigo/ws.php?format=json", {
-        method: "pwg.images.rate",
-        rate: e + "",
-        image_id: this.baseData.image.id,
-      });
+      // await post("/piwigo/ws.php?format=json", {
+      //   method: "pwg.images.rate",
+      //   rate: e + "",
+      //   image_id: this.baseData.image.id,
+      // });
     },
     async initImageInfo(image) {
       if (typeof image == "object" && !Array.isArray(image)) {
@@ -261,28 +266,33 @@ export default defineComponent({
       //   searchInfo: false,
       //   upload: false,
       // });
-      changeCardProperties(that, {
-        waterFall: {
-          watchKey: ["color"],
-          getFunc: async function (that, data) {
-            let { color } = data
-            let colors = color.replace('rgb(', '').replace(')', '').split(',')
-            let res = await post('/admin/picture/pictureInfo/search', {
-              colorRMax: (colors[0] * 1),
-              colorRMin: (colors[0] * 1),
-              colorGMax: (colors[1] * 1),
-              colorGMin: (colors[1] * 1),
-              colorBMax: (colors[2] * 1),
-              colorBMin: (colors[2] * 1),
-            })
-            return res.data.list
-          },
-        },
-      });
+      // changeCardProperties(that, {
+      //   waterFall: {
+      //     watchKey: ["color"],
+      //     getFunc: async function (that, data) {
+      //       let { color } = data
+      //       let colors = color.replace('rgb(', '').replace(')', '').split(',')
+      //       let res = await post('/admin/picture/pictureInfo/search', {
+      //         colorRMax: (colors[0] * 1),
+      //         colorRMin: (colors[0] * 1),
+      //         colorGMax: (colors[1] * 1),
+      //         colorGMin: (colors[1] * 1),
+      //         colorBMax: (colors[2] * 1),
+      //         colorBMin: (colors[2] * 1),
+      //       })
+      //       return res.data.list
+      //     },
+      //   },
+      // });
+      if (this.sendSearch) {
+        await this.sendSearch(this, color)
+      }
       this.$nextTick(() => {
         setData(that, {
-          category: {},
-          color: color,
+          query: {
+            color: color,
+            colorRange: 30
+          }
         });
       });
     },

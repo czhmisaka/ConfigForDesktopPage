@@ -1,18 +1,19 @@
 <!--
  * @Date: 2022-11-21 08:52:56
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-24 00:15:11
+ * @LastEditTime: 2024-06-16 21:53:04
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title" class="drawerForm"
-    :size="`${isMobile() ? 90 : (plugInData.size || 50)}%`" :with-header="plugInData.title ? true : false"
+    :size="`${plugInData.size || (isMobile() ? 100 : 50)}%`" :with-header="plugInData.title ? true : false"
     :append-to-body="true" :close-on-click-modal="true" :show-close="true" @close="fuckClose" :style="`border-radius: ${borderRadius
       }px;margin: ${plugInData['fullscreenGridDesktop'] ? 0 : margin
       }px;height: calc(100vh - ${2 * (plugInData['fullscreenGridDesktop'] ? 0 : margin)
       }px);box-shadow: rgba(0, 0, 0, 0.1) -6px 6px 12px, inset rgba(0,0,0,0.05) -3px 3px 12px 0px;${plugInData['bgColor'] ? 'background:' + plugInData['bgColor'] + ';' : ''}${plugInData['fullscreenGridDesktop'] ? 'transition:all 0s;' : ''
       }
       `">
+      <!-- {{ plugInData['data'] }} -->
     <div :class="'formBody ' +
       (!plugInData.btnList || plugInData.btnList.length == 0 ? 'formBody_noBtn ' : ' ') +
       (plugInData['fullscreenGridDesktop'] ? 'formBody_fullScreen ' : ' ')
@@ -26,7 +27,8 @@
         <gridDesktop ref="gridDesktop" :grid-col-num="plugInData['gridDesktopConfig'].gridColNum"
           :desktopData="desktopDataList" :preBaseData="plugInData['gridDesktopConfig'].preBaseData"
           :component-lists="component" :cus-style="plugInData['gridDesktopConfig']?.cusStyle" v-model="formData"
-          @close="close" />
+          @close="close" :needEdit="false" />
+        <!-- 组件问题调试打开 needEdit -->
       </div>
     </div>
     <div :class="'formBody elForm_formbody' +
@@ -80,8 +82,8 @@
       <div v-for="(item, index) in plugInData.btnList.filter((btn) =>
         btn && btn.isShow ? btn.isShow(formData, JSON.parse(JSON.stringify(btn))) : true
       )" style="float: left; margin-right: 6px" :key="index + 'btnlistitem'">
-        <el-button :id="item.label + '_drawerForm'" plain :loading="item.isLoading" @click="btnClick(item)"
-          :disabled="item.isDisable(formData)" :type="item.elType" :icon="item.icon">
+        <el-button :id="item.label + '_drawerForm'" plain :loading="item.isLoading" @click="btnClick(item)" :disabled="item.isDisable(formData)"
+          :type="item.elType" :icon="item.icon">
           {{ item.label }}
         </el-button>
       </div>
@@ -116,6 +118,7 @@ import { refreshDesktop } from "@/components/basicComponents/grid/module/cardApi
 import { useCardStyleConfigHook } from "@/store/modules/cardStyleConfig";
 import { useCacheHook } from "@/store/modules/cache";
 import { aiCacheKey } from "@/modules/AiHelper/config/aiCommond";
+
 const VITE_PROXY_DOMAIN_REAL = getPreUrl();
 let formDataForCheck = {};
 export default defineComponent({
@@ -175,8 +178,25 @@ export default defineComponent({
       // drawer
       drawerData: {} as stringAnyObj,
       actionUrl: VITE_PROXY_DOMAIN_REAL,
+
+      isThatProvider: false,
     };
   },
+  async mounted() {
+    // 这可能是通向调用地狱的道路 ，也有可能是组件全局化天国的开始 -czh 20240529
+    // 判断是否在同一页面重复获取that
+    if (!await useCacheHook().getDataByKey('NowGridDesktopThat')) {
+      const that = this
+      useCacheHook().setup('NowGridDesktopThat', async () => { return that })
+      this.isThatProvider = true
+    }
+  },
+
+  unmounted() {
+    if (this.isThatProvider)
+      useCacheHook().clear('NowGridDesktopThat')
+  },
+
   methods: {
     /**
      * @name: 初始化表单
@@ -269,7 +289,7 @@ export default defineComponent({
     },
 
     fuckClose() {
-      this.plugInData['afterClose'] && this.plugInData['afterClose'](this)
+      localStorage.setItem("fuckThePJ", "true");
     },
 
     /**
@@ -279,7 +299,7 @@ export default defineComponent({
      * @Date: 2022-12-02 09:28:12
      */
     async open() {
-      this.isReady = false; 1
+      this.isReady = false;
       await this.$nextTick();
       if (this.plugInData["gridDesktop"] && this.plugInData["gridDesktopConfig"]) {
         this.desktopDataList = await this.plugInData["gridDesktopConfig"].desktopData(this);
@@ -305,6 +325,7 @@ export default defineComponent({
       else this.formData = {};
       formDataForCheck = deepClone(this.formData);
       if (!this.plugInData["noEdit"]) this.checkOnChange(this.formData, true);
+      console.log('fuck form data',this.formData)
       this.isOpen = true;
     },
   },

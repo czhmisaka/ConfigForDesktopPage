@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 09:35:29
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-23 22:30:29
+ * @LastEditTime: 2024-06-28 22:42:35
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/inputForm.vue
 -->
 <template>
@@ -42,15 +42,16 @@
       : true
   )
 " :key="index + 'btn'" class="floatLeft" :style="item.style ? item.style : ''">
+
+
             <el-upload ref="uploadRef" :headers="getDownLoadRequestHeaders()" class="upload-demo"
-              :action="actionUrl + (item.uploadInfo ? item.uploadInfo.action : '')"
-              :limit="item.uploadInfo ? item.uploadInfo.limit : 1" :data="item.uploadInfo ? item.uploadInfo?.data : {}"
-              :on-success="(response, file, fileList) => btnClick(item, response)"
-              :on-error="(response, file, fileList) => btnClick(item, response)"
-              :on-exceed="(response, file, fileList) => btnClick(item, response)" :show-file-list="false"
-              v-if="item.type == btnActionTemplate.UploadFunction">
+              :action="actionUrl + (item.uploadInfo ? item.uploadInfo.action : '')" v-model:file-list="fileList" multiple
+              :show-file-list="false" :limit="item.uploadInfo ? item.uploadInfo.limit : 100000"
+              :http-request="(e) => uploadFunc(item, e)" v-if="item.type == btnActionTemplate.UploadFunction">
               <el-button plain icon="plus" type="primary">{{ item.label }}</el-button>
             </el-upload>
+
+
             <el-button v-else :id="item.label + '_' + 'inputForm'" :loading="item.isLoading" @click="btnClick(item)"
               :disabled="item.isDisable({ ...formData, _selectedList: selectedList }, item)
                 " :type="item.elType
@@ -137,6 +138,7 @@ export default defineComponent({
     return {
       formData: {},
       uiSchema: {},
+      fileList: [],
       formFooter: {
         show: false,
       },
@@ -228,6 +230,10 @@ export default defineComponent({
      * @param {*} btn
      */
     btnClick(btn: btnCellTemplate, res?: stringAnyObj) {
+      this.$emit("btnClick", btn, res);
+    },
+
+    uploadFunc(btn: btnCellTemplate, res?: stringAnyObj) {
       this.$emit("btnClick", btn, res);
     },
 

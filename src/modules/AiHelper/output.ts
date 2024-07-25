@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-26 11:24:08
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-11 00:30:42
+ * @LastEditTime: 2024-07-04 09:26:37
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/output.ts
  */
 export const moduleInfo = {
@@ -18,11 +18,11 @@ import { closeAiHelper, openAiHelper } from "./component/liveHelper/TalkerDrawer
 export const output = async () => {
   return {
     moduleApi: {
-      // closeAiHelper,
-      // openAiHelper,
+      closeAiHelper,
+      openAiHelper,
     },
     CardApiInjectComponent: {
-      // liveHelper,
+      liveHelper,
     },
   };
 };
