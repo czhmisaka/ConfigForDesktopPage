@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-02-16 23:07:02
  * @LastEditors: CZH
- * @LastEditTime: 2024-03-25 23:52:33
+ * @LastEditTime: 2024-07-26 00:36:50
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/component/numberCard.vue
 -->
 <template>
@@ -31,11 +31,11 @@
     </CardBg>
 </template>
 <script lang="ts">
-import { componentInfo, gridSizeMaker } from '@/components/basicComponents/grid/module/dataTemplate';
+import { componentInfo, gridSizeMaker, inputType, propInfo } from '@/components/basicComponents/grid/module/dataTemplate';
 import { defineComponent } from 'vue'
 import CardBg from '@/components/basicComponents/cell/card/cardBg.vue';
 export default defineComponent({
-    components:{CardBg},
+    components: { CardBg },
     componentInfo: {
         labelNameCN: "数字卡片",
         key: "numberCard",
@@ -45,6 +45,20 @@ export default defineComponent({
             middle: gridSizeMaker(1, 1),
         },
     } as componentInfo,
+    propsDetail: {
+        label: {
+            label: '标题',
+            type: inputType.text
+        },
+        data: {
+            label: '数据',
+            type: inputType.text
+        },
+        suffix: {
+            label: 'suffix',
+            type: inputType.text
+        },
+    } as propInfo,
 
     props: [
         'label',
@@ -52,7 +66,7 @@ export default defineComponent({
         'suffix',
         'iotCardTitleStyle'
     ],
-    mounted(){
+    mounted() {
         this.$emit('ready')
     },
     setup() {

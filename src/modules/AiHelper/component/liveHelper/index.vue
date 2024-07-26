@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-04-09 14:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-23 23:50:23
+ * @LastEditTime: 2024-07-26 01:25:32
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/liveHelper/index.vue
 -->
 <template>
@@ -175,7 +175,7 @@ export default defineComponent({
             const that = this
             const preWord = await useCacheHook().getDataByKey(aiCacheKey.aiPreWord)
             console.log('fuck 用户：', preWord + word)
-            let res = await chat(preWord + word, 'glm-4')
+            let res = await chat(preWord + word, 'glm-4-flash')
             let backWord = res.data.choices[0].message.content
             let data = {} as any
             const tryData = extractJSON(backWord)

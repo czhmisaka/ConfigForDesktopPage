@@ -37,7 +37,7 @@ import { useCacheHook } from "@/store/modules/cache";
 import { showCell } from '../../../userManage/component/searchTable/searchTable';
 import { ElImage, ElMessage, ElPopover, ElTag, ElTooltip } from "element-plus";
 import { 上级相册 } from "./newCategoryManage";
-import { actionCellMaker } from "@/modules/taskList/config/AiAction";
+import { actionCellMaker } from "@/modules/TaskList/config/AiAction";
 
 export const uploadStatus = {
     // 准备上传

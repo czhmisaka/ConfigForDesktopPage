@@ -14,7 +14,7 @@
     overflow: 'hidden',
   }">
     <gridDesktop v-if="Object.keys(componentList).length > 0" :grid-col-num="desktopData.gridColNum"
-      :desktopData="desktopDataList" :component-lists="componentList" :cus-style="desktopData?.cusStyle"
+      :desktopData="desktopDataList" :component-lists="[]" :cus-style="desktopData?.cusStyle"
       :noAnimate="true" />
   </div>
 </template>

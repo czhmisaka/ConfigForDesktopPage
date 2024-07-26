@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-11-03 22:30:18
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-28 09:29:22
+ * @LastEditTime: 2024-07-26 00:13:52
  * @FilePath: /ConfigForDesktopPage/src/store/modules/cache.ts
  */
 import { defineStore } from "pinia";
@@ -24,6 +24,9 @@ interface cacheStoreTemplate {
     [key: string]: () => Promise<stringAnyObj>;
   };
   isDevKey: string[];
+  getNumMap: {
+    [key: string]: number
+  }
 }
 
 export const cacheStore = defineStore({
@@ -33,11 +36,34 @@ export const cacheStore = defineStore({
     keyLoadMap: {},
     dataLoadFuncMap: {},
     isDevKey: [],
+    getNumMap: {},
   }),
   actions: {
+    showData() {
+      console.log("【cache】", Object.keys(this.data), this.data);
+    },
+
+    showKeyStatus() {
+      let data = Object.keys(this.keyLoadMap).map(key => {
+        return {
+          key,
+          status: this.keyLoadMap[key]
+        }
+      })
+      console.clear()
+      console.table(data, ['key', 'status'])
+    },
+
     isInCache(key) {
+      if (this.getNumMap[key]) this.getNumMap[key] = this.getNumMap[key] + 1
+      else this.getNumMap[key] = 1
       if (this.keyLoadMap[key] && this.dataLoadFuncMap[key]) return true;
       else return false;
+    },
+
+    isLoad(key) {
+      if (!this.isInCache(key)) return false
+      return this.keyLoadMap[key] == loadStatus.success
     },
 
     // 提示若已有数据应当刷新 // 可以用于刷新全局缓存数据
@@ -70,6 +96,7 @@ export const cacheStore = defineStore({
 
     // 获取数据，若数据不存在则调用load func
     async getDataByKey(key) {
+      // this.showData();
       // 未注册的key则直接失效
       if (key in this.keyLoadMap) {
         const status = this.keyLoadMap[key];
@@ -85,6 +112,10 @@ export const cacheStore = defineStore({
 
       // 调试用的，别乱开，开了每次都会重新执行数据获取函数 // 用于排查数据为能及时更新的问题
       // this.setRefresh(key);
+    },
+
+    getDataByKeyStatic(key) {
+      if (this.isInCache(key)) return this.data[key];
     },
 
     // 等待数据获取
@@ -125,11 +156,17 @@ export const cacheStore = defineStore({
         this.data[key] = resData;
         this.keyLoadMap[key] = loadStatus.success;
       } catch (e) {
-        if (this.isDevKey.indexOf(key) != -1)
-          console.error(`【${key}】加载报错`, e);
+        // if (this.isDevKey.indexOf(key) != -1)
+        console.error(`【${key}】加载报错`, e);
         this.keyLoadMap[key] = loadStatus.error;
       }
       return this.data[key];
+    },
+
+    refreshAll() {
+      Object.keys(this.keyLoadMap).map(x => {
+        this.keyLoadMap[x] = loadStatus.isInit
+      })
     },
 
     // 清除某个key // 或者全部清空

@@ -267,7 +267,7 @@ export const iotEventManage = async () => {
     fontWeight: 600,
     fontSize: "1em",
     margin: '3px 6px'
-}
+  }
   let { data } = await post("/admin/iot/iotEvent/sysInfo", {});
   const { averageTime, eventCheck, eventDeal, publish } = JSON.parse(data);
   const init = eventCenterCell(
@@ -320,7 +320,6 @@ export const iotEventManage = async () => {
       {
         props: {
           iotCardTitleStyle,
-
           label: "事件检查",
           data: eventCheck / 5,
           suffix: "/s",
@@ -340,7 +339,6 @@ export const iotEventManage = async () => {
       {
         props: {
           iotCardTitleStyle,
-
           label: "事件处理",
           data: eventDeal / 5,
           suffix: "/s",
@@ -401,5 +399,6 @@ export const iotEventManage = async () => {
     )
       .setPosition(0, 1)
       .setSize(12, 7),
+    // ...gridEditList
   ] as gridCellTemplate[];
 };

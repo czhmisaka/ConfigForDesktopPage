@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-29 14:11:20
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-26 01:13:04
+ * @LastEditTime: 2024-07-26 01:13:33
  * @FilePath: /ConfigForDesktopPage/src/router/util.ts
  */
 import { menuInfoTemplate } from "./../components/menu/menuConfigTemplate";
@@ -9,6 +9,9 @@ import { CardComponentTemplate } from "../components/basicComponents/grid/module
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
 import { desktopDataTemplate, stringAnyObj } from "@/modules/userManage/types";
+import { componentLists } from "@/components/basicComponents/grid/module/gridCard/module/componentLists";
+import { useCacheHook } from "@/store/modules/cache";
+import { collapseItemProps } from "element-plus";
 
 // 函数执行时间计算
 export const timeChecker = class {
@@ -30,6 +33,7 @@ export const timeChecker = class {
   };
 
   checkTime = (word: string, extraWord: string = "") => {
+    extraWord += " " + decodeURI(window.location.href);
     if (!this.showConsole) return;
     if (!this.checkTimeMap[word]) {
       this.checkTimeMap[word] = new Date().getTime();
@@ -160,6 +164,7 @@ export interface modulesCellTemplate {
   path: string;
   routers: any[];
   isReady: boolean;
+  pageConfigIsReady: boolean;
   pageMap: stringAnyObj;
   components: {
     [key: string]: CardComponentTemplate;
@@ -194,7 +199,7 @@ export const getModuleFromView = async (init = false) => {
           moduleList &&
           moduleList.length > 0 &&
           moduleList.filter((x) => x.isReady).length ==
-            moduleList.filter((x) => x.components).length
+          moduleList.filter((x) => x.components).length
         ) {
           clearInterval(interval);
           timeConsole.checkTime("模块加载", "实际结束");
@@ -247,9 +252,9 @@ export const getModuleFromView = async (init = false) => {
     return fileName.split("/").length < len
       ? ""
       : fileName
-          .split("/")
-          .filter((x: any, i: number) => i >= len - 1)
-          .join("/");
+        .split("/")
+        .filter((x: any, i: number) => i >= len - 1)
+        .join("/");
   }
 
   /**
@@ -272,10 +277,10 @@ export const getModuleFromView = async (init = false) => {
    */
   function dealRequireList(
     checkFunc: (dealName: string, len: number) => boolean,
-    dealFunc: (fileName: string, isLast: boolean) => void,
-    afterFunc: () => void = () => {}
+    dealFunc: (fileName: string, isLast: boolean) => Promise<void>,
+    afterFunc: () => void = () => { }
   ) {
-    const dealList = requireList.filter((fileName: string) => {
+    const dealList = requireList.filter(async (fileName: string) => {
       return checkFunc(getDealName(fileName), getFileNameLength(fileName));
     });
     dealList.map(async (fileName: string, i: number) => {
@@ -293,12 +298,13 @@ export const getModuleFromView = async (init = false) => {
     (dealName, len) => {
       return dealName == mainPage && len == 5;
     },
-    (fileName: string) => {
+    async (fileName: string) => {
       const moduleName = getModuleName(fileName);
       moduleList.push({
         name: moduleName,
         path: `@/modules/${moduleName}/`,
         isReady: false,
+        pageConfigIsReady: false,
         routers: [
           routerCellMaker(
             `/${moduleName}`,
@@ -319,18 +325,22 @@ export const getModuleFromView = async (init = false) => {
 
   // 处理组件列表
   // 此处需要更新成 promise.all 形式 -- 改好了 czh 2023 1121
-  // 之后需要基于判断当前优先加载的组件去获取需要展示的组件对象
+  // 之后需要基于判断当前优先加载的组件去获取需要展示的组件对象 - 20240511 开始开发选择性载入
+  // 改好咯～现在组件都是异步加载的 - 20240513
   let compDealPromiseList = [];
   let hasCompModuleName = [];
   dealRequireList(
     (dealName, len) => dealName == component,
-    async (fileName: string, isLast: boolean) => {
+    async (fileName: string) => {
       const moduleName = getModuleName(fileName);
       moduleList.map(async (module: modulesCellTemplate, index) => {
         if (module.name == moduleName) {
           const func = async (fileName, index) => {
-            let comp = await (await requireModule(fileName)).default();
-            moduleList[index]["components"] = comp;
+            // let comp = await (await requireModule(fileName)).default();
+            moduleList[index]["components"][moduleName] = (await requireModule(
+              fileName
+            )) as any;
+            // moduleList[index]["components"] = { fileName: fileName };
             moduleList[index].isReady = true;
           };
           hasCompModuleName.push(moduleName);
@@ -339,6 +349,7 @@ export const getModuleFromView = async (init = false) => {
       });
     }
   );
+
   // 无组件则直接ready
   moduleList.map((x) => {
     if (hasCompModuleName.indexOf(x.name) == -1) x.isReady = true;
@@ -347,13 +358,16 @@ export const getModuleFromView = async (init = false) => {
   Promise.all(compDealPromiseList);
 
   // 添加默认路由方案 (output配置中可以关闭)
+  // 使用 pageConfigIsReady 阻塞加载
   dealRequireList(
     (dealName, len) => dealName == pageConfigData,
-    (fileName: string) => {
+    async (fileName: string) => {
       const moduleName = getModuleName(fileName);
       moduleList.map(async (module: modulesCellTemplate) => {
         if (module.name == moduleName) {
+          module.pageConfigIsReady = false;
           const pageMap = (await requireModule(fileName))["PageConfig"];
+          // const pageMap = {};
           for (let x in pageMap) {
             module.pageMap[x] = pageMap[x];
           }
@@ -364,6 +378,7 @@ export const getModuleFromView = async (init = false) => {
               meta: {
                 originData: {
                   ...pageMap[pageName],
+
                   desktopData: null,
                 },
                 ...pageMap[pageName]["cusStyle"],
@@ -399,6 +414,7 @@ export const getModuleFromView = async (init = false) => {
               );
             }
           });
+          module.pageConfigIsReady = true;
         }
         return module;
       });
@@ -408,7 +424,7 @@ export const getModuleFromView = async (init = false) => {
   // 处理路由列表
   dealRequireList(
     (dealName, len) => dealName == router,
-    (fileName: string) => {
+    async (fileName: string) => {
       const moduleName = getModuleName(fileName);
       moduleList.map(async (module: modulesCellTemplate) => {
         if (module.name == moduleName) {
@@ -425,7 +441,7 @@ export const getModuleFromView = async (init = false) => {
   // 处理outPut文件
   dealRequireList(
     (dealName, len) => dealName == output && len == 5,
-    (fileName: string) => {
+    async (fileName: string) => {
       const moduleName = getModuleName(fileName);
       moduleList.map(async (module: modulesCellTemplate) => {
         if (module.name == moduleName) {
@@ -454,21 +470,28 @@ export const getModuleFromView = async (init = false) => {
         moduleList &&
         moduleList.length > 0 &&
         moduleList.filter((x) => x.isReady).length ==
-          moduleList.filter((x) => x.components).length
+        moduleList.filter((x) => x.components).length &&
+        moduleList.filter((x) => x.pageConfigIsReady).length ==
+        moduleList.length
       ) {
         clearInterval(interval);
         timeConsole.checkTime("模块加载", "实际结束");
         res(true);
       }
-    }, 30);
+    }, 100);
   });
+
   return moduleList;
 };
 
+// 工具获取
 export const getAction = () => {
   if (Object.keys(action).length == 0) getModuleFromView(true);
+  // 获取所有引用关系
+
   // 获取所有的模块构建出来的路由记录
   action["getAllPageRouter"] = async () => {
+    await getModuleFromView()
     let routes = [];
     moduleList.map((x) => {
       x.routers.map((cell) => {
@@ -486,6 +509,7 @@ export const getAction = () => {
   };
 
   // 获取所有模块包的组件
+  // 只能获得一个引用的指向关系，modules内的组件需要额外调用getOneComponent
   action["getAllComponents"] = () => {
     let back = {};
     moduleList.map((module: modulesCellTemplate) => {
@@ -495,6 +519,74 @@ export const getAction = () => {
       };
     });
     return back;
+  };
+
+  // 按照 getAllComponents 获取的信息，获取单个模块内的组件
+  // 防止数据不同步，此处放置的 moduleList 不一定是加载完成的（低性能电脑容易出现）
+  action["getOneComponent"] = async (name: string) => {
+    await getModuleFromView();
+    let components = action.getAllComponents();
+    if (componentLists && componentLists[name]) return componentLists[name];
+    console.log(name,components,'获取单个组件')
+    if (name.split("_").length == 2) {
+      const moduleName = name.split("_")[0];
+      if (useCacheHook().isInCache("component_" + moduleName)) {
+        return (await useCacheHook().getDataByKey("component_" + moduleName))[
+          name
+        ];
+      } else {
+        if (components[moduleName]) {
+          useCacheHook().setup("component_" + moduleName, async () => {
+            return await components[moduleName].default();
+          });
+          return (await useCacheHook().getDataByKey("component_" + moduleName))[
+            name
+          ];
+        }
+      }
+    }
+    return componentLists["iframe"];
+  };
+
+  // 加载所有模块包中的组件引用
+  action["loadAllComponents"] = async (name: string) => {
+    await getModuleFromView()
+    let components = action.getAllComponents();
+    Object.keys(components).map((moduleName) => {
+      if (!useCacheHook().isInCache("component_" + moduleName))
+        useCacheHook().setup(
+          "component_" + moduleName,
+          async () => {
+            let res = await components[moduleName].default()
+            console.log(res,'加载了组件')
+            return res;
+          },
+          true
+        );
+    });
+
+    let cardComponents = {};
+    await new Promise((r, j) => {
+      const checkStatus = setInterval(() => {
+        let isAllLoad = true;
+        Object.keys(components).map((moduleName) => {
+          if (!useCacheHook().isLoad("component_" + moduleName))
+            isAllLoad = false;
+        });
+        if (isAllLoad) {
+          Object.keys(components).map((moduleName) => {
+            cardComponents = {
+              ...cardComponents,
+              ...useCacheHook().getDataByKeyStatic("component_" + moduleName),
+            };
+          });
+          clearInterval(checkStatus);
+          r(true);
+        }
+      }, 100);
+    });
+    useCacheHook().showData();
+    return cardComponents;
   };
 
   // 获取所有模块包的 插入式能力组件
@@ -521,7 +613,6 @@ export const getAction = () => {
         }
       }
     });
-
     return back;
   };
 

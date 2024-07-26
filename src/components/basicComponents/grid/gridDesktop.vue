@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 21:57:48
  * @LastEditors: CZH
- * @LastEditTime: 2024-06-16 14:20:03
+ * @LastEditTime: 2024-07-26 00:20:13
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
 -->
 
@@ -9,51 +9,74 @@
   <div :ref="'screenId_' + idRandom" :id="'screenId_' + idRandom" :style="{
     overflowY: cusStyle.wholeScreen ? 'hidden' : 'auto',
     overflowX: 'hidden',
-    ...(cusStyle['desktopStyle'] || {})
+    ...(cusStyle['desktopStyle'] || {}),
   }" class="baseGrid">
-    <!-- <div style="position:fixed;top:0px;z-index: 10000000;">{{ gridList.map(x => x.label) }} </div>-->
-    <grid-layout :layout="gridListComputed()" :col-num="gridColNum" :row-height="gridRowNumAndUnit.blockSize"
-      :responsive="false" :isDraggable="baseData.editable" :isResizable="false" :vertical-compact="false"
-      :prevent-collision="false" :use-css-transforms="true" :maxRows="cusStyle.maxRows || 30"
+    <!-- <div style="position:fixed;top:0px;z-index: 10000000;">{{ gridList.map(x => x.label) }} </div> -->
+    <grid-layout :auto-size="false" :layout="gridListComputed()" :col-num="gridColNum"
+      :row-height="gridRowNumAndUnit.blockSize" :responsive="false" :isDraggable="baseData.editable" :isResizable="false"
+      :vertical-compact="false" :prevent-collision="false" :use-css-transforms="true" :maxRows="cusStyle.maxRows || 30"
       :margin="[gridRowNumAndUnit.margin, gridRowNumAndUnit.margin]">
-      <div :class="'grayBg ' + (highLightComponentsList.length > 0 ? 'grayBg_Active' : '')" :style="{
-        zIndex: highLightComponentsList.length > 0 ? 20000 : -1,
-        width: highLightController.show ? '100vw' : '0px',
-        height: highLightController.show ? '100vh' : '0px',
-      }"></div>
-      <grid-item v-for="(item, index) in gridListComputed()" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i"
-        :key="item.i" @move="gridItemOnMove" @resize="gridItemOnResize" class="grid-item" :style="{
-          ...gridItemStyle(gridList[index]),
-          transition: (gridList[index].options.noAnimate) ? '' : (noAnimate
-            ? ''
-            : baseData.editable
-              ? fastMode
-                ? 'max-width 0.4s, width 0.3s , height 0.3s'
-                : ''
-              : fastMode
-                ? 'max-width 0.4s, transform 0.5s ease-in-out , width 0.3s , height 0.3s'
-                : '') + ' !important',
+      <div :class="'grayBg ' +
+        (hightLightComponentsList.length > 0 ? 'grayBg_Active' : '')
+        " :style="{
+    zIndex: hightLightComponentsList.length > 0 ? 20000 : -1,
+    width: hightLightControler.show ? '100vw' : '0px',
+    height: hightLightControler.show ? '100vh' : '0px',
+  }"></div>
+      <grid-item v-for="(item, index) in gridList" :x="gridListComputed()[index].x" :y="gridListComputed()[index].y"
+        :w="gridListComputed()[index].w" :h="gridListComputed()[index].h" :i="gridListComputed()[index].i"
+        :key="item.label + index" @move="gridItemOnMove" @resize="gridItemOnResize" class="grid-item" :style="{
+          ...gridItemStyle(item),
+          transition: item.options.needAnimate
+            ? 'max-width 0.4s, transform 0.5s ease-in-out , width 0.3s , height 0.3s !important'
+            : item.options.noAnimate
+              ? ''
+              : (noAnimate
+                ? ''
+                : baseData.editable
+                  ? fastMode
+                    ? 'max-width 0.4s, width 0.3s , height 0.3s'
+                    : ''
+                  : fastMode
+                    ? 'max-width 0.4s, transform 0.5s ease-in-out , width 0.3s , height 0.3s'
+                    : '') + ' !important',
         }">
-        <card :ref="'card_' + index" :detail="{ ...gridList[index], index }" :baseData="baseData"
-          :sizeUnit="gridRowNumAndUnit" :gridList="gridList" :componentLists="componentLists"
-          @onChange="(value, options) => cardOnChange(index, value, options)" />
+        <Suspense>
+          <template #default>
+            <card :ref="'card_' + index" :detail="{ ...item, index }" :baseData="baseData" :sizeUnit="gridRowNumAndUnit"
+              :gridList="gridList" :componentLists="{ ...componentLists, ...backUpComponents }" @onChange="(value, options) => cardOnChange(index, value, options)
+                " />
+          </template>
+          <template #fallback>
+            <!-- <template #default> -->
+            <cardBg element-loading-background="rgba(0, 0, 0, 0)" style="
+                text-align: left;
+                padding: 24px;
+                backdrop-filter: blur(1px);
+                background: rgba(0, 0, 0, 0.01) !important;
+              " v-loading="true">
+            </cardBg>
+          </template>
+        </Suspense>
       </grid-item>
     </grid-layout>
-    <componentsListModal v-if="needEdit" :gridList="gridList" :componentLists="componentLists" ref="componentsListModal"
-      @onChange="(index, value) =>
+    <componentsListModal v-if="needEdit" :gridList="gridList" :componentLists="{ ...componentLists, ...backUpComponents }"
+      ref="componentsListModal" @onChange="(index, value) =>
         cardOnChange(index, value, {
           type: [cardOnChangeType.gridCardListonChange],
         })
         " />
     <cardEditModal v-if="needEdit" :detail="baseData._componentDetail" ref="cardEdit" :gridList="gridList"
-      :componentIndex="baseData._componentIndex" :sizeUnit="gridRowNumAndUnit" :componentLists="componentLists" @onChange="(index, value) =>
+      :componentIndex="baseData._componentIndex" :sizeUnit="gridRowNumAndUnit"
+      :componentLists="{ ...componentLists, ...backUpComponents }" @onChange="(index, value) =>
         cardOnChange(index, value, {
           type: [cardOnChangeType.gridCardListonChange],
         })
         " />
     <component v-for="item in Object.keys(PlugInComponents)" :is="PlugInComponents[item]" :ref="`PlugIn_${item}`"
-      :plugInData="plugInData[item]" :baseData="baseData" :gridList="gridList" :componentLists="componentLists"
-      :detail="{ label: item, index: -1 }" @onChange="(value, options) => cardOnChange(-1, value, options)"></component>
+      :plugInData="plugInData[item]" :baseData="baseData" :gridList="gridList"
+      :componentLists="{ ...componentLists, ...backUpComponents }" :detail="{ label: item, index: -1 }"
+      @onChange="(value, options) => cardOnChange(-1, value, options)"></component>
   </div>
 </template>
 
@@ -75,9 +98,20 @@ import gridLayout from "./GridLayout/GridLayout.vue";
 import gridItem from "./GridLayout/GridItem.vue";
 import { takeRight } from "lodash";
 import { timeConsole } from "@/router/util";
-import { gridCell } from '../../../modules/userManage/component/searchTable/searchTable';
-import { deepClone } from '../../../utils/index';
+import { gridCell } from "../../../modules/userManage/component/searchTable/searchTable";
+import { deepClone } from "../../../utils/index";
+import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
+import { useCacheHook } from "../../../store/modules/cache";
 let useAble = 0;
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>`;
 function throttle(func, delay) {
   let timer = null;
   let lastTime = 0;
@@ -113,18 +147,23 @@ function fuck(that) {
     unit: "vw",
     blockSize: 0, // px单位的 单个grid单元大小
     colSize: 0,
-    margin: that.cusStyle?.margin || 12,
+    margin: that.cusStyle?.margin || 0,
   };
   if (that.cusStyle.wholeScreen == true) {
-    screen.rowNum = Math.floor(screen.width / (screen.height / that.gridColNum));
+    screen.rowNum = Math.floor(
+      screen.width / (screen.height / that.gridColNum)
+    );
     screen.unit = "vh";
     let rowOrColKey = that.cusStyle.maxRows || that.gridColNum;
-    screen.blockSize = (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
+    screen.blockSize =
+      (screen.height - screen.margin * (rowOrColKey + 1)) / rowOrColKey;
   } else {
     screen.rowNum = Math.floor(screen.height / that.gridColNum);
     screen.blockSize =
       screen.unit == "vw"
-        ? (screen.width - that.gridColNum * that.cusStyle.margin - that.cusStyle.margin) /
+        ? (screen.width -
+          that.gridColNum * that.cusStyle.margin -
+          that.cusStyle.margin) /
         that.gridColNum
         : screen.height / that.gridColNum;
   }
@@ -136,6 +175,7 @@ export default defineComponent({
   name: "gridDesktop",
   components: {
     card,
+    cardBg,
     gridLayout,
     gridItem,
     cardEditModal,
@@ -168,7 +208,7 @@ export default defineComponent({
     // 是否需要编辑界面
     needEdit: {
       type: Boolean,
-      default: false
+      default: false,
     },
 
     // 可编辑状态 // 目前尚未实装功能
@@ -254,6 +294,7 @@ export default defineComponent({
   },
   data() {
     return {
+      svg,
       cardOnChangeType,
       // 渲染用组件列表
       gridList: [] as gridCellTemplate[],
@@ -267,7 +308,7 @@ export default defineComponent({
 
       // 基础数据存放
       baseData: {
-        margin: 12,
+        margin: 0,
         editable: false,
         wholeScreen: false,
         _componentDetail: {},
@@ -277,16 +318,18 @@ export default defineComponent({
       idRandom: (useAble += Math.random()),
 
       // 高光组件列表
-      highLightComponentsList: [] as string[],
-      highLightController: {
+      hightLightComponentsList: [] as string[],
+      hightLightControler: {
         show: false,
         timeOut: null,
       },
 
       // 组件实际渲染用数据
       gridListToLayout: [],
-
       gridRowNumAndUnit: {} as any,
+
+      // 备用组件库
+      backUpComponents: {},
     };
   },
   methods: {
@@ -364,8 +407,7 @@ export default defineComponent({
               ? "组件「" + this.gridList[index].labelNameCN + "」"
               : "桌面组件",
             "请求执行事件<" + type + ">",
-            value,
-            this.baseData
+            value
           );
         else
           console.log(
@@ -394,17 +436,22 @@ export default defineComponent({
             const changeList = Object.keys(value);
             const needRefreshCardList = [] as number[];
             // debugger;
-            this.gridList = this.gridList.map((card: gridCellTemplate, index: number) => {
-              changeList.map((x: string) => {
-                if (card.label == x) {
-                  needRefreshCardList.push(index);
-                  card = deepMerge(value[x], card);
-                }
-              });
-              return card;
-            });
+            this.gridList = this.gridList.map(
+              (card: gridCellTemplate, index: number) => {
+                changeList.map((x: string) => {
+                  if (card.label == x) {
+                    needRefreshCardList.push(index);
+                    card = deepMerge(value[x], card);
+                  }
+                });
+                return card;
+              }
+            );
             needRefreshCardList.map((item) => {
-              if (this.$refs["card_" + item] && this.$refs["card_" + item].length > 0) {
+              if (
+                this.$refs["card_" + item] &&
+                this.$refs["card_" + item].length > 0
+              ) {
                 this.$refs["card_" + item][0].$forceUpdate();
               }
             });
@@ -416,19 +463,24 @@ export default defineComponent({
             const changeList = Object.keys(value);
             const needRefreshCardList = [] as number[];
             // debugger;
-            this.gridList = this.gridList.map((card: gridCellTemplate, index: number) => {
-              changeList.map((x: string) => {
-                if (card.label == x) {
-                  needRefreshCardList.push(index);
-                  for (let c in value[x]) {
-                    card.options.props[c] = value[x][c];
+            this.gridList = this.gridList.map(
+              (card: gridCellTemplate, index: number) => {
+                changeList.map((x: string) => {
+                  if (card.label == x) {
+                    needRefreshCardList.push(index);
+                    for (let c in value[x]) {
+                      card.options.props[c] = value[x][c];
+                    }
                   }
-                }
-              });
-              return card;
-            });
+                });
+                return card;
+              }
+            );
             needRefreshCardList.map((item) => {
-              if (this.$refs["card_" + item] && this.$refs["card_" + item].length > 0) {
+              if (
+                this.$refs["card_" + item] &&
+                this.$refs["card_" + item].length > 0
+              ) {
                 this.$refs["card_" + item][0].$forceUpdate();
               }
             });
@@ -436,25 +488,27 @@ export default defineComponent({
             console.error("输入数据有误", value);
           }
         } else if (type == cardOnChangeType.highLightCard) {
-          if (this.highLightController.timeOut)
-            clearTimeout(this.highLightController.timeOut);
+          if (this.hightLightControler.timeOut)
+            clearTimeout(this.hightLightControler.timeOut);
           if (typeof value == "object" && value.length > 0) {
-            const cardLabelList = this.gridList.map((card: gridCellTemplate) => {
-              return card.label;
-            });
-            this.highLightController.show = true;
+            const cardLabelList = this.gridList.map(
+              (card: gridCellTemplate) => {
+                return card.label;
+              }
+            );
+            this.hightLightControler.show = true;
             value.map((cardLabel) => {
               if (
                 cardLabelList.indexOf(cardLabel) > -1 &&
-                this.highLightComponentsList.indexOf(cardLabel) == -1
+                this.hightLightComponentsList.indexOf(cardLabel) == -1
               )
-                this.highLightComponentsList.push(cardLabel);
+                this.hightLightComponentsList.push(cardLabel);
             });
           } else {
-            this.highLightComponentsList = [];
+            this.hightLightComponentsList = [];
             const that = this;
-            this.highLightController.timeOut = setTimeout(() => {
-              that.highLightController.show = false;
+            this.hightLightControler.timeOut = setTimeout(() => {
+              that.hightLightControler.show = false;
             }, 300);
           }
         } else if (type == cardOnChangeType.cardEdit) {
@@ -471,27 +525,28 @@ export default defineComponent({
         } else if (type == cardOnChangeType.cardAdd) {
           // 这里写的尽量简单了，后期优化
           if (value) {
-            this.gridList.push(value)
+            this.gridList.push(value);
           } else {
-            console.error('请勿添加空组件')
+            console.error("请勿添加空组件");
           }
         } else if (type == cardOnChangeType.cardDelete) {
-          if (value && value.length > 0) {
-            for (let i = this.gridList.length - 1; i > 0; i--) {
-              for (let label in value) {
-                if (value[label] == this.gridList[i].label) {
-                  this.gridList.splice(i, 1)
-                  break;
-                }
-              }
+          if (!value || value.length == 0) {
+            value = [this.gridList[index].label];
+          }
+          const gridList = [...this.gridList];
+          for (let i = gridList.length - 1; i > 0; i--) {
+            if (value.indexOf(gridList[i].label) > -1) {
+              gridList.splice(i, 1);
             }
-          } else this.gridList.splice(index, 1).filter(Boolean);
+          }
+          this.gridList = gridList;
         } else if (type == cardOnChangeType.openComponentsList) {
           this.$refs.componentsListModal.open();
         } else if (type == cardOnChangeType.moduleApi) {
           if (typeof value == "object") {
             for (let refs in value) {
               if (this.$refs[`PlugIn_${refs}`]) {
+                this.plugInData[refs] = null;
                 const plugInComponent = this.$refs[`PlugIn_${refs}`][0];
                 if (!value[refs]) {
                   if (plugInComponent && plugInComponent["close"]) {
@@ -508,9 +563,9 @@ export default defineComponent({
           }
         } else if (type == cardOnChangeType.upEmit) {
           if (value && Object.keys(value).length > 0)
-            Object.keys(value).map(x => {
-              this.$emit(x, value[x])
-            })
+            Object.keys(value).map((x) => {
+              this.$emit(x, value[x]);
+            });
         }
       });
       // this.gridListComputed()
@@ -534,7 +589,7 @@ export default defineComponent({
           style = {
             maxWidth: "10000px",
             zIndex:
-              this.highLightComponentsList.indexOf(gridCell.label) > -1
+              this.hightLightComponentsList.indexOf(gridCell.label) > -1
                 ? "20001"
                 : "100",
             opacity: "1",
@@ -554,8 +609,19 @@ export default defineComponent({
 
     // 填充gridList
     forceUpdateGridList() {
-      this.gridList = markRaw(this.desktopData as Array<gridCellTemplate>)
+      this.gridList = markRaw(this.desktopData as Array<gridCellTemplate>);
       // this.gridListComputed()
+    },
+
+    /**
+     * @name: loadAllComponents
+     * @description: 加载所有组件，一般用于
+     * @authors: CZH
+     * @Date: 2024-05-31 16:55:40
+     */
+    async loadAllComponents() {
+      let res = await getAction()["loadAllComponents"]();
+      this.backUpComponents = res;
     },
   },
 
@@ -592,8 +658,10 @@ export default defineComponent({
   },
 
   async mounted() {
+    if (this.needEdit) {
+      this.loadAllComponents();
+    }
     const that = this;
-    // that.gridRowNumAndUnitDeal();
     setTimeout(() => {
       that.gridRowNumAndUnitDeal();
       timeConsole.checkTime("gridDesktop");
@@ -617,7 +685,8 @@ export default defineComponent({
   //backdrop-filter: saturate(50%) blur(4px);
   background-color: rgba(0, 0, 0, 0);
   position: fixed;
-  background-image: radial-gradient(rgba(0, 0, 0, 0) 0px, rgb(0, 0, 0, 0.1) 0px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0) 0px,
+      rgb(0, 0, 0, 0.1) 0px);
   background-size: 0px 0px;
   border-bottom-color: rgb(220, 223, 230);
   border-bottom-style: solid;
@@ -629,7 +698,8 @@ export default defineComponent({
 .grayBg_Active {
   background-color: rgba(0, 0, 0, 0.1);
   background-size: 4px 4px;
-  background-image: radial-gradient(rgba(0, 0, 0, 0) 1px, rgba(180, 180, 180, 0.3) 1px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0) 1px,
+      rgba(180, 180, 180, 0.3) 1px);
 }
 
 @keyframes hoverFadeInOut {

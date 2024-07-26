@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2023-09-04 15:06:40
- * @FilePath: /lcdp_fe_setup/src/modules/ApplicationManage/component/index.ts
+ * @LastEditTime: 2024-05-07 17:24:34
+ * @FilePath: /lcdp_fe_setup/src/modules/AiHelper/component/index.ts
  */
 import {
   CardComponentTemplate,
@@ -14,6 +14,7 @@ import {
 import { defineAsyncComponent } from "vue";
 import { moduleInfo } from "../output";
 const importModule = import.meta.glob("./**", {});
+// const importModule = {};
 
 const componentGetter = async () => {
   const preName = moduleInfo.name;

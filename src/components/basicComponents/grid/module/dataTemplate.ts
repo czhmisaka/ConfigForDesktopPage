@@ -1,14 +1,15 @@
 /*
  * @Date: 2022-04-28 22:20:23
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 18:51:31
+ * @LastEditTime: 2024-07-26 01:06:19
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/dataTemplate.ts
  */
 
-import { cardUtil, setSize, setPosition } from "./util";
+import { getAction, timeChecker, timeConsole } from "@/router/util";
+import { cardUtil } from "./util";
 import { defineAsyncComponent, defineComponent, ref, h } from "vue";
-import { createApp, markRaw } from "vue";
-import { componentLists } from "./gridCard/module/componentLists";
+// import { componentLists } from "./module/componentLists";
+import { createApp } from "vue";
 
 export enum cardOnChangeType {
   upOnChange = "upOnChange",
@@ -112,11 +113,6 @@ export interface gridCellTemplate {
     methods: {};
     params: {};
   };
-  setSize: (
-    width: number | string,
-    height: number | string
-  ) => gridCellTemplate;
-  setPosition: (x: number | string, y: number | string) => gridCellTemplate;
   [key: string]: any;
 }
 
@@ -176,6 +172,8 @@ export interface componentInfo {
   group?: string;
   context?: Array<any>;
   gridInfo?: { [key: string]: gridSizeCell };
+  labelNameCN?: string;
+  key?: string;
   [key: string]: any;
 }
 export interface propInfo {
@@ -222,32 +220,24 @@ export const cardComponentMaker = (
 export interface cardComponent {
   name: string;
   type: cardComponentType;
-  data?: string | any;
+  data?: string;
   getFunc?: (data: any) => any;
 }
 
-export const componentGetter = (
-  component: cardComponent,
-  componentLists: { [key: string]: any }
-): any => {
+export const componentGetter = async (
+  component: cardComponent
+  // componentLists: { [key: string]: any }
+): Promise<any> => {
   switch (component.type) {
     case cardComponentType.componentList:
-      // console.log(
-      //   "fuckcomponentList",
-      //   Object.keys(componentLists).indexOf(component.name),
-      //   componentLists,
-      //   component.name
-      // );
-      if (Object.keys(componentLists).indexOf(component.name) > -1) {
-        return markRaw(componentLists[component.name]);
-      } else {
-        return componentLists["iframe"];
-      }
+      timeConsole.checkTime('组件加载' + component.name)
+      let back = await getAction()["getOneComponent"](component.name);
+      console.log(back,'component',component.name)
+      timeConsole.checkTime('组件加载' + component.name)
+      return back
     case cardComponentType.fromData:
       if (!component.data) return "";
       return {
-        // component:defineComponent(Function('"use strict";return (' + component.data + ')')().bind(ref))
-        // component: defineComponent(eval('(()=>{return '+component.data+'})()')),
         component: createApp(eval("(()=>{return " + component.data + "})()")),
       };
     case cardComponentType.cusComponent:

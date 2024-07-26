@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-24 14:14:42
  * @LastEditors: CZH
- * @LastEditTime: 2023-12-27 23:25:06
+ * @LastEditTime: 2024-07-26 01:20:18
  * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/baseToolComponents/cardEditModal.vue
 -->
 
@@ -35,9 +35,9 @@
                 <el-option v-for="(item, index) in Object.keys(componentList)" :value="item"
                   :key="componentList[item].name + '_' + index">
                   {{
-                    componentList[item].componentInfo.label +
+                    componentList[item]?.componentInfo?.label +
                     ":" +
-                    componentList[item].componentInfo.description
+                    componentList[item]?.componentInfo?.description
                   }}
                 </el-option>
               </el-select>
@@ -50,24 +50,10 @@
         </cardBg>
         <cardBg :cus-style="cusStyle">
           <el-divider content-position="left">组件属性</el-divider>
-
           <el-form :model="componentsProps" v-on:submit.prevent>
             <el-form-item v-for="(formItem, index) in componentsPropsInputTemplate" :key="index + '_FormItem'"
-              :label="formItem.label">
+              :label="formItem.label" style="margin-bottom: 6px;">
               <el-input v-model="componentsProps[formItem.key]" />
-            </el-form-item>
-          </el-form>
-        </cardBg>
-        <cardBg :cus-style="cusStyle">
-          <el-divider content-position="left">组件权限</el-divider>
-
-          <el-form :model="componentsProps" v-on:submit.prevent>
-            <el-form-item v-for="(formItem, index) in componentsPropsInputTemplate" :key="index + '_FormItem'"
-              :label="formItem.label">
-              <el-select v-model="premission[index + '_FormItem']" placeholder="">
-                <el-option :label="'true'" :value="true"></el-option>
-                <el-option :label="'false'" :value="false"></el-option>
-              </el-select>
             </el-form-item>
           </el-form>
         </cardBg>
@@ -127,6 +113,10 @@ export default defineComponent({
   computed: {
     // componentsType.componentList 加载方式中可使用的组件列表
     componentList() {
+      console.log({
+        ...componentLists,
+        ...this.componentLists,
+      },'组件列表')
       return {
         ...componentLists,
         ...this.componentLists,
@@ -195,10 +185,7 @@ export default defineComponent({
       this.componentsProps = { ...this.detail.options.props };
       // componentList 模式属性预先加载
       if (this.detail.component.type == cardComponentType.componentList) {
-        const props = componentGetter(this.detail.component, this.componentList)
-          ?.settingDetail?.props;
-        console.log(props, componentGetter(this.detail.component, this.componentList), 'asdFuck')
-
+        const props = (await componentGetter(this.detail.component))?.settingDetail?.props;
         for (let x in props) {
           this.componentsPropsInputTemplate.push({
             key: x,
@@ -236,7 +223,9 @@ export default defineComponent({
      */
     async componentLoaderChange() {
       const { cardComponentDetail } = this;
-      let cardComponent = componentGetter(cardComponentDetail, this.componentList);
+      let cardComponent = await componentGetter(cardComponentDetail);
+
+      console.log(cardComponentDetail,'asdasdasd',cardComponent)
 
       // 根据不同的组件加载模式执行对应的检查方式
       switch (cardComponentDetail.type) {
@@ -244,10 +233,10 @@ export default defineComponent({
           // 重置输入模板
           this.componentsPropsInputTemplate = [];
           await this.$nextTick();
-          for (let x in cardComponent.settngDetail.props) {
+          for (let x in cardComponent.settingDetail.props) {
             this.componentsPropsInputTemplate.push({
               key: x,
-              ...cardComponent.settngDetail.props[x],
+              ...cardComponent.settingDetail.props[x],
             });
           }
           break;
@@ -266,6 +255,7 @@ export default defineComponent({
      */
     async open() {
       await this.getPropsData();
+      await this.componentLoaderChange()
       await this.$nextTick();
       this.modalControl.isOpen = true;
     },

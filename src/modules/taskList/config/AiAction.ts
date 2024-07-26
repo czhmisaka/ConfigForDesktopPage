@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-03-24 01:46:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-24 00:02:51
+ * @LastEditTime: 2024-07-26 01:30:43
  * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiAction.ts
  */
 
@@ -112,6 +112,7 @@ export const action = async (inDrawer = false) => {
   const allIot = (await useCacheHook().getDataByKey("allIot")).map((x) => {
     return { ...x, fullName: x.groupName + "_" + x.name, id: x.id };
   });
+  console.log(allIot,'allIot')
   let back = [
     actionCellMaker(
       "iotDesktop",

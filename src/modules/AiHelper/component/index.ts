@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-10 21:58:05
+ * @LastEditTime: 2024-07-26 00:22:54
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/index.ts
  */
 import {
@@ -14,7 +14,6 @@ import {
 import { defineAsyncComponent } from "vue";
 import { moduleInfo } from "../output";
 const importModule = import.meta.glob("./**", {});
-// console.log(importModule);
 // const importModule = {};
 
 const componentGetter = async () => {

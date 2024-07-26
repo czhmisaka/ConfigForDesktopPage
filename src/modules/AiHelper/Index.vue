@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-12-30 17:48:16
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-10 23:17:48
+ * @LastEditTime: 2024-07-26 01:00:11
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/Index.vue
 -->
 
@@ -13,7 +13,7 @@
     overflow: 'hidden',
   }">
     <gridDesktop v-if="Object.keys(componentList).length > 0" :grid-col-num="desktopData.gridColNum"
-      :desktopData="desktopDataList" :component-lists="componentList" :cus-style="desktopData?.cusStyle"
+      :desktopData="desktopDataList" :component-lists="[]" :cus-style="desktopData?.cusStyle"
       :noAnimate="true" />
   </div>
 </template>

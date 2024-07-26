@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-23 21:32:33
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-24 15:11:07
+ * @LastEditTime: 2024-07-26 01:35:51
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/config/aiCommond.ts
  */
 
@@ -10,12 +10,12 @@ import {
   actionCellTemplate,
   actionCellMaker,
   extractJSON,
-} from "@/modules/taskList/config/AiAction";
-import { AiFormPreWord } from "@/modules/taskList/config/AiForm";
+  action as mainAction
+} from "@/modules/TaskList/config/AiAction";
+import { AiFormPreWord } from "@/modules/TaskList/config/AiForm";
 import { useCacheHook } from "@/store/modules/cache";
 import { chat } from "@/utils/api/requests";
 import { ElLoading } from "element-plus";
-
 const cache = useCacheHook();
 
 export enum aiCacheKey {
@@ -26,10 +26,10 @@ export enum aiCacheKey {
 }
 
 // 一般ai可能会使用的一些东西
-cache.setup(aiCacheKey.aiAction, async () => {});
-cache.setup(aiCacheKey.aiMemory, async () => {});
-cache.setup(aiCacheKey.aiPreWord, async () => {});
-cache.setup(aiCacheKey.aiForm, async () => {});
+cache.setup(aiCacheKey.aiAction, async () => { });
+cache.setup(aiCacheKey.aiMemory, async () => { });
+cache.setup(aiCacheKey.aiPreWord, async () => { });
+cache.setup(aiCacheKey.aiForm, async () => { });
 
 export const refreshAllAiProps = () => {
   cache.setRefresh(aiCacheKey.aiAction);
@@ -46,6 +46,7 @@ export const baseAction = async (that) => {
   //   console.log(gridList, "gridList，baseAction");
   let preWord = ``;
   let action = [
+    ...await mainAction(),
     actionCellMaker(
       "go",
       ["前往{pageName}", "去{pageName}"],
@@ -143,7 +144,7 @@ export const baseAction = async (that) => {
             text: "思考中",
             background: "rgba(0, 0, 0, 0.7)",
           });
-          let res = await chat(await AiFormPreWord(form, data.theme), "glm-4");
+          let res = await chat(await AiFormPreWord(form, data.theme), 'glm-4-flash');
           loading.close();
           let back = res.data.choices[0].message.content;
           const tryData = extractJSON(back);
@@ -169,7 +170,7 @@ export const baseAction = async (that) => {
         }
       )
     );
-    
+
     if (queryItemTemplate && queryItemTemplate.length != 0) {
       preWord += `该表单中可填写的内容有:${queryItemTemplate
         .map((x) => {
