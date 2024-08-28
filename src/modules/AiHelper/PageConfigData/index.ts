@@ -1,12 +1,13 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: CZH
- * @LastEditTime: 2024-04-09 13:54:58
+ * @LastEditTime: 2024-04-18 10:31:12
  * @FilePath: /lcdp_fe_setup/src/modules/AiHelper/PageConfigData/index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { desktopDataTemplate } from "@/modules/userManage/types";
 import { isValidKey } from "@/utils/index";
+import { AiChatDesktopCellList } from "./AIChat";
 
 export const base = {
   name: "测试",
@@ -18,7 +19,9 @@ export const base = {
     allPeopleCanSee: true,
   },
 };
-let pageConfig = {} as { [key: string]: desktopDataTemplate };
+let pageConfig = {
+  ...AiChatDesktopCellList,
+} as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
   [key: string]: desktopDataTemplate;

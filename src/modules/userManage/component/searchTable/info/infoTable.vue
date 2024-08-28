@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-11 10:18:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-20 23:44:38
+ * @LastEditTime: 2024-07-26 17:47:16
  * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/info/infoTable.vue
 -->
 <template>

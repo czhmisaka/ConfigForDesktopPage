@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: CZH
- * @LastEditTime: 2024-07-16 14:55:17
+ * @LastEditTime: 2024-08-28 22:35:40
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/pictureListManage.tsx
  */
 
@@ -35,9 +35,10 @@ import { repBackMessageShow } from "@/modules/userManage/component/searchTable/d
 import { uploadFile } from "../../api/upload";
 import { useCacheHook } from "@/store/modules/cache";
 import { showCell } from '../../../userManage/component/searchTable/searchTable';
-import { ElImage, ElMessage, ElPopover, ElTag, ElTooltip } from "element-plus";
+import { ElImage, ElLoading, ElMessage, ElMessageBox, ElPopover, ElTag, ElTooltip } from "element-plus";
 import { 上级相册 } from "./newCategoryManage";
 import { actionCellMaker } from "@/modules/TaskList/config/AiAction";
+import { h } from "vue";
 
 export const uploadStatus = {
     // 准备上传
@@ -193,9 +194,42 @@ export const 清空 = btnMaker('清空', btnActionTemplate.Function, {
     }
 })
 
+export const 生成图片 = btnMaker('生成图片', btnActionTemplate.Function, {
+    function: async (that, data) => {
+        ElMessageBox.prompt('请输入提示词', '文本生成图片', {
+            confirmButtonText: '开始生成',
+            cancelButtonText: '取消',
+        }).then(async ({ value }) => {
+            const loading = ElLoading.service({
+                lock: true,
+                text: "图片处理中",
+                background: "rgba(0, 0, 0, 0.7)",
+            });
+            let res = await post('/admin/picture/genEngine/txt2img', {
+                prompt: value
+            })
+            loading.close()
+            ElMessageBox({
+                title: value,
+                message: () => h('img', {
+                    src: `data:image/png;base64,` + res.data.images[0]
+                }),
+            })
+        })
+    }
+})
+
 export const photoListKey = 'pictureListManageKey'
 
-useCacheHook().setup(photoListKey, async () => {
+useCacheHook().setup(photoListKey, async () => 
+
+
+
+
+
+
+
+{
     return []
 }, true)
 
@@ -252,7 +286,7 @@ export const PictureListManage = async () => {
                 return data[key] && data[key].length > 0 ? <div>{
                     data[key].map(x => {
                         return <ElTag style={{
-                            marginRight:'3px'
+                            marginRight: '3px'
                         }} effect="dark" type='info'>
                             {x.name}
                         </ElTag>
@@ -277,7 +311,7 @@ export const PictureListManage = async () => {
                 defaultQuery: {
                     showLink: null,
                 },
-                btnList: [批量上传按钮, 开始上传按钮, 批量删除, 清空],
+                btnList: [批量上传按钮, 开始上传按钮, 批量删除, 清空, 生成图片],
                 autoSearch: false,
                 modeChange: true,
                 isCard: false,

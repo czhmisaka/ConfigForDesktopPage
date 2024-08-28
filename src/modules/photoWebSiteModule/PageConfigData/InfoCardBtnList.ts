@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: CZH
- * @LastEditTime: 2024-07-25 22:16:55
+ * @LastEditTime: 2024-08-28 22:45:30
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
  */
 import {
@@ -338,12 +338,14 @@ export const 解析图片信息 = btnMaker("解析图片信息", btnActionTempla
         });
         let res = await post('/admin/picture/pictureInfo/checkPicture', {
             id: data.id,
-            model: 'clip'
+            model: 'deepdanbooru' as 'clip' | 'deepdanbooru'
         })
-        let resa = await chat(`${res.data.caption}请把上述内容翻译成中文，并对其适当的扩充，同时在最后用【xxx】、【xx】的格式输出这段话的关键词。(不要输出思考过程)`,"glm-4-flash")
+        let resa = await chat(`${res.data.caption}请把上述内容翻译成中文，并用【】包裹的格式输出这些关键词。`,"glm-4-flash")
+        // let resa = await chat(`${res.data.caption}请把上述内容翻译成中文，并对其适当的扩充，同时在最后用【xxx】、【xx】的格式输出这段话的关键词。(不要输出思考过程)`,"glm-4-flash")
         loading.close()
         ElMessageBox({
             message: resa.data.choices[0].message.content,
+            // message:res.data.caption,
             title: '解析结果',
             type: 'success'
         })

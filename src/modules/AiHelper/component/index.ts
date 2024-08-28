@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-20 21:59:45
  * @LastEditors: CZH
- * @LastEditTime: 2024-07-26 00:22:54
- * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/index.ts
+ * @LastEditTime: 2024-05-07 17:24:34
+ * @FilePath: /lcdp_fe_setup/src/modules/AiHelper/component/index.ts
  */
 import {
   CardComponentTemplate,
