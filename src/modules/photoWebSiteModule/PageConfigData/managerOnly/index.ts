@@ -12,6 +12,7 @@ import { categoryManage } from "./categoryManage";
 import { userManage } from "./userManage";
 import { collectionManage } from "./collectionManage";
 import { desktopDataTemplate } from "@/modules/userManage/types";
+import { loraServerManage } from "./loraServer/loraServerManage";
 
 const pageConfig = {
   tagManage: {
@@ -25,6 +26,18 @@ const pageConfig = {
       margin: 6,
     },
   },
+
+  loraServer:{
+    name:'loraServer管理',
+    desktopData: loraServerManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  }
 
   // categoryManage: {
   //   name: "相册管理",
