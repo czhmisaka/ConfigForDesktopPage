@@ -13,6 +13,7 @@ import { userManage } from "./userManage";
 import { collectionManage } from "./collectionManage";
 import { desktopDataTemplate } from "@/modules/userManage/types";
 import { loraServerManage } from "./loraServer/loraServerManage";
+import { imgFolderManage } from "./loraServer/imgFolder";
 
 const pageConfig = {
   tagManage: {
@@ -27,9 +28,20 @@ const pageConfig = {
     },
   },
 
-  loraServer:{
-    name:'loraServer管理',
+  loraServer: {
+    name: 'loraServer管理',
     desktopData: loraServerManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  },
+  imgFolder: {
+    name: "图集管理",
+    desktopData: imgFolderManage,
     gridColNum: 12,
     cusStyle: {
       showLink: true,

@@ -56,11 +56,23 @@ export const loraServerStorage = new SearchCellStorage([
   ...baseCoolTableCell,
 ]);
 
+const 删除loraServer = btnMaker("删除", btnActionTemplate.Function, {
+  elType: "danger",
+  icon: "DeleteFilled",
+  function: async (that, data) => {
+    let res = await post("/admin/picture/lora/server/delete", {
+      ids: [data.id],
+    });
+    repBackMessageShow(that,res)
+  },
+});
+
 loraServerStorage.push(
   tableCellTemplateMaker(
     "操作",
     "asd",
     actionCell([
+      删除loraServer,
       btnMaker("检查状态", btnActionTemplate.Function, {
         function: async (that, data) => {
           let res = await post("/admin/picture/lora/server/checkStatus", {

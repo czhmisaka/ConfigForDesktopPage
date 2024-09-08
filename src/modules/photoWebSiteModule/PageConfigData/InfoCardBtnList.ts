@@ -326,6 +326,7 @@ export const 打包成册 = btnMaker("打包成册", btnActionTemplate.Function,
     },
 });
 
+
 export const 解析图片信息 = btnMaker("解析图片信息", btnActionTemplate.Function, {
     icon: 'Check',
     elType: 'warning',

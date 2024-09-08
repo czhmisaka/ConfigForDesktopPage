@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-18 19:50:20
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-16 22:59:41
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/tagManage.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-08 23:00:32
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\tagManage.ts
  */
 import {
   btnMaker,
@@ -267,10 +267,14 @@ export const tagManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: [tableCellTemplateMaker("关键词", "search")],
+          searchItemTemplate: [tableCellTemplateMaker("关键词", "keyWord")],
           showItemTemplate: tagsStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post('/admin/picture/tags/page', {})
+            let res = await post('/admin/picture/tags/page', {
+              ...query,
+              page:query.pageNumber,
+              size:query.pageSize
+            })
             return transformDataFromCool(res.data)
           },
           btnList: [添加标签, 批量删除标签],
