@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2024-09-06 00:15:06
- * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\loraServer\loraServerManage.tsx
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraServerManage.tsx
  */
 
 import {
@@ -32,6 +32,7 @@ import {
 } from "@/modules/userManage/types";
 import { post } from "@/utils/api/requests";
 import { ElTag } from "element-plus";
+import { transformDataFromCool } from "../newCategoryManage";
 export const baseCoolTableCell = [
   tableCellTemplateMaker("更新时间", "updateTime"),
   tableCellTemplateMaker("创建时间", "createTime"),
@@ -120,11 +121,18 @@ export const loraServerManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: [],
+          searchItemTemplate: [
+            tableCellTemplateMaker('','keyWord'),
+            tableCellTemplateMaker('状态','status')
+          ],
           showItemTemplate: loraServerStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post("/admin/picture/lora/server/list", {});
-            return res.data;
+            let res = await post("/admin/picture/lora/server/page", {
+              ...query,
+              page: query.pageNumber,
+              size: query.pageSize,
+            });
+            return transformDataFromCool(res.data);
           },
           btnList: [创建lora节点],
           cantSelect: true,
