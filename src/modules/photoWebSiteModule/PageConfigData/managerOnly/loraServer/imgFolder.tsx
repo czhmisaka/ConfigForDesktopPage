@@ -79,7 +79,7 @@ export const imgFolderStorage = new SearchCellStorage([
   ...baseCoolTableCell,
 ]);
 
-const 删除图集 = btnMaker("删除", btnActionTemplate.Function, {
+export const 删除图集 = btnMaker("删除", btnActionTemplate.Function, {
   elType: "danger",
   icon: "Delete",
   function: async (that, data) => {
@@ -101,8 +101,14 @@ export const 添加图片到图集 = btnMaker(
   "添加图片到图集",
   btnActionTemplate.Function,
   {
+    isShow: (data) => {
+      return data && data["length"] && data["length"] > 0;
+    },
     function: async (that, data) => {
-      const { imgIds } = data;
+      let imgIds = [] as number[];
+      if (typeof data == "object" && data.imgIds) imgIds = data.imgIds;
+      if (typeof data == "object" && data.length > 0)
+        imgIds = data.map((x) => x.id);
       if (!imgIds || imgIds.length == 0) return ElMessage.error("请先选择图片");
       let drawerProps = {
         title: "选择图集",
@@ -140,12 +146,12 @@ export const 添加图片到图集 = btnMaker(
         btnList: [
           btnMaker("添加", btnActionTemplate.Function, {
             function: async (th, da) => {
-              const { imgIds, imgFolderId } = da;
+              const { imgFolderId } = da;
               let res = await post("/admin/picture/lora/imgFolder/addImages", {
                 imgIds,
                 imgFolderId,
               });
-              repBackMessageShow(th,res)
+              repBackMessageShow(th, res);
             },
           }),
         ],

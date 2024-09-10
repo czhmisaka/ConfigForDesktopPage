@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-16 23:41:40
- * @LastEditors: CZH
- * @LastEditTime: 2024-08-28 22:45:30
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/InfoCardBtnList.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-10 23:18:13
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\InfoCardBtnList.ts
  */
 import {
     btnMaker,
@@ -29,6 +29,7 @@ import {
     changeVisible,
     refreshDesktop,
 } from "@/components/basicComponents/grid/module/cardApi";
+import { 添加图片到图集 } from "./managerOnly/loraServer/imgFolder";
 
 //批量
 function getFile(url) {
@@ -356,6 +357,7 @@ export const 解析图片信息 = btnMaker("解析图片信息", btnActionTempla
 export const InfoCardBtnList = [
     打包成册,
     收藏按钮,
+    添加图片到图集,
     添加标签按钮,
     添加到处理区,
     下载单张,

@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-06-20 16:46:31
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-16 23:09:21
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/myPicture.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-10 23:19:26
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\myPicture.ts
  */
 import {
     cardComponentType,
@@ -23,6 +23,7 @@ import {
     repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import { btnActionTemplate } from "@/modules/userManage/types";
+import { 添加图片到图集 } from "./managerOnly/loraServer/imgFolder";
 
 export const myPicture = async () => {
     let user = useUserStoreHook();
@@ -144,7 +145,7 @@ export const myPicture = async () => {
             },
             {
                 props: {
-                    btnList: [移出处理区, 打包成册, 批量下载, 批量删除, 删除],
+                    btnList: [移出处理区, 打包成册, 批量下载,添加图片到图集, 批量删除, 删除],
                     watchKeyForCategory: "category",
                 },
             }

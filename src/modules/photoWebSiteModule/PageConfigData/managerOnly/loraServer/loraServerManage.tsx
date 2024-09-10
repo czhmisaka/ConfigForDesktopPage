@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2024-09-06 00:15:06
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraServerManage.tsx
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\loraServer\loraServerManage.tsx
  */
 
 import {
@@ -123,7 +123,11 @@ export const loraServerManage = async () => {
         props: {
           searchItemTemplate: [
             tableCellTemplateMaker('','keyWord'),
-            tableCellTemplateMaker('状态','status')
+            tableCellTemplateMaker('状态','status',staticSelectCell({
+              onLine:'在线',
+              offLine:'离线',
+              onWork:'工作中'
+            }))
           ],
           showItemTemplate: loraServerStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
