@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-03-12 23:09:15
- * @LastEditors: CZH
- * @LastEditTime: 2023-07-30 23:12:55
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/selectList/searchInfoChosSearch.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-16 02:01:37
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\selectList\searchInfoChosSearch.vue
 -->
 <template>
   <cardBg @mouseenter="changeVisiable(true)" @mouseleave="changeVisiable(false)">
@@ -52,12 +52,14 @@
       >
         {{ item.name }}
       </el-button>
+      {{preUrl}}
       <el-upload
         class="upload-demo"
-        :action="`/api/upload/searchImage?token=${token}`"
+        :action="preUrl+`/admin/picture/pictureInfo/searchByPicture`"
         drag
         :data="{}"
-        :on-success="searchByImage"
+        :limit="1"
+        :before-upload="searchByImage"
         multiple
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -86,6 +88,7 @@ import {
 } from "@/components/basicComponents/grid/module/cardApi/index";
 import { post } from "@/utils/api/requests";
 import { useUserStoreHook } from "@/store/modules/user";
+import { getPreUrl } from "../../../../utils/api/requests";
 
 export default defineComponent({
   name: "searchInfoChosSearch",
@@ -117,7 +120,7 @@ export default defineComponent({
     return {
       searchString: "食物",
       loading: false,
-
+preUrl:getPreUrl(),
       preGridInfo: {},
       isOpen: false,
       closeBySearch: false,

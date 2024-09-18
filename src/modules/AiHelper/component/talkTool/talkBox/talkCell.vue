@@ -1,8 +1,8 @@
 <!--
  * @Date: 2024-03-25 17:20:28
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-06 19:07:29
- * @FilePath: /lcdp_fe_setup/src/modules/AiHelper/component/talkTool/talkBox/talkCell.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-16 03:03:38
+ * @FilePath: \github\config-for-desktop-page\src\modules\AiHelper\component\talkTool\talkBox\talkCell.vue
 -->
 <template>
   <div v-if="cell.from == 'ai'" class="avater">
@@ -210,9 +210,9 @@ import {
   reportDataTemplate,
   reportType,
 } from "./index";
-import userHeader from "@/modules/AiHelper/assets/userHeader.png";
-import robotHeader from "@/modules/AiHelper/assets/robotHeader.png";
-import background from "@/modules/knowledge/assets/logo/image.png";
+// import userHeader from "@/modules/AiHelper/assets/userHeader.png";
+// import robotHeader from "@/modules/AiHelper/assets/robotHeader.png";
+// import background from "@/modules/knowledge/assets/logo/image.png";
 import { stringAnyObj } from "@/modules/ApplicationManage/types";
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { btnCellTemplate } from "@/modules/userManage/types";
@@ -229,8 +229,8 @@ export default defineComponent({
     return {
       showTypeTemplate,
       dataId: num++,
-      userHeader,
-      robotHeader,
+      userHeader:'',
+      robotHeader:'',
       // 笑死，全是历史遗留
       svg: {
         bad: "./img/bad.svg",

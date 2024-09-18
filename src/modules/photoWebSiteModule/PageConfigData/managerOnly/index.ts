@@ -14,6 +14,7 @@ import { collectionManage } from "./collectionManage";
 import { desktopDataTemplate } from "@/modules/userManage/types";
 import { loraServerManage } from "./loraServer/loraServerManage";
 import { imgFolderManage } from "./loraServer/imgFolder";
+import { loraTrainTaskManage } from "./loraServer/loraTrainTask";
 
 const pageConfig = {
   tagManage: {
@@ -49,6 +50,17 @@ const pageConfig = {
       maxRows: 8,
       margin: 6,
     },
+  },
+  训练任务:{
+    name:'lora训练任务',
+    desktopData:loraTrainTaskManage,
+    gridColNum:12,
+    cusStyle:{
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    }
   }
 
   // categoryManage: {

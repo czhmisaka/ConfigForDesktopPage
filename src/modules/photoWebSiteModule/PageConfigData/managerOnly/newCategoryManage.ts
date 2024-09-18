@@ -126,7 +126,7 @@ const 批量删除相册 = btnMaker('批量删除相册', btnActionTemplate.Func
 export const transformDataFromCool = (data: any) => {
     const { pagination, list } = data
     return {
-        list,
+        list: list.filter(x => x.id),
         total: pagination.total,
         pageNumber: pagination.page,
         pageSize: pagination.size,

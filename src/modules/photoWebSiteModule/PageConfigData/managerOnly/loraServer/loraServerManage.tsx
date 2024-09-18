@@ -64,7 +64,7 @@ const 删除loraServer = btnMaker("删除", btnActionTemplate.Function, {
     let res = await post("/admin/picture/lora/server/delete", {
       ids: [data.id],
     });
-    repBackMessageShow(that,res)
+    repBackMessageShow(that, res);
   },
 });
 
@@ -109,6 +109,32 @@ const 创建lora节点 = btnMaker("创建lora节点", btnActionTemplate.Function
   },
 });
 
+export const 选择loraServer = tableCellTemplateMaker(
+  "lora训练服务器",
+  "loraServer",
+  searchCell(formInputType.searchList, {
+    propertiesOption: {
+      type: "number",
+    },
+    funcInputOptionsLoader: async (that) => {
+      let attr = { multiple: false };
+      attr["remoteMethod"] = async (query) => {
+        let res = await post("/admin/picture/lora/server/page", {
+          keyWord: query,
+          size: 200,
+        });
+        return transformDataFromCool(res.data).list.map((x) => {
+          return {
+            label: x.name,
+            value: x.id,
+          };
+        });
+      };
+      return attr;
+    },
+  })
+);
+
 export const loraServerManage = async () => {
   return [
     gridCellMaker(
@@ -122,12 +148,16 @@ export const loraServerManage = async () => {
       {
         props: {
           searchItemTemplate: [
-            tableCellTemplateMaker('','keyWord'),
-            tableCellTemplateMaker('状态','status',staticSelectCell({
-              onLine:'在线',
-              offLine:'离线',
-              onWork:'工作中'
-            }))
+            tableCellTemplateMaker("", "keyWord"),
+            tableCellTemplateMaker(
+              "状态",
+              "status",
+              staticSelectCell({
+                onLine: "在线",
+                offLine: "离线",
+                onWork: "工作中",
+              })
+            ),
           ],
           showItemTemplate: loraServerStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {

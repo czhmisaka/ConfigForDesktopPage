@@ -19,6 +19,21 @@ export const uploadFile = async (file: any) => {
     return res
 }
 
+export const searchByPicture = async(file:any)=>{
+    var formData = new FormData();
+    formData.append("file", file);
+    let res = await request({
+        url: getPreUrl() + '/admin/picture/pictureInfo/searchByPicture',
+        method: 'POST',
+        data: formData,
+        headers: {
+            ...getHeaders(),
+            "Content-Type": "multipart/form-data"
+        },
+    })
+    return res
+}
+
 
 
 // 调用图片id获取

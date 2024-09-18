@@ -50,8 +50,9 @@ export const imgFolderStorage = new SearchCellStorage([
   tableCellTemplateMaker("name", "name"),
   tableCellTemplateMaker("备注", "mark"),
   tableCellTemplateMaker("目标tag", "tagName"),
+  tableCellTemplateMaker('图片数量','imgNum'),
   tableCellTemplateMaker(
-    "共同tag",
+    "目标tag",
     "targetTag",
     searchCell(formInputType.searchList, {
       propertiesOption: {
@@ -64,6 +65,7 @@ export const imgFolderStorage = new SearchCellStorage([
         attr["remoteMethod"] = async (query) => {
           let res = await post("/admin/picture/tags/page", {
             keyWord: query,
+            size:200,
           });
           return transformDataFromCool(res.data).list.map((x) => {
             return {
@@ -161,9 +163,6 @@ export const 添加图片到图集 = btnMaker(
   }
 );
 
-imgFolderStorage.push(
-  tableCellTemplateMaker("操作", "asd", actionCell([删除图集]))
-);
 
 export const 新建图集 = btnMaker("新建图集", btnActionTemplate.Function, {
   elType: "primary",
@@ -188,6 +187,38 @@ export const 新建图集 = btnMaker("新建图集", btnActionTemplate.Function,
   },
 });
 
+
+export const 编辑图集 = btnMaker('编辑图集',btnActionTemplate.Function,{
+  elType: "primary",
+  icon: "Edit",
+  function:async(that,data)=>{
+    let drawerProps = {
+      title: `编辑图集【${data.name}】`,
+      data:data,
+      queryItemTemplate: [
+        ...imgFolderStorage.getByKeyArr(["name", "mark", "targetTag"]),
+      ],
+      btnList: [
+        btnMaker("确定", btnActionTemplate.Function, {
+          icon: "Position",
+          function: async (that, data) => {
+            delete data.tagName
+            delete data.imgNum
+            let res = await post("/admin/picture/lora/imgFolder/update", data);
+            repBackMessageShow(that, res);
+          },
+        }),
+      ],
+    } as drawerProps;
+    openDrawerFormEasy(that, drawerProps);
+  }
+})
+
+imgFolderStorage.push(
+  tableCellTemplateMaker("操作", "asd", actionCell([删除图集,编辑图集]))
+);
+
+
 export const imgFolderManage = async () => {
   return [
     gridCellMaker(
@@ -205,8 +236,8 @@ export const imgFolderManage = async () => {
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post("/admin/picture/lora/imgFolder/page", {
               ...query,
-              page: query.pageNumber,
-              size: query.pageSize,
+              page: query.pageNumber || 1,
+              size: query.pageSize || 10,
             });
             return transformDataFromCool(res.data);
           },

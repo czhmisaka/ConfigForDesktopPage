@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2024-07-04 14:36:59
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-16 02:37:43
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\main.ts
  */
 
 import {
@@ -190,7 +190,12 @@ export const mainDesktop = async () => {
           outputKey: "query",
           tagList: tagList,
           searchByImage: async (that, list) => {
-
+            console.log(list, 'asd')
+            changeCardProperties(that, {
+              waterFall: {
+                imageList:list
+              },
+            });
           },
         },
       }

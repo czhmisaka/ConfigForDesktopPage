@@ -1,12 +1,16 @@
 <!--
  * @Date: 2023-01-21 21:10:09
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-16 00:22:43
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/imageList/waterfall.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-16 02:50:03
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\imageList\waterfall.vue
 -->
 <template>
   <cardBg>
-    <div class="wholeScreen" :id="'waterfall_' + MathRandom" v-loading="isLoading">
+    <div
+      class="wholeScreen"
+      :id="'waterfall_' + MathRandom"
+      v-loading="isLoading"
+    >
       <!-- <div
         :style="{
           position: 'fixed',
@@ -43,7 +47,8 @@
               margin: row.margin + 'px',
             }"
             :class="
-              selected.id == item.id || selecteds.map((x) => x.id).indexOf(item.id) > -1
+              selected.id == item.id ||
+              selecteds.map((x) => x.id).indexOf(item.id) > -1
                 ? ' normal selectedIn'
                 : 'normal'
             "
@@ -115,9 +120,11 @@ function fuckk(thatt) {
   const rowIndexNumber = Math.floor(
     (elw.offsetWidth - offsetForScrollBar) / that.row.rowIndexSize
   );
-  const lastOffset = (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
+  const lastOffset =
+    (elw.offsetWidth - offsetForScrollBar) % that.row.rowIndexSize;
   if (
-    (that.row.rowIndexNumber != rowIndexNumber || that.row.lastOffset != lastOffset) &&
+    (that.row.rowIndexNumber != rowIndexNumber ||
+      that.row.lastOffset != lastOffset) &&
     rowIndexNumber > 100
   ) {
     that.row.rowIndexNumber = rowIndexNumber;
@@ -127,7 +134,10 @@ function fuckk(thatt) {
   }
 }
 
-function getBaseDataByWatchKey(baseData: stringAnyObj, watchKey: string | string[]) {
+function getBaseDataByWatchKey(
+  baseData: stringAnyObj,
+  watchKey: string | string[]
+) {
   if (typeof watchKey == "string") watchKey = [watchKey];
   let backData = {};
   let num = 0;
@@ -172,11 +182,46 @@ export default defineComponent({
 
   baseProps: {},
 
-  props: ["baseData", "sizeUnit", "watchKey", "imageList", "getFunc", "startSearch"],
+  props: [
+    "baseData",
+    "sizeUnit",
+    "watchKey",
+    "imageList",
+    "getFunc",
+    "startSearch",
+  ],
   components: { cardBg, waterFallItem },
   watch: {
     nowShowType(val: showType) {
       if (val == showType.waterFall) fuckk(this);
+    },
+    imageList: {
+      handler: async function (val) {
+        const that = this;
+        this.rowList = [[]];
+        this.data.offset = 0;
+
+        imageListForReSize = [];
+        let list = val.map((x) => {
+          return {
+            ...x,
+            origin: x,
+            url: x.url,
+            path: x.path,
+            height: that.row.height,
+            width:
+              Math.floor(
+                ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+              ) * that.row.rowIndexSize,
+            rowIndex: Math.floor(
+              ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+            ),
+          };
+        });
+        imageListForReSize = list;
+        that.pkFunc(list);
+        that.isLoading = false;
+      },
     },
     baseData: {
       handler: async function (val) {
@@ -326,7 +371,9 @@ export default defineComponent({
     // 键盘事件
     keyDown(e) {
       if (
-        ["Space", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown"].indexOf(e.code) != -1
+        ["Space", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown"].indexOf(
+          e.code
+        ) != -1
       )
         e.preventDefault();
       let { rowIndex, colIndex } = this.selected;
@@ -379,7 +426,10 @@ export default defineComponent({
           break;
         case "ArrowRight":
           if (colIndex < row.length - 1) colIndex++;
-          else if (colIndex == row.length - 1 && rowIndex++ < this.rowList.length - 1) {
+          else if (
+            colIndex == row.length - 1 &&
+            rowIndex++ < this.rowList.length - 1
+          ) {
             rowIndex++;
             colIndex = 0;
           } else {
@@ -392,7 +442,9 @@ export default defineComponent({
         this.setImage(this.rowList[rowIndex][colIndex], rowIndex, colIndex);
     },
 
-    async getImgList(val = getBaseDataByWatchKey(this.baseData, this.watchKey)) {
+    async getImgList(
+      val = getBaseDataByWatchKey(this.baseData, this.watchKey)
+    ) {
       const that = this;
       if (that.isLoading) return null;
       if (!val) return null;
@@ -416,8 +468,9 @@ export default defineComponent({
           path: x.path,
           height: that.row.height,
           width:
-            Math.floor(((that.row.height / x.height) * x.width) / that.row.rowIndexSize) *
-            that.row.rowIndexSize,
+            Math.floor(
+              ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
+            ) * that.row.rowIndexSize,
           rowIndex: Math.floor(
             ((that.row.height / x.height) * x.width) / that.row.rowIndexSize
           ),
@@ -439,7 +492,8 @@ export default defineComponent({
         let row = getRow();
         let rowIndex =
           row.length > 0
-            ? that.row.rowIndexNumber - row.map((x) => x.rowIndex).reduce((a, b) => a + b)
+            ? that.row.rowIndexNumber -
+              row.map((x) => x.rowIndex).reduce((a, b) => a + b)
             : that.row.rowIndexNumber;
         return rowIndex;
       }
@@ -527,11 +581,12 @@ export default defineComponent({
   justify-content: flex-start;
 }
 .selectedIn {
-  box-shadow: 0px 0px 2.5px rgba(9, 13, 255, 0.812), 0px 0px 2.7px rgba(9, 13, 255, 0.922),
-    0px 0px 2.6px rgba(9, 13, 255, 0.934), 0px 0px 2.3px rgba(9, 13, 255, 0.906),
-    0px 0px 2px rgba(9, 13, 255, 0.863), 0px 0px 1.7px rgba(9, 13, 255, 0.821),
-    0px 0px 1.4px rgba(9, 13, 255, 0.794), 0px 0px 1.3px rgba(9, 13, 255, 0.797),
-    0px 0px 1.5px rgba(9, 13, 255, 0.852), 0px 0px 4px rgba(9, 13, 255, 1);
+  box-shadow: 0px 0px 2.5px rgba(9, 13, 255, 0.812),
+    0px 0px 2.7px rgba(9, 13, 255, 0.922), 0px 0px 2.6px rgba(9, 13, 255, 0.934),
+    0px 0px 2.3px rgba(9, 13, 255, 0.906), 0px 0px 2px rgba(9, 13, 255, 0.863),
+    0px 0px 1.7px rgba(9, 13, 255, 0.821), 0px 0px 1.4px rgba(9, 13, 255, 0.794),
+    0px 0px 1.3px rgba(9, 13, 255, 0.797), 0px 0px 1.5px rgba(9, 13, 255, 0.852),
+    0px 0px 4px rgba(9, 13, 255, 1);
 }
 .normal {
   transition: all 0.1s;
