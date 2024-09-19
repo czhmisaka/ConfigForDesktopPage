@@ -50,13 +50,13 @@ export const imgFolderStorage = new SearchCellStorage([
   tableCellTemplateMaker("name", "name"),
   tableCellTemplateMaker("备注", "mark"),
   tableCellTemplateMaker("目标tag", "tagName"),
-  tableCellTemplateMaker('图片数量','imgNum'),
+  tableCellTemplateMaker("图片数量", "imgNum"),
   tableCellTemplateMaker(
     "目标tag",
     "targetTag",
     searchCell(formInputType.searchList, {
       propertiesOption: {
-        type: "number",
+        type: "string",
       },
       funcInputOptionsLoader: async (that) => {
         let attr = {
@@ -65,14 +65,17 @@ export const imgFolderStorage = new SearchCellStorage([
         attr["remoteMethod"] = async (query) => {
           let res = await post("/admin/picture/tags/page", {
             keyWord: query,
-            size:200,
+            size: 200,
           });
-          return transformDataFromCool(res.data).list.map((x) => {
-            return {
-              label: x.name,
-              value: x.id,
-            };
-          });
+          return [
+            query ? { label: query, value: "needCreate:" + query } : false,
+            ...transformDataFromCool(res.data).list.map((x) => {
+              return {
+                label: x.name,
+                value: x.id + "",
+              };
+            }),
+          ].filter(Boolean);
         };
         return attr;
       },
@@ -163,7 +166,6 @@ export const 添加图片到图集 = btnMaker(
   }
 );
 
-
 export const 新建图集 = btnMaker("新建图集", btnActionTemplate.Function, {
   elType: "primary",
   icon: "Plus",
@@ -177,6 +179,13 @@ export const 新建图集 = btnMaker("新建图集", btnActionTemplate.Function,
         btnMaker("创建图集", btnActionTemplate.Function, {
           icon: "Position",
           function: async (that, data) => {
+            if (data.targetTag.indexOf("needCreate:") > -1) {
+              let tagAddRes = await post("/admin/picture/tags/add", {
+                name: data.targetTag.replace("needCreate:", ""),
+                description: "图集使用",
+              });
+              data.targetTag = tagAddRes.data.id + "";
+            }
             let res = await post("/admin/picture/lora/imgFolder/add", data);
             repBackMessageShow(that, res);
           },
@@ -187,14 +196,13 @@ export const 新建图集 = btnMaker("新建图集", btnActionTemplate.Function,
   },
 });
 
-
-export const 编辑图集 = btnMaker('编辑图集',btnActionTemplate.Function,{
+export const 编辑图集 = btnMaker("编辑图集", btnActionTemplate.Function, {
   elType: "primary",
   icon: "Edit",
-  function:async(that,data)=>{
+  function: async (that, data) => {
     let drawerProps = {
       title: `编辑图集【${data.name}】`,
-      data:data,
+      data: data,
       queryItemTemplate: [
         ...imgFolderStorage.getByKeyArr(["name", "mark", "targetTag"]),
       ],
@@ -202,8 +210,8 @@ export const 编辑图集 = btnMaker('编辑图集',btnActionTemplate.Function,{
         btnMaker("确定", btnActionTemplate.Function, {
           icon: "Position",
           function: async (that, data) => {
-            delete data.tagName
-            delete data.imgNum
+            delete data.tagName;
+            delete data.imgNum;
             let res = await post("/admin/picture/lora/imgFolder/update", data);
             repBackMessageShow(that, res);
           },
@@ -211,13 +219,55 @@ export const 编辑图集 = btnMaker('编辑图集',btnActionTemplate.Function,{
       ],
     } as drawerProps;
     openDrawerFormEasy(that, drawerProps);
-  }
-})
+  },
+});
+
+export const 查看图集图片 = btnMaker("查看图片", btnActionTemplate.Function, {
+  function: async (that, data) => {
+    const getFunc = async (that, dataa) => {
+      let res = await post("/admin/picture/lora/imgFolder/getImgFolderAllImg", {
+        imgFolderId: data.id,
+      });
+      return res.data;
+    };
+    let drawerProps = {
+      gridDesktop: true,
+      size: 60,
+      gridDesktopConfig: {
+        desktopData: async () => [
+          gridCellMaker(
+            "waterFall",
+            "瀑布流图片展示功能",
+            {},
+            {
+              name: "photoWebSiteModule_waterfall",
+              type: cardComponentType.componentList,
+            },
+            {
+              props: {
+                getFunc: getFunc,
+                startSearch: true,
+              },
+            }
+          )
+            .setPosition(0, 0)
+            .setSize(12, 8),
+        ],
+        gridColNum: 12,
+        cusStyle: {
+          wholeScreen: true,
+          margin:0.001,
+          maxRows: 8,
+        },
+      },
+    } as drawerProps;
+    openDrawerFormEasy(that, drawerProps);
+  },
+});
 
 imgFolderStorage.push(
-  tableCellTemplateMaker("操作", "asd", actionCell([删除图集,编辑图集]))
+  tableCellTemplateMaker("操作", "asd", actionCell([删除图集,查看图集图片, 编辑图集]))
 );
-
 
 export const imgFolderManage = async () => {
   return [

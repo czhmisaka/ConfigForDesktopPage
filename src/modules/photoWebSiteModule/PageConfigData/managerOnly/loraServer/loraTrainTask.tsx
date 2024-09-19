@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-09-09 14:28:04
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-18 22:25:34
+ * @LastEditTime: 2024-09-20 00:14:39
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\loraServer\loraTrainTask.tsx
  */
 
@@ -32,7 +32,7 @@ import {
   formInputType,
   showType,
 } from "@/modules/userManage/types";
-import { post } from "@/utils/api/requests";
+import { getPreUrl, post } from "@/utils/api/requests";
 import data from "@iconify-icons/ep/check";
 import { ElTag } from "element-plus";
 import { transformDataFromCool } from "../newCategoryManage";
@@ -138,7 +138,7 @@ export const loraTrainTaskStorage_lora训练任务字段库 = new SearchCellStor
                 text-inside="true"
                 stroke-width="20"
                 percentage={data[key].toFixed(2)}
-                status={data[key]==100?'success':'primary'}
+                status={data[key] == 100 ? "success" : "primary"}
               ></el-progress>
             </div>
           );
@@ -162,7 +162,7 @@ export const loraTrainTaskStorage_lora训练任务字段库 = new SearchCellStor
           });
           return transformDataFromCool(res.data).list.map((x) => {
             return {
-              label: x.name,
+              label: `${x.name}【${x.mark}】【${x.tagName}】`,
               value: x.id,
             };
           });
@@ -236,11 +236,29 @@ export const 开始训练 = btnMaker("开始训练", btnActionTemplate.Function,
   },
 });
 
+export const 下载lora = btnMaker("下载lora", btnActionTemplate.Function, {
+  icon: "Download",
+  elType: "primary",
+  isShow: (data) => data.status == "success",
+  function: async (that, data) => {
+    window.open(
+      getPreUrl() +
+        "/public/loraTrainTask/loraTrainTask_" +
+        data.id +
+        "/model/" +
+        data.name +
+        ".safetensors"
+    );
+  },
+});
+
 loraTrainTaskStorage_lora训练任务字段库.push(
   tableCellTemplateMaker(
     "操作",
     "asd",
-    actionCell([删除训练任务_单个, 开始训练])
+    actionCell([下载lora, 删除训练任务_单个, 开始训练], {
+      noDetail: true,
+    })
   )
 );
 
