@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: CZH
- * @LastEditTime: 2024-01-21 00:35:29
+ * @LastEditTime: 2024-09-28 23:25:31
  * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/categoryManage.ts
  */
 import {
@@ -32,7 +32,7 @@ import {
 } from "@/components/basicComponents/grid/module/dataTemplate";
 
 export const categoryManage = async () => {
-  const categorysStorage = new SearchCellStorage([
+  const categoryStorage = new SearchCellStorage([
     tableCellTemplateMaker("相册名", "name"),
     tableCellTemplateMaker("描述", "comment"),
     tableCellTemplateMaker("图片数量", "total_nb_images"),
@@ -59,7 +59,7 @@ export const categoryManage = async () => {
       if (data && data.id) base["parent"] = data.id;
       let drawerProps = {
         title: "新增相册",
-        queryItemTemplate: categorysStorage.getByKeyArr(["name", "comment"]),
+        queryItemTemplate: categoryStorage.getByKeyArr(["name", "comment"]),
         btnList: [提交],
         data: base,
       };
@@ -87,7 +87,7 @@ export const categoryManage = async () => {
     function: async (that, data) => {
       let drawerProps = {
         title: "编辑相册",
-        queryItemTemplate: categorysStorage.getByKeyArr(["name", "comment"]),
+        queryItemTemplate: categoryStorage.getByKeyArr(["name", "comment"]),
         btnList: [编辑提交],
         data: data,
       };
@@ -166,7 +166,7 @@ export const categoryManage = async () => {
     },
   });
 
-  categorysStorage.push(
+  categoryStorage.push(
     tableCellTemplateMaker(
       "操作",
       "asd",
@@ -190,7 +190,7 @@ export const categoryManage = async () => {
           searchItemTemplate: [
             tableCellTemplateMaker('关键词','search'),
           ],
-          showItemTemplate: categorysStorage.getAll(),
+          showItemTemplate: categoryStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post('/piwigo',{
               // method: "pwg.categories.getList",

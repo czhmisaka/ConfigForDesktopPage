@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-29 00:03:53
+ * @LastEditTime: 2024-09-29 01:19:35
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\newCategoryManage.ts
  */
 
@@ -41,6 +41,7 @@ export const 上级相册 = tableCellTemplateMaker("上级相册", "parent", sea
                 label: 'name',
                 value: 'id'
             },
+            setCheckedKeys:false,
             showCheckbox: false,
             multiple: false,
             type: "number",
