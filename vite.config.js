@@ -112,13 +112,13 @@ export default ({
             exclude: ["@pureadmin/theme/dist/browser-utils"]
         },
         build: {
-            target: 'esnext', 
+            target: 'esnext',
             sourcemap: false,
             // 消除打包大小超过500kb警告
             chunkSizeWarningLimit: 4000,
             rollupOptions: {
                 input: {
-                    
+
                     index: pathResolve("index.html")
                 },
                 // 静态资源分类打包
@@ -130,6 +130,7 @@ export default ({
             }
         },
         server: {
+            host: '0.0.0.0',
             port: VITE_PORT,
             proxy: {
                 '/apichat/': {
@@ -137,7 +138,7 @@ export default ({
                     // target: 'http://127.0.0.1:80',
                     // target: 'http://10.73.153.63:7861/chat',
                     // target: 'http://10.73.153.150:14791/lcdpChat/chat',
-                    target:'https://open.bigmodel.cn/api/paas/v4/',
+                    target: 'https://open.bigmodel.cn/api/paas/v4/',
                     changeOrigin: true,
                     ws: true,
                     rewrite: (path) => {

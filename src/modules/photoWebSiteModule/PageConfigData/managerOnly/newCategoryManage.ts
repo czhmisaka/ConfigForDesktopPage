@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-29 00:52:40
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/newCategoryManage.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-09-29 00:03:53
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\newCategoryManage.ts
  */
 
 import {
@@ -45,7 +45,7 @@ export const 上级相册 = tableCellTemplateMaker("上级相册", "parent", sea
             multiple: false,
             type: "number",
             nodeKey: "value",
-            checkStrictly: false,
+            checkStrictly: true,
         };
         let res = await post("/admin/picture/categories/tree", {});
         // return topic.triggerTopic;
