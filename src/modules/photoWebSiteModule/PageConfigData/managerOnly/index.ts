@@ -1,11 +1,11 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-15 15:01:10
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/index.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-05 21:38:22
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\index.ts
  */
 
-import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
+import { cardComponentType, gridCellMaker, gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { isValidKey } from "@/utils/index";
 import { tagManage } from "./tagManage";
 import { categoryManage } from "./categoryManage";
@@ -61,7 +61,30 @@ const pageConfig = {
       maxRows: 8,
       margin: 6,
     }
-  }
+  },
+  ComfyUi:{
+    name:'ComfyUi',
+    desktopData: async()=>{
+      return [
+        gridCellMaker('测试','test',{},{
+          type:cardComponentType.componentList,
+          name:'iframe'
+        },{
+          props:{
+            url:'http://127.0.0.1:8188/'
+          }
+        }).setSize(12,8)
+      ]
+    },
+    gridColNum:12,
+    cusStyle:{
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6
+    },
+   
+  },
 
   // categoryManage: {
   //   name: "相册管理",
@@ -89,17 +112,17 @@ const pageConfig = {
   //   },
   // },
 
-  // collectionManage: {
-  //   name: "收藏夹管理",
-  //   desktopData: collectionManage,
-  //   gridColNum: 12,
-  //   cusStyle: {
-  //     showLink: true,
-  //     wholeScreen: true,
-  //     maxRows: 8,
-  //     margin: 6,
-  //   },
-  // },
+  collectionManage: {
+    name: "收藏夹管理",
+    desktopData: collectionManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
