@@ -22,7 +22,7 @@ import { searchCell } from "@/modules/userManage/component/searchTable/searchTab
 import { post} from "@/utils/api/requests";
 import { openDrawerFormEasy } from "@/modules/userManage/component/searchTable/drawerForm";
 import { SearchCellStorage } from "../../../userManage/component/searchTable/searchTable";
-import { dobuleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
+import { doubleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 
 import {
@@ -99,7 +99,7 @@ export const categoryManage = async () => {
     elType: "danger",
     icon: "Delete",
     function: async (that, data) => {
-      if (await dobuleCheckBtnMaker("删除", data.name).catch(() => false))
+      if (await doubleCheckBtnMaker("删除", data.name).catch(() => false))
         repBackMessageShow(
           that,
           await post('/piwigo',{

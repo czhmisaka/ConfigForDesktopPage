@@ -15,7 +15,7 @@ import {
 import {
   btnMaker,
   closeBtn,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import {
   changeVisible,
@@ -301,7 +301,7 @@ export const eat = async () => {
                   icon: 'Position',
                   elType: 'primary',
                   function: async (that, data) => {
-                    if (await dobuleCheckBtnMaker('确认抽奖', `${data.type}共${data.maxTimes * 1 + 1}人`, {
+                    if (await doubleCheckBtnMaker('确认抽奖', `${data.type}共${data.maxTimes * 1 + 1}人`, {
                     }).catch(x => false)) {
                       that.isOpen = false
                       that.formData = {};

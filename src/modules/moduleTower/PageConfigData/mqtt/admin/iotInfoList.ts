@@ -14,7 +14,7 @@ import { IotDeviceTemplate } from "@/modules/moduleTower/component/mqtt/iotCard"
 import { openDrawerForIotCardServiceDesktop } from "@/modules/moduleTower/component/mqtt/iotServiceDesktop";
 import {
   btnMaker,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
   repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -43,7 +43,7 @@ const 删除按钮 = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
   function: async (that, data: IotDeviceTemplate) => {
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除",
         `确认删除【${data.name}】设备吗？`
       ).catch((x) => false)
@@ -65,7 +65,7 @@ const 批量删除按钮 = btnMaker("删除", btnActionTemplate.Function, {
   function: async (that, data) => {
     let selectedList = that.selectedList;
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除",
         `确认删除${selectedList
           .map((x: IotDeviceTemplate) => "【" + x.name + "】")

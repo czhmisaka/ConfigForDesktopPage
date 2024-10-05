@@ -7,7 +7,7 @@
 
 import {
   btnMaker,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import { btnActionTemplate, formInputType } from "@/modules/userManage/types";
 import { chat } from "@/utils/api/requests";

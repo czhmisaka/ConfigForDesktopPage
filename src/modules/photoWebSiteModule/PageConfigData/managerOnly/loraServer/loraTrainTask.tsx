@@ -13,7 +13,7 @@ import {
 import { stringAnyObj } from "@/modules/ApplicationManage/types";
 import {
   btnMaker,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
   repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -52,7 +52,7 @@ export const 删除训练任务_单个 = btnMaker("删除", btnActionTemplate.Fu
   elType: "danger",
   function: async (that, data) => {
     if (
-      await dobuleCheckBtnMaker("删除训练任务" + `【${data.name}】`, "").catch(
+      await doubleCheckBtnMaker("删除训练任务" + `【${data.name}】`, "").catch(
         (x) => false
       )
     ) {
@@ -73,7 +73,7 @@ export const 删除训练任务_批量 = btnMaker("删除", btnActionTemplate.Fu
   function: async (that, data) => {
     const list = data["_selectedList"];
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除训练任务" + `【${list.map((x) => x.name).join("】、【")}】`,
         ""
       ).catch((x) => false)

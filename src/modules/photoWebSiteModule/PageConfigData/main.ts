@@ -36,7 +36,7 @@ import { stringAnyObj } from "../../userManage/types";
 // 图片信息操作列表
 import { InfoCardBtnList } from "./InfoCardBtnList";
 import { setData } from "../../../components/basicComponents/grid/module/cardApi/index";
-import { dobuleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
+import { doubleCheckBtnMaker } from "../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 import { SearchCellStorage } from "../../userManage/component/searchTable/searchTable";
 import { DataInfo } from "../../../utils/auth";

@@ -19,7 +19,7 @@ import { setData } from "@/components/basicComponents/grid/module/cardApi";
 import { useUserStoreHook } from "@/store/modules/user";
 import {
     btnMaker,
-    dobuleCheckBtnMaker,
+    doubleCheckBtnMaker,
     repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import { btnActionTemplate } from "@/modules/userManage/types";
@@ -35,7 +35,7 @@ export const myPicture = async () => {
             return options.status == "webmaster" && data && data["path"];
         },
         function: async (that, data) => {
-            if (await dobuleCheckBtnMaker("删除图片", data.file).catch(() => false)) {
+            if (await doubleCheckBtnMaker("删除图片", data.file).catch(() => false)) {
                 let res = await post('/piwigo', {
                     method: "pwg.images.delete",
                     image_id: data.id,
@@ -58,7 +58,7 @@ export const myPicture = async () => {
         },
         function: async (that, data) => {
             if (
-                await dobuleCheckBtnMaker(
+                await doubleCheckBtnMaker(
                     "删除图片",
                     `【${data.map((x) => x.file).join("】【")}】`
                 ).catch(() => false)
@@ -108,7 +108,7 @@ export const myPicture = async () => {
                 props: {
                     name: "Delete",
                     onClickFunc: async ({ props, context, e }) => {
-                        if (await dobuleCheckBtnMaker("清空暂存区", "确认要清空所有图片吗").catch(() => false)) {
+                        if (await doubleCheckBtnMaker("清空暂存区", "确认要清空所有图片吗").catch(() => false)) {
                             useCartHook().clearCart();
                             location.reload();
                         }

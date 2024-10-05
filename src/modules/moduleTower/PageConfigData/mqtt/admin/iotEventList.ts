@@ -16,7 +16,7 @@ import {
 } from "@/modules/userManage/component/eventCenter/eventCenter";
 import {
   btnMaker,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
   repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -212,7 +212,7 @@ const 编辑事件 = btnMaker("编辑事件", btnActionTemplate.Function, {
 const 删除事件 = btnMaker("删除事件", btnActionTemplate.Function, {
   function: async (that, data) => {
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         `删除事件【${data.name}】`,
         `事件简介【${data.description}】`
       ).catch(() => false)
@@ -234,7 +234,7 @@ const 批量删除事件 = btnMaker("批量删除事件", btnActionTemplate.Func
   function: async (that, data) => {
     let selectedList = that.selectedList;
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除",
         `确认删除${selectedList
           .map((x) => "【" + x.name + "】")

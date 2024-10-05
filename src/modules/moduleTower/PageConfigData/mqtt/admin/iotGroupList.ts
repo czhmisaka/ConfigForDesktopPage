@@ -14,7 +14,7 @@ import { IotDeviceTemplate } from "@/modules/moduleTower/component/mqtt/iotCard"
 import { openDrawerForIotCardServiceDesktop } from "@/modules/moduleTower/component/mqtt/iotServiceDesktop";
 import {
   btnMaker,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
   repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -37,7 +37,7 @@ const 删除按钮 = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
   function: async (that, data) => {
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除",
         `确认删除【${data.name}】分组吗？`
       ).catch((x) => false)

@@ -23,7 +23,7 @@ import { searchCell } from "@/modules/userManage/component/searchTable/searchTab
 import { post} from "@/utils/api/requests";
 import { openDrawerFormEasy } from "@/modules/userManage/component/searchTable/drawerForm";
 import { SearchCellStorage } from "../../../userManage/component/searchTable/searchTable";
-import { dobuleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
+import { doubleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 
 import {
@@ -59,7 +59,7 @@ export const userManage = async () => {
     elType: "primary",
     function: async (that, data) => {
       if (
-        await dobuleCheckBtnMaker(
+        await doubleCheckBtnMaker(
           "确认新建用户",
           "【" + data.username + "】"
         ).catch(() => false)
@@ -80,7 +80,7 @@ export const userManage = async () => {
           status: "admin",
           pwg_token: options.token,
         });
-        await dobuleCheckBtnMaker("初始密码：", password);
+        await doubleCheckBtnMaker("初始密码：", password);
         repBackMessageShow(that, res);
       }
     },
@@ -101,7 +101,7 @@ export const userManage = async () => {
     elType: "danger",
     function: async (that, data) => {
       if (
-        await dobuleCheckBtnMaker("删除用户", data.userName).catch(() => false)
+        await doubleCheckBtnMaker("删除用户", data.userName).catch(() => false)
       ) {
         let user = useUserStoreHook();
         let options = await user.getOptions();
@@ -145,7 +145,7 @@ export const userManage = async () => {
             elType: "primary",
             function: async (that_confirm, data_confirm) => {
               if (
-                await dobuleCheckBtnMaker(
+                await doubleCheckBtnMaker(
                   "确认修改密码",
                   data.username + "的密码将被修改"
                 ).catch(() => false)

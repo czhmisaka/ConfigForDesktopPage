@@ -35,7 +35,7 @@ import {
 import {
   btnMaker,
   closeDrawerFormEasy,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
   repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";

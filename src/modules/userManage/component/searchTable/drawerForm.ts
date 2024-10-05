@@ -107,12 +107,12 @@ export const btnMaker = (
 };
 
 /**
- * @name: dobuleCheckBtnMaker
+ * @name: doubleCheckBtnMaker
  * @description: 二次确认按钮
  * @authors: CZH
  * @Date: 2022-12-14 14:56:27
  */
-export const dobuleCheckBtnMaker = (
+export const doubleCheckBtnMaker = (
   title: string,
   message: string,
   options: stringAnyObj = {}
@@ -136,7 +136,7 @@ export const dobuleCheckBtnMaker = (
 };
 
 /**
- * @name: allProcessDobuleCheckBtnMaker
+ * @name: allProcessdoubleCheckBtnMaker
  * @description: waitForWriting
  * @authors: CZH
  * @Date: 2023-08-01 18:59:04
@@ -146,7 +146,7 @@ export const dobuleCheckBtnMaker = (
  * @param {*} postFunc
  * @param {stringAnyObj} data
  */
-export function allProcessDobuleCheckBtnMaker(
+export function allProcessdoubleCheckBtnMaker(
   btnName,
   title,
   message: (that: stringAnyObj, data: stringAnyObj) => string,
@@ -159,7 +159,7 @@ export function allProcessDobuleCheckBtnMaker(
   return btnMaker(btnName, btnActionTemplate.Function, {
     function: async (that, data) => {
       if (
-        await dobuleCheckBtnMaker(title, message(that, data)).catch(
+        await doubleCheckBtnMaker(title, message(that, data)).catch(
           (x) => false
         )
       )

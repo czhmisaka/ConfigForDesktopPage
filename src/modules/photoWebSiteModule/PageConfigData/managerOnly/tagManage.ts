@@ -23,7 +23,7 @@ import { searchCell } from "@/modules/userManage/component/searchTable/searchTab
 import { post } from "@/utils/api/requests";
 import { openDrawerFormEasy } from "@/modules/userManage/component/searchTable/drawerForm";
 import { SearchCellStorage } from "../../../userManage/component/searchTable/searchTable";
-import { dobuleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
+import { doubleCheckBtnMaker } from "../../../userManage/component/searchTable/drawerForm";
 import { useUserStoreHook } from "@/store/modules/user";
 
 import {
@@ -111,7 +111,7 @@ export const tagManage = async () => {
     icon: "Delete",
     elType: "danger",
     function: async (that, data) => {
-      if (await dobuleCheckBtnMaker("删除标签", data.name).catch(() => false))
+      if (await doubleCheckBtnMaker("删除标签", data.name).catch(() => false))
         repBackMessageShow(
           that,
           await post('/admin/picture/tags/delete', {
@@ -201,7 +201,7 @@ export const tagManage = async () => {
           btnMaker("提交", btnActionTemplate.Function, {
             function: async (that, data) => {
               if (
-                await dobuleCheckBtnMaker(
+                await doubleCheckBtnMaker(
                   "修改标签",
                   `即将修改标签名称为【${data.newName}】`
                 ).catch((x) => false)
@@ -242,7 +242,7 @@ export const tagManage = async () => {
       if (!(selectedList && selectedList.length > 0))
         ElMessage.error("请选择标签");
       if (
-        await dobuleCheckBtnMaker(
+        await doubleCheckBtnMaker(
           "批量删除",
           selectedList.map((x) => x.name).join(",")
         ).catch(() => false)

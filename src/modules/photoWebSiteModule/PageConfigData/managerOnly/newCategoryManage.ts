@@ -16,7 +16,7 @@ import {
 import {
     btnMaker,
     closeBtn,
-    dobuleCheckBtnMaker,
+    doubleCheckBtnMaker,
     openDrawerFormEasy,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import {
@@ -99,7 +99,7 @@ export const 新增相册 = btnMaker('新增相册', btnActionTemplate.Function,
 const 删除相册 = btnMaker('删除相册', btnActionTemplate.Function, {
     icon: 'Delete',
     function: async (that, data) => {
-        if (await dobuleCheckBtnMaker('删除相册', '确认删除相册【' + data.name + '】吗？').catch(x => false)) {
+        if (await doubleCheckBtnMaker('删除相册', '确认删除相册【' + data.name + '】吗？').catch(x => false)) {
             let res = await post("/admin/picture/categories/delete", {
                 ids: [data.id]
             })
@@ -115,7 +115,7 @@ const 批量删除相册 = btnMaker('批量删除相册', btnActionTemplate.Func
     },
     elType: 'danger',
     function: async (that, data) => {
-        if (await dobuleCheckBtnMaker('批量删除相册', '确认删除选中相册吗？').catch(x => false)) {
+        if (await doubleCheckBtnMaker('批量删除相册', '确认删除选中相册吗？').catch(x => false)) {
             let res = await post("/admin/picture/categories/delete", {
                 ids: data._selectedList.map(x => x.id)
             })

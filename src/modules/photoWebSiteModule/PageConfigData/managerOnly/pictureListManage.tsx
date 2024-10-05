@@ -16,7 +16,7 @@ import {
 import {
   btnMaker,
   closeBtn,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
 } from "@/modules/userManage/component/searchTable/drawerForm";
 import {
@@ -177,7 +177,7 @@ export const 删除 = btnMaker("删除", btnActionTemplate.Function, {
     data.uploadStatus == uploadStatus.finish,
   function: async (that, data) => {
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除图片",
         `确认删除图片【${data.name}】记录`
       ).catch((x) => false)
@@ -211,7 +211,7 @@ export const 批量删除 = btnMaker("删除", btnActionTemplate.Function, {
   function: async (that, data) => {
     const delPhotos = data._selectedList;
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除图片",
         `确认删除图片【${delPhotos.map((x) => x.name).join("】、【")}】记录`
       ).catch((x) => false)
@@ -247,7 +247,7 @@ export const 清空 = btnMaker("清空", btnActionTemplate.Function, {
     ),
   function: async (that, data) => {
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "清空",
         "确认清空当前所有预备上传、已上传文件吗？"
       ).catch((x) => false)

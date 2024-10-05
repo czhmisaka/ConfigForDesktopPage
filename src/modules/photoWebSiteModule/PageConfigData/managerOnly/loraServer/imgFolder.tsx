@@ -18,7 +18,7 @@ import {
 import { stringAnyObj } from "@/modules/ApplicationManage/types";
 import {
   btnMaker,
-  dobuleCheckBtnMaker,
+  doubleCheckBtnMaker,
   openDrawerFormEasy,
   repBackMessageShow,
 } from "@/modules/userManage/component/searchTable/drawerForm";
@@ -89,7 +89,7 @@ export const 删除图集 = btnMaker("删除", btnActionTemplate.Function, {
   icon: "Delete",
   function: async (that, data) => {
     if (
-      await dobuleCheckBtnMaker(
+      await doubleCheckBtnMaker(
         "删除图集",
         `确认要删除图集【${data.name}】吗？`
       ).catch((x) => false)
