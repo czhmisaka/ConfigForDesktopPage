@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-18 19:50:20
- * @LastEditors: CZH
- * @LastEditTime: 2024-10-06 00:14:15
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/collectionManage.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-06 00:18:27
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\collectionManage.ts
  */
 import {
   btnMaker,
@@ -143,7 +143,7 @@ export const collectionManage = async () => {
           searchItemTemplate: [tableCellTemplateMaker("关键词", "keyWord")],
           showItemTemplate: collectionStorage.getAll(),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
-            let res = await post("/admin/picture/collection/page", {});
+            let res = await post("/admin/picture/collection/tree", {});
             return res.data;
           },
           btnList: [新增收藏夹, 批量删除收藏夹],

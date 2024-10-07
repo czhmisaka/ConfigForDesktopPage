@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-28 21:53:41
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/index.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-07 19:00:30
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\index.ts
  */
 
 import { mainDesktop } from "./main";
@@ -15,9 +15,21 @@ import { myPicture } from "./myPicture";
 import { desktopDataTemplate } from '../../userManage/types';
 import { PictureListManage } from "./managerOnly/pictureListManage";
 import { CategoryManage } from "./managerOnly/newCategoryManage";
+import { collectionManage } from "./managerOnly/collectionManage";
 
 
 const pageConfig = {
+  main: {
+    name: "图库",
+    desktopData: mainDesktop,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 12,
+      margin: 6,
+    },
+  },
   categoryManage: {
     name: "相册管理",
     desktopData: CategoryManage,
@@ -29,20 +41,20 @@ const pageConfig = {
       margin: 6,
     },
   },
-  pictureListManage: {
-    name: "批量上传",
-    desktopData: PictureListManage,
+  collectionManage: {
+    name: "收藏夹管理",
+    desktopData: collectionManage,
     gridColNum: 12,
     cusStyle: {
       showLink: true,
       wholeScreen: true,
-      maxRows: 12,
+      maxRows: 8,
       margin: 6,
     },
   },
-  main: {
-    name: "图库",
-    desktopData: mainDesktop,
+  pictureListManage: {
+    name: "批量上传",
+    desktopData: PictureListManage,
     gridColNum: 12,
     cusStyle: {
       showLink: true,

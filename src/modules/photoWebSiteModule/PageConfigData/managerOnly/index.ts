@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-05 21:38:22
+ * @LastEditTime: 2024-10-07 18:58:52
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\index.ts
  */
 
@@ -112,17 +112,7 @@ const pageConfig = {
   //   },
   // },
 
-  collectionManage: {
-    name: "收藏夹管理",
-    desktopData: collectionManage,
-    gridColNum: 12,
-    cusStyle: {
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-    },
-  },
+  
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {
