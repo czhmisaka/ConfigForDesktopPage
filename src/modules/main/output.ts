@@ -6,7 +6,7 @@
  */
 export const moduleInfo = {
   name: "main",
-  title: "模块功能展示",
+  title: "风格迁移",
   icon: "EL_ElemeFilled",
   info: "展示各种模块以及基础cardApi",
   author: "czh",

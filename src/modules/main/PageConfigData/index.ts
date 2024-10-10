@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2024-01-30 23:20:48
- * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-11 00:14:16
+ * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\index.ts
  */
 import { mainDesktop } from "./main";
 import { mobileDesktop } from "./mobile/mobile";
@@ -10,6 +10,10 @@ import { isValidKey } from "@/utils/index";
 
 import { desktopDataTemplate } from "@/modules/userManage/types";
 import { eat } from "./eat";
+import { gridCellMaker, cardComponentType } from "@/components/basicComponents/grid/module/dataTemplate";
+import { imgFolderManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/imgFolder";
+import { loraServerManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraServerManage";
+import { loraTrainTaskManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraTrainTask";
 
 export const base = {
   gridColNum: 12,
@@ -21,30 +25,62 @@ export const base = {
   },
 };
 let pageConfig = {
-  // EAT:{
-  //   desktopData:eat,
-  //   gridColNum: 24,
-  //   cusStyle: {
-  //     ...base.cusStyle,
-  //     wholeScreen: true,
-  //     maxRows:16,
-  //     Fullscreen:false
-  //   },
-  // },
-  // MAIN: {
-  //   desktopData: mainDesktop,
-  //   gridColNum: 12,
-  //   cusStyle: {
-  //     ...base.cusStyle,
-  //     wholeScreen: false,
-  //     // Fullscreen:true
-  //   },
-  // },
-  // MOBILE: {
-  //   ...base,
-  //   desktopData: mobileDesktop,
-  //   gridColNum: 4,
-  // },
+  loraServer: {
+    name: 'loraServer管理',
+    desktopData: loraServerManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  },
+  imgFolder: {
+    name: "图集管理",
+    desktopData: imgFolderManage,
+    gridColNum: 12,
+    cusStyle: {
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  },
+  训练任务:{
+    name:'lora训练任务',
+    desktopData:loraTrainTaskManage,
+    gridColNum:12,
+    cusStyle:{
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    }
+  },
+  ComfyUi:{
+    name:'ComfyUi',
+    desktopData: async()=>{
+      return [
+        gridCellMaker('测试','test',{},{
+          type:cardComponentType.componentList,
+          name:'iframe'
+        },{
+          props:{
+            url:'http://127.0.0.1:8188/'
+          }
+        }).setSize(12,8)
+      ]
+    },
+    gridColNum:12,
+    cusStyle:{
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6
+    },
+   
+  },
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

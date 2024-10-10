@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-09-13 14:37:37
- * @LastEditors: CZH
- * @LastEditTime: 2023-12-22 12:57:45
- * @FilePath: /ConfigForDesktopPage/src/layout/components/modules/modulesLIst.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-11 00:10:17
+ * @FilePath: \github\config-for-desktop-page\src\layout\components\modules\modulesLIst.vue
 -->
 <script setup lang="ts">
 import { useModuleHook } from "@/store/modules/module";
@@ -18,11 +18,15 @@ const { nowModule } = toRefs(useModuleHook());
 
 <template>
   <cardBg
-    :class="`modulesItem ${nowModule.name == item.name ? 'modulesItem_active' : ''}`"
+    :class="`modulesItem ${
+      nowModule.name == item.name ? 'modulesItem_active' : ''
+    }`"
     :cus-style="{
       display: 'flex',
       backgroundImage: `linear-gradient(135deg, ${
-        item.icon && item.icon[0] == '{' ? JSON.parse(item.icon).color : 'rgba(0,0,0,0.05)'
+        item.icon && item.icon[0] == '{'
+          ? JSON.parse(item.icon).color
+          : 'rgba(0,0,0,0.05)'
       } -150%, rgba(0,0,0,0) 50%)`,
       backdropFilter: 'saturate(50%) blur(4px)',
     }"
@@ -38,7 +42,7 @@ const { nowModule } = toRefs(useModuleHook());
         )
       "
     /> -->
-    {{ item.name }}
+    {{ item.meta.title ? item.meta.title : item.name }}
   </cardBg>
 </template>
 

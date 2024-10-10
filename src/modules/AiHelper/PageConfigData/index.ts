@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2024-04-18 10:31:12
- * @FilePath: /lcdp_fe_setup/src/modules/AiHelper/PageConfigData/index.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-11 00:02:44
+ * @FilePath: \github\config-for-desktop-page\src\modules\AiHelper\PageConfigData\index.ts
  */
 import { gridCellTemplate } from "@/components/basicComponents/grid/module/dataTemplate";
 import { desktopDataTemplate } from "@/modules/userManage/types";
@@ -20,7 +20,7 @@ export const base = {
   },
 };
 let pageConfig = {
-  ...AiChatDesktopCellList,
+  // ...AiChatDesktopCellList,
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

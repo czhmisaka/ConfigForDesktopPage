@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-07 18:58:52
+ * @LastEditTime: 2024-10-11 00:14:04
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\index.ts
  */
 
@@ -29,62 +29,62 @@ const pageConfig = {
     },
   },
 
-  loraServer: {
-    name: 'loraServer管理',
-    desktopData: loraServerManage,
-    gridColNum: 12,
-    cusStyle: {
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-    },
-  },
-  imgFolder: {
-    name: "图集管理",
-    desktopData: imgFolderManage,
-    gridColNum: 12,
-    cusStyle: {
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-    },
-  },
-  训练任务:{
-    name:'lora训练任务',
-    desktopData:loraTrainTaskManage,
-    gridColNum:12,
-    cusStyle:{
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6,
-    }
-  },
-  ComfyUi:{
-    name:'ComfyUi',
-    desktopData: async()=>{
-      return [
-        gridCellMaker('测试','test',{},{
-          type:cardComponentType.componentList,
-          name:'iframe'
-        },{
-          props:{
-            url:'http://127.0.0.1:8188/'
-          }
-        }).setSize(12,8)
-      ]
-    },
-    gridColNum:12,
-    cusStyle:{
-      showLink: true,
-      wholeScreen: true,
-      maxRows: 8,
-      margin: 6
-    },
+  // loraServer: {
+  //   name: 'loraServer管理',
+  //   desktopData: loraServerManage,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6,
+  //   },
+  // },
+  // imgFolder: {
+  //   name: "图集管理",
+  //   desktopData: imgFolderManage,
+  //   gridColNum: 12,
+  //   cusStyle: {
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6,
+  //   },
+  // },
+  // 训练任务:{
+  //   name:'lora训练任务',
+  //   desktopData:loraTrainTaskManage,
+  //   gridColNum:12,
+  //   cusStyle:{
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6,
+  //   }
+  // },
+  // ComfyUi:{
+  //   name:'ComfyUi',
+  //   desktopData: async()=>{
+  //     return [
+  //       gridCellMaker('测试','test',{},{
+  //         type:cardComponentType.componentList,
+  //         name:'iframe'
+  //       },{
+  //         props:{
+  //           url:'http://127.0.0.1:8188/'
+  //         }
+  //       }).setSize(12,8)
+  //     ]
+  //   },
+  //   gridColNum:12,
+  //   cusStyle:{
+  //     showLink: true,
+  //     wholeScreen: true,
+  //     maxRows: 8,
+  //     margin: 6
+  //   },
    
-  },
+  // },
 
   // categoryManage: {
   //   name: "相册管理",

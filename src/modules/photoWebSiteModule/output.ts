@@ -6,9 +6,9 @@
  */
 export const moduleInfo = {
   name: "photoWebSiteModule",
-  title: "基于piwigo pythonserver 的扩展包",
+  title: "素材分类",
   info: "基于piwigo pythonserver 的扩展包",
-  author:'czh'
+  author: 'czh'
 };
 
 export const output = async () => {
