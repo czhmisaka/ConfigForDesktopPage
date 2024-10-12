@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-21 08:52:56
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-16 21:53:04
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/drawerForm.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-10-13 05:53:00
+ * @FilePath: \github\config-for-desktop-page\src\modules\userManage\component\searchTable\drawerForm.vue
 -->
 <template>
   <el-drawer v-if="plugInData" v-model="isOpen" :title="plugInData.title" class="drawerForm"
@@ -264,7 +264,7 @@ export default defineComponent({
         if (this.plugInData["gridDesktop"]) {
           let Data = this.$refs["gridDesktop"].baseData;
           await btn.function(this, Data);
-        } else await btn.function(this, this.formData);
+        } else await btn.function(this, JSON.parse(JSON.stringify(this.formData)));
       } else if (btn.type == btnActionTemplate.Url) {
         window.open(btn.url);
       }

@@ -31,7 +31,7 @@ import {
   showType,
 } from "@/modules/userManage/types";
 import { post } from "@/utils/api/requests";
-import { ElTag } from "element-plus";
+import { ElLoadingService, ElTag } from "element-plus";
 import { transformDataFromCool } from "../newCategoryManage";
 export const baseCoolTableCell = [
   tableCellTemplateMaker("更新时间", "updateTime"),
@@ -68,21 +68,54 @@ const 删除loraServer = btnMaker("删除", btnActionTemplate.Function, {
   },
 });
 
+const 详情 = btnMaker("详情", btnActionTemplate.Function, {
+  icon: "Document",
+  elType: "primary",
+  function: async (that, data) => {
+    if (data["creater"]) {
+      let res = await post("/admin/base/sys/user/list", {
+        id: data["creater"],
+      });
+      console.log(res,'asd')
+      if(res.data && res.data.length == 1 ){
+        data['createrName'] = res.data[0].username
+      }
+    }
+    openDrawerFormEasy(that, {
+      title: data.name,
+      queryItemTemplate: [
+        ...loraServerStorage.getAll(),
+        tableCellTemplateMaker("创建者", "createrName"),
+      ],
+      noEdit: true,
+      data: {
+        ...data,
+      },
+    });
+  },
+});
+
 loraServerStorage.push(
   tableCellTemplateMaker(
     "操作",
     "asd",
-    actionCell([
-      删除loraServer,
-      btnMaker("检查状态", btnActionTemplate.Function, {
-        function: async (that, data) => {
-          let res = await post("/admin/picture/lora/server/checkStatus", {
-            id: data.id,
-          });
-          repBackMessageShow(that, res);
-        },
-      }),
-    ])
+    actionCell(
+      [
+        详情,
+        删除loraServer,
+        btnMaker("检查状态", btnActionTemplate.Function, {
+          function: async (that, data) => {
+            let res = await post("/admin/picture/lora/server/checkStatus", {
+              id: data.id,
+            });
+            repBackMessageShow(that, res);
+          },
+        }),
+      ],
+      {
+        noDetail: true,
+      }
+    )
   )
 );
 
@@ -148,7 +181,7 @@ export const loraServerManage = async () => {
       {
         props: {
           searchItemTemplate: [
-            tableCellTemplateMaker("", "keyWord"),
+            tableCellTemplateMaker("模糊查询", "keyWord"),
             tableCellTemplateMaker(
               "状态",
               "status",

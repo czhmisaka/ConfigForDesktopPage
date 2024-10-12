@@ -256,7 +256,7 @@ export const 查看图集图片 = btnMaker("查看图片", btnActionTemplate.Fun
         gridColNum: 12,
         cusStyle: {
           wholeScreen: true,
-          margin:0.001,
+          margin: 0.001,
           maxRows: 8,
         },
       },
@@ -265,8 +265,48 @@ export const 查看图集图片 = btnMaker("查看图片", btnActionTemplate.Fun
   },
 });
 
+export const 查看图集详情 = btnMaker("详情", btnActionTemplate.Function, {
+  function: async (that, data) => {
+    if (data["creater"]) {
+      let res = await post("/admin/base/sys/user/list", {
+        id: data["creater"],
+      });
+      console.log(res, "asd");
+      if (res.data && res.data.length == 1) {
+        data["createrName"] = res.data[0].username;
+      }
+    }
+    openDrawerFormEasy(that, {
+      title: data.name,
+      queryItemTemplate: [
+        ...imgFolderStorage.getAll(),
+        tableCellTemplateMaker("创建者", "createrName"),
+        tableCellTemplateMaker(
+          "使用次数",
+          "trainTimes",
+          showCell(showType.func, {
+            showFunc: (data, key) => {
+              return data[key] + "次";  
+            },
+          })
+        ),
+      ],
+      noEdit: true,
+      data: {
+        ...data,
+      },
+    });
+  },
+});
+
 imgFolderStorage.push(
-  tableCellTemplateMaker("操作", "asd", actionCell([删除图集,查看图集图片, 编辑图集]))
+  tableCellTemplateMaker(
+    "操作",
+    "asd",
+    actionCell([查看图集详情, 删除图集, 查看图集图片, 编辑图集], {
+      noDetail: true,
+    })
+  )
 );
 
 export const imgFolderManage = async () => {
@@ -281,7 +321,7 @@ export const imgFolderManage = async () => {
       },
       {
         props: {
-          searchItemTemplate: [tableCellTemplateMaker("", "keyWord")],
+          searchItemTemplate: [tableCellTemplateMaker("模糊查询", "keyWord")],
           showItemTemplate: imgFolderStorage.getAll(["targetTag"]),
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post("/admin/picture/lora/imgFolder/page", {
