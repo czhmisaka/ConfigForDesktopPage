@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-16 02:37:43
- * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\main.ts
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-10-07 19:09:46
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/main.ts
  */
 
 import {
@@ -148,7 +148,7 @@ export const mainDesktop = async () => {
       }
     )
       .setPosition(0, 0)
-      .setSize(2, 5),
+      .setSize(2, 6),
     gridCellMaker(
       "collectionList",
       "收藏夹列表",
@@ -175,8 +175,8 @@ export const mainDesktop = async () => {
         },
       }
     )
-      .setPosition(0, 5)
-      .setSize(2, 5),
+      .setPosition(0, 6)
+      .setSize(2, 6),
     gridCellMaker(
       "searchInfo",
       "搜索栏",
@@ -239,24 +239,24 @@ export const mainDesktop = async () => {
     )
       .setPosition(10, 0)
       .setSize(2, 12),
-    gridCellMaker(
-      "upload",
-      "上传",
-      {},
-      {
-        type: cardComponentType.componentList,
-        name: "photoWebSiteModule_upload",
-      },
-      {
-        props: {
-          uploaded: async (that, data) => {
+    // gridCellMaker(
+    //   "upload",
+    //   "上传",
+    //   {},
+    //   {
+    //     type: cardComponentType.componentList,
+    //     name: "photoWebSiteModule_upload",
+    //   },
+    //   {
+    //     props: {
+    //       uploaded: async (that, data) => {
 
-          }
-        }
-      }
-    )
-      .setPosition(0, 10)
-      .setSize(2, 2),
+    //       }
+    //     }
+    //   }
+    // )
+    //   .setPosition(0, 10)
+    //   .setSize(2, 2),
 
   ] as gridCellTemplate[];
 };
