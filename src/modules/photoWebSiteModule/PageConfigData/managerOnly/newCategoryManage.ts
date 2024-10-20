@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-29 01:19:35
+ * @LastEditTime: 2024-10-21 02:59:01
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\newCategoryManage.ts
  */
 
@@ -41,7 +41,7 @@ export const 上级相册 = tableCellTemplateMaker("上级相册", "parent", sea
                 label: 'name',
                 value: 'id'
             },
-            setCheckedKeys:false,
+            setCheckedKeys: false,
             showCheckbox: false,
             multiple: false,
             type: "number",
@@ -98,6 +98,7 @@ export const 新增相册 = btnMaker('新增相册', btnActionTemplate.Function,
 
 const 删除相册 = btnMaker('删除相册', btnActionTemplate.Function, {
     icon: 'Delete',
+    elType:'danger',
     function: async (that, data) => {
         if (await doubleCheckBtnMaker('删除相册', '确认删除相册【' + data.name + '】吗？').catch(x => false)) {
             let res = await post("/admin/picture/categories/delete", {
@@ -124,6 +125,31 @@ const 批量删除相册 = btnMaker('批量删除相册', btnActionTemplate.Func
     }
 })
 
+
+const 编辑相册 = btnMaker('编辑', btnActionTemplate.Function, {
+    icon: 'EditPen',
+    elType: "primary",
+    function: async (that, data) => {
+        const 提交 = btnMaker('确认', btnActionTemplate.Function, {
+            icon: 'Position',
+            function: async (that, data) => {
+                let res = await post("/admin/picture/categories/update", {
+                    ...data, rank: 0
+                })
+                repBackMessageShow(that, res)
+            }
+        })
+        let drawerProps = {
+            title: `编辑相册【${data.name}】`,
+            queryItemTemplate: Storage.getByKeyArr(['name', 'desc']),
+            btnList: [提交],
+            data,
+        } as drawerProps
+        openDrawerFormEasy(that, drawerProps)
+    }
+})
+
+
 export const transformDataFromCool = (data: any) => {
     const { pagination, list } = data
     return {
@@ -147,7 +173,7 @@ export const CategoryManage = async () => {
                     ...Storage.getByKeyArr([
                         'name', 'desc', 'count', 'score'
                     ]),
-                    tableCellTemplateMaker('操作', 'asd', actionCell([删除相册]))
+                    tableCellTemplateMaker('操作', 'asd', actionCell([编辑相册, 删除相册]))
                 ],
                 searchFunc: async (query, that) => {
                     let res = await post("/admin/picture/categories/tree", {});

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-11 00:14:16
+ * @LastEditTime: 2024-10-18 01:51:07
  * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\index.ts
  */
 import { mainDesktop } from "./main";
@@ -47,39 +47,39 @@ let pageConfig = {
       margin: 6,
     },
   },
-  训练任务:{
-    name:'lora训练任务',
-    desktopData:loraTrainTaskManage,
-    gridColNum:12,
-    cusStyle:{
+  训练任务: {
+    name: 'lora训练任务',
+    desktopData: loraTrainTaskManage,
+    gridColNum: 12,
+    cusStyle: {
       showLink: true,
       wholeScreen: true,
       maxRows: 8,
       margin: 6,
     }
   },
-  ComfyUi:{
-    name:'ComfyUi',
-    desktopData: async()=>{
+  ComfyUi: {
+    name: 'ComfyUi',
+    desktopData: async () => {
       return [
-        gridCellMaker('测试','test',{},{
-          type:cardComponentType.componentList,
-          name:'iframe'
-        },{
-          props:{
-            url:'http://127.0.0.1:8188/'
+        gridCellMaker('测试', 'test', {}, {
+          type: cardComponentType.componentList,
+          name: 'iframe'
+        }, {
+          props: {
+            url: window.location.origin.replace(':10500', ':8188')
           }
-        }).setSize(12,8)
+        }).setSize(12, 8)
       ]
     },
-    gridColNum:12,
-    cusStyle:{
+    gridColNum: 12,
+    cusStyle: {
       showLink: true,
       wholeScreen: true,
       maxRows: 8,
       margin: 6
     },
-   
+
   },
 } as { [key: string]: desktopDataTemplate };
 
