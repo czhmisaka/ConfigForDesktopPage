@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-28 22:29:05
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-08 23:55:43
+ * @LastEditTime: 2024-11-04 01:02:39
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\pictureListManage.tsx
  */
 
@@ -57,6 +57,7 @@ import { 上级相册 } from "./newCategoryManage";
 import { actionCellMaker } from "@/modules/TaskList/config/AiAction";
 import { h } from "vue";
 import { 添加图片到图集 } from "./loraServer/imgFolder";
+import axios from "axios";
 
 export const uploadStatus = {
   // 准备上传

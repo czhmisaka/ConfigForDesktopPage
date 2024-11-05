@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-08-15 23:37:57
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-18 01:51:07
+ * @LastEditTime: 2024-11-04 02:06:19
  * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\index.ts
  */
 import { mainDesktop } from "./main";
@@ -14,6 +14,8 @@ import { gridCellMaker, cardComponentType } from "@/components/basicComponents/g
 import { imgFolderManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/imgFolder";
 import { loraServerManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraServerManage";
 import { loraTrainTaskManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraTrainTask";
+import { markRaw, defineComponent } from "vue";
+import { uploadImage } from "./uploadImage";
 
 export const base = {
   gridColNum: 12,
@@ -58,6 +60,20 @@ let pageConfig = {
       margin: 6,
     }
   },
+  TransImge: {
+    name: 'trans',
+    desktopData: uploadImage,
+    gridColNum: 12,
+    cusStyle: {
+      allPeopleCanSee:true,
+      Fullscreen: true,
+      showLink: true,
+      wholeScreen: true,
+      maxRows: 8,
+      margin: 6,
+    },
+  },
+
   ComfyUi: {
     name: 'ComfyUi',
     desktopData: async () => {

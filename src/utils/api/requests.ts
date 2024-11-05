@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-01-22 18:59:01
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-09 20:44:17
- * @FilePath: /ConfigForDesktopPage/src/utils/api/requests.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-11-04 02:01:40
+ * @FilePath: \github\config-for-desktop-page\src\utils\api\requests.ts
  */
 
 import axios from "axios";
@@ -123,12 +123,14 @@ request.interceptors.response.use(
           -1 && x.path != "/"
         );
       })[0];
+      console.log(nowRoute,'asd')
       if (
         nowRoute?.meta &&
         (nowRoute?.meta["allPeopleCanSee"] || nowRoute?.meta["loginPage"])
       ) {
       } else {
-        console.log("fuck");
+        console.log("fuck",response.config);
+        
         return useUserStoreHook().logOut(false);
       }
       return Promise.resolve({ data: {} });

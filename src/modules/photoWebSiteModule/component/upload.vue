@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-10-20 21:59:36
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-11 00:23:29
- * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/component/upload.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-11-04 01:23:36
+ * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\upload.vue
 -->
 <template>
   <cardBg>
@@ -10,9 +10,19 @@
         :data="{ ...data, ...optionsData, categoryId: baseData?.category?.id }" 
      -->
     <div class="box">
-      <el-upload style="width:100%;height;100%" v-model:file-list="fileList" :on-change="handleChange" :auto-upload="true"
-        :show-file-list="false" :action="action" :on-success="success" multiple :headers="headers">
-        <el-button :icon="Upload" circle size="large" class="center"> </el-button>
+      <el-upload
+        style="width:100%;height;100%"
+        v-model:file-list="fileList"
+        :on-change="handleChange"
+        :auto-upload="true"
+        :show-file-list="false"
+        :action="action"
+        :on-success="success"
+        multiple
+        :headers="headers"
+      >
+        <el-button :icon="Upload" circle size="large" class="center">
+        </el-button>
       </el-upload>
     </div>
   </cardBg>
@@ -30,8 +40,8 @@ import {
 import cardBg from "@/components/basicComponents/cell/card/cardBg.vue";
 import { ElMessage } from "element-plus";
 import { post } from "@/utils/api/requests";
-import { getPreUrl } from '../../../utils/api/requests';
-import { getHeaders } from '../../../utils/api/user/header';
+import { getPreUrl } from "../../../utils/api/requests";
+import { getHeaders } from "../../../utils/api/user/header";
 
 export default defineComponent({
   name: "upload",
@@ -55,21 +65,28 @@ export default defineComponent({
   baseProps: {},
 
   components: { cardBg },
-  props: ["action", "sizeUnit", "onClickFunc", "tips", "detail", "baseData", 'optionsData'],
+  props: [
+    "action",
+    "sizeUnit",
+    "onClickFunc",
+    "tips",
+    "detail",
+    "baseData",
+    "optionsData",
+  ],
   data() {
     return {
       Upload,
       fileList: [],
-      data: {
-
-      },
+      data: {},
       timeCheckToRestore: null,
-      action: getPreUrl() + '/admin/picture/pictureInfo/upload',
+      action: getPreUrl() + "/admin/picture/pictureInfo/upload",
       // action:getPreUrl()+'/admin/base/comm/upload',
       headers: {
         ...getHeaders(),
-        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary6gdw9ktqWd9RaXF9'
-      }
+        "Content-Type":
+          "multipart/form-data; boundary=----WebKitFormBoundary6gdw9ktqWd9RaXF9",
+      },
     };
   },
   mounted() {
@@ -78,11 +95,11 @@ export default defineComponent({
 
   methods: {
     async success(e) {
-      const category = this.baseData.category
-      let res = await post('/admin/picture/categories/addPicture', {
+      const category = this.baseData.category;
+      let res = await post("/admin/picture/categories/addPicture", {
         pictureIds: [e.data.id],
-        categoryId: category.id
-      })
+        categoryId: category.id,
+      });
       if (this.timeCheckToRestore) clearTimeout(this.timeCheckToRestore);
     },
 

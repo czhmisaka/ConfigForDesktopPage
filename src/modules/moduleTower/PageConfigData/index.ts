@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2024-04-09 08:56:45
- * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/PageConfigData/index.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-11-03 20:37:28
+ * @FilePath: \github\config-for-desktop-page\src\modules\moduleTower\PageConfigData\index.ts
  */
 import { isValidKey } from "@/utils/index";
 import { desktopDataTemplate } from "@/modules/userManage/types";
@@ -24,23 +24,23 @@ export const base = {
   },
 };
 let pageConfig = {
-  IotInfoList: {
-    ...base,
-    name: "设备列表",
-    desktopData: iotInfoList,
-  },
-  iotGroupList: {
-    ...base,
-    name: "分组列表",
-    desktopData: iotGroupList,
-  },
-  iotEventList: {
-    ...base,
-    name: "事件列表",
-    desktopData: iotEventManage,
-  },
-  ...MqttPageConfig,
-  ...designDesktop,
+  // IotInfoList: {
+  //   ...base,
+  //   name: "设备列表",
+  //   desktopData: iotInfoList,
+  // },
+  // iotGroupList: {
+  //   ...base,
+  //   name: "分组列表",
+  //   desktopData: iotGroupList,
+  // },
+  // iotEventList: {
+  //   ...base,
+  //   name: "事件列表",
+  //   desktopData: iotEventManage,
+  // },
+  // ...MqttPageConfig,
+  // ...designDesktop,
 } as { [key: string]: desktopDataTemplate };
 
 let Page = {} as {

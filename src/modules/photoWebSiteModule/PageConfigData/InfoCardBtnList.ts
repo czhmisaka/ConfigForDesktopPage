@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-16 23:41:40
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-10 23:18:13
+ * @LastEditTime: 2024-11-04 01:21:00
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\InfoCardBtnList.ts
  */
 import {
@@ -30,6 +30,7 @@ import {
     refreshDesktop,
 } from "@/components/basicComponents/grid/module/cardApi";
 import { 添加图片到图集 } from "./managerOnly/loraServer/imgFolder";
+import { h } from "vue";
 
 //批量
 function getFile(url) {
@@ -328,6 +329,31 @@ export const 打包成册 = btnMaker("打包成册", btnActionTemplate.Function,
 });
 
 
+export const 风格迁移 = btnMaker("刺绣风格迁移", btnActionTemplate.Function, {
+    isShow: (data) => {
+        return data && !data["length"];
+    },
+    function: async (that, data) => {
+        let loading = ElLoading.service({
+            text:'风格迁移图片生成中'
+        })
+        let res = await post("/admin/picture/lora/server/TransformImgTask", {
+            imgId: data.id,
+        });
+
+        const img = res.data.imgData;
+        console.log(res.data);
+        loading.close()
+        ElMessageBox({
+            message: () =>
+                h("img", {
+                    src: img.replace('127.0.0.1', window.location.hostname),
+                }),
+        });
+    },
+});
+
+
 export const 解析图片信息 = btnMaker("解析图片信息", btnActionTemplate.Function, {
     icon: 'Check',
     elType: 'warning',
@@ -342,7 +368,7 @@ export const 解析图片信息 = btnMaker("解析图片信息", btnActionTempla
             id: data.id,
             model: 'deepdanbooru' as 'clip' | 'deepdanbooru'
         })
-        let resa = await chat(`${res.data.caption}请把上述内容翻译成中文，并用【】包裹的格式输出这些关键词。`,"glm-4-flash")
+        let resa = await chat(`${res.data.caption}请把上述内容翻译成中文，并用【】包裹的格式输出这些关键词。`, "glm-4-flash")
         // let resa = await chat(`${res.data.caption}请把上述内容翻译成中文，并对其适当的扩充，同时在最后用【xxx】、【xx】的格式输出这段话的关键词。(不要输出思考过程)`,"glm-4-flash")
         loading.close()
         ElMessageBox({
@@ -358,6 +384,7 @@ export const InfoCardBtnList = [
     打包成册,
     收藏按钮,
     添加图片到图集,
+    风格迁移,
     添加标签按钮,
     添加到处理区,
     下载单张,

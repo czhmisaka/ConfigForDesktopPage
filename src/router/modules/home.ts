@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-02-13 09:16:34
- * @LastEditors: CZH
- * @LastEditTime: 2024-02-05 21:50:08
- * @FilePath: /ConfigForDesktopPage/src/router/modules/home.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-11-04 02:17:14
+ * @FilePath: \github\config-for-desktop-page\src\router\modules\home.ts
  */
 import type { RouteConfigsTable } from "/#/index";
 const Layout = () => import("@/layout/index.vue");
@@ -16,7 +16,20 @@ const homeRouter: RouteConfigsTable = {
     title: "首页",
     rank: 0,
   },
-  children: [],
+  children: [
+    {
+      path: "/main_tran",
+      name: "风格迁移",
+      component: () => import("@/modules/main/trans.vue"),
+      meta: {
+        Fullscreen: true,
+        wholeScreen: true,
+        title: "风格迁移",
+        showLink: false,
+        allPeopleCanSee: true,
+      },
+    },
+  ],
 };
 
 export default homeRouter;
