@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-11-04 02:06:19
- * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\index.ts
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-12-08 00:55:45
+ * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
  */
 import { mainDesktop } from "./main";
 import { mobileDesktop } from "./mobile/mobile";
@@ -15,7 +15,7 @@ import { imgFolderManage } from "@/modules/photoWebSiteModule/PageConfigData/man
 import { loraServerManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraServerManage";
 import { loraTrainTaskManage } from "@/modules/photoWebSiteModule/PageConfigData/managerOnly/loraServer/loraTrainTask";
 import { markRaw, defineComponent } from "vue";
-import { uploadImage } from "./uploadImage";
+import { uploadImage, uploadImage_new } from "./uploadImage";
 
 export const base = {
   gridColNum: 12,
@@ -62,7 +62,7 @@ let pageConfig = {
   },
   TransImge: {
     name: 'trans',
-    desktopData: uploadImage,
+    desktopData: uploadImage_new,
     gridColNum: 12,
     cusStyle: {
       allPeopleCanSee:true,

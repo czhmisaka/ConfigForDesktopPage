@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-12-30 11:00:24
  * @LastEditors: CZH
- * @LastEditTime: 2024-02-15 22:02:33
+ * @LastEditTime: 2024-12-07 22:56:38
  * @FilePath: /ConfigForDesktopPage/src/main.ts
  */
 import { getAction, getModuleFromView, timeChecker } from "@/router/util";
@@ -46,6 +46,7 @@ app.component("IconifyIconOffline", IconifyIconOffline);
 app.component("IconifyIconOnline", IconifyIconOnline);
 app.component("FontIcon", FontIcon);
 // 自定义指令
+
 import * as directives from "@/directives";
 Object.keys(directives).forEach((key) => {
   app.directive(key, (directives as { [key: string]: Directive })[key]);
