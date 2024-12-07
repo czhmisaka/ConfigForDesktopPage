@@ -1,8 +1,8 @@
 /*
  * @Date: 2023-12-29 12:45:14
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-11-04 01:59:11
- * @FilePath: \github\config-for-desktop-page\src\modules\moduleTower\component\mqtt\iotServiceDesktop.ts
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-12-04 23:39:53
+ * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
 import {
@@ -47,6 +47,15 @@ export const iotCardServiceDesktop = async () => {
   return [] as gridCellTemplate[];
 };
 
+useCacheHook().setup(
+  "allIot",
+  async () => {
+    let res = await post("/admin/iot/iot/getAll", {});
+    return res.data||[];
+  },
+  true
+);
+
 // Iot设备弹窗
 export const openDrawerForIotCardServiceDesktop = async (
   that,
@@ -54,14 +63,7 @@ export const openDrawerForIotCardServiceDesktop = async (
   inDrawer = false
 ) => {
 
-  useCacheHook().setup(
-    "allIot",
-    async () => {
-      let res = await post("/admin/iot/iot/getAll", {});
-      return res.data;
-    },
-    true
-  );
+  
   // 构建IotCard
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
     .setSize(2, 2.5)

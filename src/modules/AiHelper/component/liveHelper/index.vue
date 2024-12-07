@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-04-09 14:13:58
  * @LastEditors: CZH
- * @LastEditTime: 2024-07-26 01:25:32
+ * @LastEditTime: 2024-12-05 15:25:15
  * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/component/liveHelper/index.vue
 -->
 <template>
