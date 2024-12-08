@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-08-15 23:37:57
- * @LastEditors: CZH
- * @LastEditTime: 2024-12-08 00:55:45
- * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/index.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-08 19:59:01
+ * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\index.ts
  */
 import { mainDesktop } from "./main";
 import { mobileDesktop } from "./mobile/mobile";
@@ -66,7 +66,7 @@ let pageConfig = {
     gridColNum: 12,
     cusStyle: {
       allPeopleCanSee:true,
-      Fullscreen: true,
+      Fullscreen: false,
       showLink: true,
       wholeScreen: true,
       maxRows: 8,

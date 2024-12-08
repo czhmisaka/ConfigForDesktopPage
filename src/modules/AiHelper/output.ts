@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-10-26 11:24:08
- * @LastEditors: CZH
- * @LastEditTime: 2024-12-04 23:11:34
- * @FilePath: /ConfigForDesktopPage/src/modules/AiHelper/output.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-09 00:52:10
+ * @FilePath: \github\config-for-desktop-page\src\modules\AiHelper\output.ts
  */
 export const moduleInfo = {
   name: "AiHelper",
@@ -22,7 +22,7 @@ export const output = async () => {
       openAiHelper,
     },
     CardApiInjectComponent: {
-      liveHelper,
+      // liveHelper,
     },
   };
 };

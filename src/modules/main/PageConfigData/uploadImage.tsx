@@ -1,7 +1,7 @@
 /*
  * @Author: czhmisaka
  * @Date: 2024-11-04 01:29:12
- * @FilePath: /ConfigForDesktopPage/src/modules/main/PageConfigData/uploadImage.tsx
+ * @FilePath: \github\config-for-desktop-page\src\modules\main\PageConfigData\uploadImage.tsx
  */
 
 import {
@@ -15,6 +15,7 @@ import { ElLoading, ElMessageBox } from "element-plus";
 import { markRaw, defineComponent, h } from "vue";
 import { setPosition } from '../../../components/basicComponents/grid/module/util';
 import { changeVisible } from "@/components/basicComponents/grid/module/cardApi";
+import { gridEditList } from "./main";
 
 export const uploadImage = async () => {
   return [
@@ -135,10 +136,12 @@ export const uploadImage_new = async () => {
       type: cardComponentType.componentList,
       name: 'photoWebSiteModule_imageSelector'
     }, {
-      showInGridDesktop: false,
+      showInGridDesktop: true,
       props: {
         imageId: ''
       }
-    }).setSize(12, 8).setPosition(0, 0)
-  ]
+    }).setSize(12, 8).setPosition(0, 0),
+    // ...gridEditList,
+    
+  ] as gridCellTemplate[]
 }
