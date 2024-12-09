@@ -395,7 +395,8 @@ export const PictureListManage = async () => {
                     effect="dark"
                     type="info"
                   >
-                    {x.name}
+                    {x.nameCn}
+                    ({x.name})
                   </ElTag>
                 );
               })}
