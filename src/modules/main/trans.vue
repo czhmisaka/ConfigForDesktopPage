@@ -6,7 +6,7 @@
 <!--
  * @Date: 2023-12-27 20:42:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-11-04 02:18:55
+ * @LastEditTime: 2024-12-08 05:15:58
  * @FilePath: /ConfigForDesktopPage/src/modules/main/Index.vue
 -->
 
@@ -26,6 +26,7 @@
       :component-lists="[]"
       :cus-style="desktopData?.cusStyle"
       :noAnimate="false"
+      :needEdit="false"
     />
   </div>
 </template>

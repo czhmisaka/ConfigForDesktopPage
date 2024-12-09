@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-30 14:30:48
- * @LastEditors: CZH
- * @LastEditTime: 2024-04-08 18:51:08
- * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/module/util.ts
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-08 04:58:37
+ * @FilePath: \github\config-for-desktop-page\src\components\basicComponents\grid\module\util.ts
  */
 
 import { gridCellTemplate, gridSizeMaker } from "./dataTemplate";

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-28 21:57:48
- * @LastEditors: CZH
- * @LastEditTime: 2024-07-26 00:20:13
- * @FilePath: /ConfigForDesktopPage/src/components/basicComponents/grid/gridDesktop.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-08 05:02:29
+ * @FilePath: \github\config-for-desktop-page\src\components\basicComponents\grid\gridDesktop.vue
 -->
 
 <template>
