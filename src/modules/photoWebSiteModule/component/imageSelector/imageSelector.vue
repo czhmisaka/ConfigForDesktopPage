@@ -1,13 +1,13 @@
 <!--
  * @Date: 2024-12-07 23:38:46
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-12-08 05:15:50
+ * @LastEditTime: 2024-12-15 23:58:47
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\component\imageSelector\imageSelector.vue
 -->
 
 
 <template>
-    <div style="height:100%">
+    <div style="height:100%;overflow:scroll">
         <DrawerCanvasVue></DrawerCanvasVue>
     </div>
 </template>
