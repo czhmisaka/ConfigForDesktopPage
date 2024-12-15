@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-11-09 19:26:59
- * @LastEditors: CZH
- * @LastEditTime: 2024-06-28 22:44:31
- * @FilePath: /ConfigForDesktopPage/src/modules/userManage/component/searchTable/searchTable.vue
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2024-12-09 21:43:54
+ * @FilePath: \github\config-for-desktop-page\src\modules\userManage\component\searchTable\searchTable.vue
  * @FuckToUi: 改这么多图啥呢，又不好看
 -->
 <template>
@@ -31,7 +31,7 @@
       marginTop: '6px',
       float: 'right',
     }" v-if="PageData.total" v-model:current-page="PageData.pageNumber" v-model:page-size="PageData.pageSize"
-      :page-sizes="[10, 20, 50, 100]" :small="true" :background="true" layout="total, sizes, prev, pager, next, jumper"
+      :page-sizes="[10, 20, 50, 100, 400]" :small="true" :background="true" layout="total, sizes, prev, pager, next, jumper"
       :total="PageData.total" @size-change="(e) => search({ pageSize: e })"
       @current-change="(e) => search({ pageNumber: e })" :hide-on-single-page="false" />
   </cardBg>

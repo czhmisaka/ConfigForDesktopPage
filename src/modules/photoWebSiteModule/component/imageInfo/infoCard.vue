@@ -70,7 +70,7 @@
         v-if="tagList && tagList.length > 0">
         <div v-for="item in tagList" class="floatTag" style="margin: 3px; margin-top: 2px">
           <el-button size="small" type="info">
-            {{ item.name }}
+            {{ item.nameCn||item.name }}
           </el-button>
         </div>
       </el-card>

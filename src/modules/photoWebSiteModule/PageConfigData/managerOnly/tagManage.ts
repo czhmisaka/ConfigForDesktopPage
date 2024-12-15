@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-18 19:50:20
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-09-08 23:00:32
+ * @LastEditTime: 2024-12-09 21:49:01
  * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\tagManage.ts
  */
 import {
@@ -15,7 +15,7 @@ import {
   formInputType,
   stringAnyObj,
 } from "@/modules/userManage/types";
-import {
+import {  
   actionCell,
   tableCellTemplateMaker,
 } from "@/modules/userManage/component/searchTable/searchTable";
@@ -37,6 +37,8 @@ import { transformDataFromCool } from "./newCategoryManage";
 export const tagManage = async () => {
   const tagsStorage = new SearchCellStorage([
     tableCellTemplateMaker("标签名", "name"),
+    tableCellTemplateMaker('标签名（zh）', 'nameCn'),
+    tableCellTemplateMaker('颜色', 'color'),
     tableCellTemplateMaker('简介', 'description'),
     // tableCellTemplateMaker("图片数量", "counter"),
     tableCellTemplateMaker("最近编辑时间", "updateTime"),
@@ -49,7 +51,7 @@ export const tagManage = async () => {
       const getFunc = async (that, data) => {
         let { limit, offset } = data;
         let res = await post('/admin/picture/pictureInfo/search', {
-          tags:[dataa.id]
+          tags: [dataa.id]
         })
         return res.data.list
       };
@@ -92,7 +94,7 @@ export const tagManage = async () => {
     icon: "Plus",
     drawerProps: {
       title: "添加标签",
-      queryItemTemplate: tagsStorage.getByKeyArr(["name", 'description']),
+      queryItemTemplate: tagsStorage.getByKeyArr(["name", 'nameCn', 'description']),
       btnList: [
         btnMaker("提交", btnActionTemplate.Function, {
           icon: "Position",
@@ -272,8 +274,8 @@ export const tagManage = async () => {
           searchFunc: async (query: stringAnyObj, that: stringAnyObj) => {
             let res = await post('/admin/picture/tags/page', {
               ...query,
-              page:query.pageNumber,
-              size:query.pageSize
+              page: query.pageNumber,
+              size: query.pageSize
             })
             return transformDataFromCool(res.data)
           },

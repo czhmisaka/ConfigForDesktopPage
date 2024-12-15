@@ -58,7 +58,8 @@
         <el-option
           v-for="tag in tagList"
           :value="tag.id"
-          :label="tag.name"
+          :key="tag.id"
+          :label="`${tag.nameCn}【${tag.name}】`"
         ></el-option>
       </el-select>
       <el-popover
