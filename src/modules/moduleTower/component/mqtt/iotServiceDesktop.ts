@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-12-29 12:45:14
  * @LastEditors: CZH
- * @LastEditTime: 2024-12-04 23:39:53
+ * @LastEditTime: 2024-12-12 16:57:06
  * @FilePath: /ConfigForDesktopPage/src/modules/moduleTower/component/mqtt/iotServiceDesktop.ts
  */
 
@@ -50,8 +50,13 @@ export const iotCardServiceDesktop = async () => {
 useCacheHook().setup(
   "allIot",
   async () => {
-    let res = await post("/admin/iot/iot/getAll", {});
-    return res.data||[];
+    try {
+      let res = await post("/admin/iot/iot/getAll", {});
+      return res.data || [];
+    }
+    catch {
+      return []
+    }
   },
   true
 );
@@ -63,7 +68,7 @@ export const openDrawerForIotCardServiceDesktop = async (
   inDrawer = false
 ) => {
 
-  
+
   // 构建IotCard
   const iotInfoCardGridCell = iotCardGridCellMaker("iotInfo", IotCardInfo)
     .setSize(2, 2.5)
