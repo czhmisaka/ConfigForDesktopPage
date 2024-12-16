@@ -1,6 +1,8 @@
 <template>
   <div class="basic_container">
-    <div class="tool"><el-button @click="handlePenClick">钢笔</el-button></div>
+    <div class="tool">
+      <el-button @click="handlePenClick">钢笔</el-button>
+    </div>
     <div class="dialog_wrap">
       <div class="image_wrap">
         <cropper-canvas ref="croppercanvas" background>
@@ -24,11 +26,13 @@
           ></canvas>
         </cropper-canvas>
       </div>
-      <div class="info_wrap">
-        <div class="cropper_preview">
+      <div class="info_wrap" >
+        <div class="cropper_preview" style="opacity: 0">
           <div>实际效果：img/canvas</div>
-          <img :src="realShow" style="width: 200px" />
           <canvas ref="resultCanvas"></canvas>
+        </div>
+        <div>
+          <img :src="realShow" style="width: 200px" />
         </div>
         <div class="btn_wrap">
           <input type="file" ref="input_form" @change="handleUploadSuccess" />
@@ -40,8 +44,8 @@
 </template>
 
 <script setup>
-import 'cropperjs';
-import { computed, nextTick, ref, onMounted } from 'vue';
+import "cropperjs";
+import { computed, nextTick, ref, onMounted } from "vue";
 
 const fileObj = ref({});
 
@@ -72,7 +76,7 @@ function startDrawing(e) {
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   // 判断是否和已有点重合
   const pointIndex = isMouseOnPoint(x, y);
@@ -85,7 +89,7 @@ function startDrawing(e) {
     }
   } else {
     // 绘制圆点
-    ctx.fillStyle = '#409EFF';
+    ctx.fillStyle = "#409EFF";
     ctx.beginPath();
     ctx.arc(x, y, 5, 0, Math.PI * 2);
     ctx.fill();
@@ -93,7 +97,7 @@ function startDrawing(e) {
     // 如果有之前的点，则绘制一条固定的线条连接上一个点和当前点
     if (points.length > 0) {
       const lastPoint = points[points.length - 1];
-      ctx.strokeStyle = '#409EFF';
+      ctx.strokeStyle = "#409EFF";
       ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.moveTo(lastPoint.x, lastPoint.y);
@@ -113,7 +117,7 @@ function draw(e) {
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   // 检测是否有鼠标悬停的点
   const pointIndex = isMouseOnPoint(x, y);
@@ -131,13 +135,13 @@ function draw(e) {
 function drawStaticElements(ctx, canvas, isClosed = false, hoverIndex = -1) {
   // 清除之前的动态线条
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#409EFF';
-  ctx.strokeStyle = '#409EFF';
+  ctx.fillStyle = "#409EFF";
+  ctx.strokeStyle = "#409EFF";
   ctx.lineWidth = 3;
 
   // 填充闭合区域
   if (isClosed && points.length > 2) {
-    ctx.fillStyle = 'rgba(255, 255, 255, .6)';
+    ctx.fillStyle = "rgba(255, 255, 255, .6)";
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     for (let i = 1; i < points.length; i++) {
@@ -192,7 +196,7 @@ function isMouseOnPoint(x, y) {
 /**
  * 确认裁剪
  */
-const emit = defineEmits(['success']);
+const emit = defineEmits(["success"]);
 const realShow = ref();
 const resultCanvas = ref();
 async function handleConfirm() {
@@ -201,7 +205,7 @@ async function handleConfirm() {
 
   resultCanvas.value.width = res.width;
   resultCanvas.value.height = res.height;
-  const ctx = resultCanvas.value.getContext('2d');
+  const ctx = resultCanvas.value.getContext("2d");
 
   // 由于此时生成的canvas是已我们的点位开始的，所以这里调整一下点位的x和y，变成新canvas的点位
   const points1 = points.map((v) => {
@@ -210,7 +214,7 @@ async function handleConfirm() {
       y: v.y - pointRect.y,
     };
   });
-  ctx.fillStyle = 'transparent';
+  ctx.fillStyle = "transparent";
   ctx.beginPath();
 
   ctx.moveTo(points1[0].x, points1[0].y);
@@ -223,10 +227,10 @@ async function handleConfirm() {
   ctx.drawImage(res, 0, 0, res.width, res.height);
 
   // 导出圆形图片数据
-  const dataImage = resultCanvas.value.toDataURL('image/png');
+  const dataImage = resultCanvas.value.toDataURL("image/png");
   realShow.value = dataImage;
   const file = dataURLtoFile(dataImage, fileObj.value.name);
-  emit('success', {
+  emit("success", {
     ...fileObj.value,
     file: file,
     fileShow: dataImage,
@@ -261,12 +265,12 @@ function getBoundingBox(points) {
 // 先将点位形成的矩形，转成一个新的canvas，类似与 $toCanvas()
 function getCanvasFromPoints(pointRect) {
   return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = pointRect.width;
     canvas.height = pointRect.height;
 
     cropperimage.value.$ready().then((image) => {
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext("2d");
       const [a, b, c, d, e, f] = cropperimage.value.$getTransform();
 
       const offsetX = -pointRect.x;
@@ -281,7 +285,7 @@ function getCanvasFromPoints(pointRect) {
       const centerX = destWidth / 2;
       const centerY = destHeight / 2;
 
-      context.fillStyle = 'transparent';
+      context.fillStyle = "transparent";
       context.fillRect(0, 0, pointRect.width, pointRect.height);
       context.save();
       context.translate(centerX, centerY);
@@ -297,7 +301,7 @@ function getCanvasFromPoints(pointRect) {
 }
 // 将data:image转成新的file
 function dataURLtoFile(dataurl, filename) {
-  var arr = dataurl.split(','),
+  var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
     bstr = atob(arr[1]),
     n = bstr.length,
