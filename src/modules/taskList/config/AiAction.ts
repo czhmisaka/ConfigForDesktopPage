@@ -1,8 +1,8 @@
 /*
  * @Date: 2024-03-24 01:46:19
  * @LastEditors: CZH
- * @LastEditTime: 2024-07-26 01:30:43
- * @FilePath: /ConfigForDesktopPage/src/modules/taskList/config/AiAction.ts
+ * @LastEditTime: 2024-12-16 17:39:34
+ * @FilePath: /ConfigForDesktopPage/src/modules/TaskList/config/AiAction.ts
  */
 
 import { useCacheHook } from "@/store/modules/cache";
@@ -78,7 +78,7 @@ export const actionCellMaker = (
   trigger: string[],
   keyWord: keyWordCellTemplate[],
   example: string,
-  action = (that, data) => {}
+  action = (that, data) => { }
 ) => {
   return {
     actionType,
@@ -112,7 +112,7 @@ export const action = async (inDrawer = false) => {
   const allIot = (await useCacheHook().getDataByKey("allIot")).map((x) => {
     return { ...x, fullName: x.groupName + "_" + x.name, id: x.id };
   });
-  console.log(allIot,'allIot')
+  console.log(allIot, 'allIot')
   let back = [
     actionCellMaker(
       "iotDesktop",
@@ -126,9 +126,8 @@ export const action = async (inDrawer = false) => {
         },
       ],
       `${allIot.map((x, i) => {
-        return `${["查看", "", "打开", "开", "看一下"][i % 5]}${
-          x.name
-        }=>{'actionType':'iotDesktop','name':'${x.fullName}'};`;
+        return `${["查看", "", "打开", "开", "看一下"][i % 5]}${x.name
+          }=>{'actionType':'iotDesktop','name':'${x.fullName}'};`;
       })}`,
       async (that, data) => {
         for (let x = 0; x < allIot.length; x++) {
@@ -189,39 +188,39 @@ export const action = async (inDrawer = false) => {
     ),
     inDrawer
       ? actionCellMaker(
-          "closeComp",
-          ["关闭组件", "关闭", "关闭界面"],
-          [],
-          `"关闭界面"=>{actionType:"closeComp"};
+        "closeComp",
+        ["关闭组件", "关闭", "关闭界面"],
+        [],
+        `"关闭界面"=>{actionType:"closeComp"};
           "关闭"=>{actionType:"closeComp"};`,
-          (that, data) => {
-            console.log(that.gridList, that);
-            let needClose = that.gridList.filter((x) => {
-              return ["inputBox", "talkBox"].indexOf(x.label) == -1;
-            });
-            needClose.map((x, i) => {
+        (that, data) => {
+          console.log(that.gridList, that);
+          let needClose = that.gridList.filter((x) => {
+            return ["inputBox", "talkBox"].indexOf(x.label) == -1;
+          });
+          needClose.map((x, i) => {
+            setTimeout(() => {
+              let data = {};
+              data[x.label] = false;
+              changeVisible(that, data);
+            }, i * 50);
+            if (i == needClose.length - 1)
               setTimeout(() => {
-                let data = {};
-                data[x.label] = false;
-                changeVisible(that, data);
-              }, i * 50);
-              if (i == needClose.length - 1)
-                setTimeout(() => {
-                  removeGridCell(that, needClose);
-                }, 500);
-            });
-            // removeGridCell(that,)
-          }
-        )
+                removeGridCell(that, needClose);
+              }, 500);
+          });
+          // removeGridCell(that,)
+        }
+      )
       : false,
     inDrawer
       ? actionCellMaker(
-          "taskList",
-          ["任务列表"],
-          [],
-          `"打开任务列表"=>{actionType:"taskList"}`,
-          (that, data) => {}
-        )
+        "taskList",
+        ["任务列表"],
+        [],
+        `"打开任务列表"=>{actionType:"taskList"}`,
+        (that, data) => { }
+      )
       : false,
   ].filter(Boolean);
   return back as actionCellTemplate[];
@@ -232,18 +231,16 @@ export const useAbleWord = async (inDrawer = false) => {
 你是一个聪明的工具小管家，能够充分理解用户说的话，并判断用户需要使用哪个工具。
 现有工具如下：
 ${(await action(inDrawer))
-  .map((x) => {
-    return `${x.trigger.join(",")};工具类型:${x.actionType},${
-      x.keyWord.length > 0 ? "参数列表:" : ""
-    } ${x.keyWord
       .map((x) => {
-        return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${
-          x.range ? "可选项：" + x.range.join(",") : ""
-        }${x.other})`;
+        return `${x.trigger.join(",")};工具类型:${x.actionType},${x.keyWord.length > 0 ? "参数列表:" : ""
+          } ${x.keyWord
+            .map((x) => {
+              return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${x.range ? "可选项：" + x.range.join(",") : ""
+                }${x.other})`;
+            })
+            .join(",")}`;
       })
-      .join(",")}`;
-  })
-  .join("。\n")}
+      .join("。\n")}
 
 Skill：
 如果在已有工具中找不到合适的工具，使用自己的话回答。
@@ -265,18 +262,16 @@ export const aiWordMaker = async (action, preWord = "") => {
   ${preWord}
   现有工具如下：
   ${(await action())
-    .map((x) => {
-      return `${x.trigger.join(",")};工具类型:${x.actionType},${
-        x.keyWord.length > 0 ? "参数列表:" : ""
-      } ${x.keyWord
-        .map((x) => {
-          return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${
-            x.range ? "可选项：" + x.range.join(",") : ""
-          }${x.other})`;
-        })
-        .join(",")}`;
-    })
-    .join("。\n")}
+      .map((x) => {
+        return `${x.trigger.join(",")};工具类型:${x.actionType},${x.keyWord.length > 0 ? "参数列表:" : ""
+          } ${x.keyWord
+            .map((x) => {
+              return `${x.label}（别名为${x.key}${x.required ? " 必填 " : ""} ${x.range ? "可选项：" + x.range.join(",") : ""
+                }${x.other})`;
+            })
+            .join(",")}`;
+      })
+      .join("。\n")}
   
   Skill：
 如果在已有工具中找不到合适的工具，使用自己的话回答。

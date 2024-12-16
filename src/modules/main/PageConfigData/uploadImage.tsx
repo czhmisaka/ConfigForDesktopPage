@@ -86,52 +86,6 @@ export const uploadImage = async () => {
 
 export const uploadImage_new = async () => {
   return [
-    gridCellMaker(
-      "测试",
-      "test",
-      {},
-      {
-        type: cardComponentType.cusComponent,
-        data: markRaw(
-          defineComponent({
-            setup(props, context) {
-              context.emit("ready");
-              const upload = async (data) => {
-                let re = await uploadFile(data.file);
-                console.log(re, 'asd')
-                changeVisible(context, {
-                  imageSelector: true
-                })
-              };
-              return () => [
-                <el-upload
-                  class="upload-demo"
-                  drag
-                  auto-upload={true}
-                  show-file-list={false}
-                  multiple={false}
-                  http-request={upload}
-                  style={{
-                    height: "100%",
-                  }}
-                >
-                  <el-icon class="el-icon--upload">
-                    <upload-filled />
-                  </el-icon>
-                  <div class="el-upload__text">上传需要风格迁移的图片</div>
-                </el-upload>,
-              ];
-            },
-          })
-        ),
-      },
-      {
-        showInGridDesktop: true,
-        props: {
-          url: window.location.origin.replace(":10500", ":8188"),
-        },
-      }
-    ).setSize(12, 8).setPosition(0, 0),
     gridCellMaker('imageSelector', 'imageSelector', {}, {
       type: cardComponentType.componentList,
       name: 'photoWebSiteModule_imageSelector'
