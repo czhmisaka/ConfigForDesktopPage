@@ -6,7 +6,7 @@
 <!--
  * @Date: 2023-12-27 20:42:06
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-12-08 05:15:58
+ * @LastEditTime: 2024-12-17 23:45:59
  * @FilePath: /ConfigForDesktopPage/src/modules/main/Index.vue
 -->
 
@@ -56,8 +56,8 @@ export default defineComponent({
   methods: {
     async init() {
       timeConsole.checkTime("index页面");
-      let res = PageConfig["TRANSIMGE"];
-      console.log(res,PageConfig)
+      let res = PageConfig["TRANSIMAGE"];
+      console.log(res,PageConfig,'asdasd')
       this.desktopData = res;
       this.desktopDataList = await this.desktopData.desktopData();
     },

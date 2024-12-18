@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-02-13 09:16:34
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-11-04 02:17:14
+ * @LastEditTime: 2024-12-17 23:47:30
  * @FilePath: \github\config-for-desktop-page\src\router\modules\home.ts
  */
 import type { RouteConfigsTable } from "/#/index";
@@ -29,6 +29,18 @@ const homeRouter: RouteConfigsTable = {
         allPeopleCanSee: true,
       },
     },
+    // {
+    //   path: "/main_tran_old",
+    //   name: "风格迁移",
+    //   component: () => import("@/modules/main/trans.vue"),
+    //   meta: {
+    //     Fullscreen: true,
+    //     wholeScreen: true,
+    //     title: "风格迁移",
+    //     showLink: false,
+    //     allPeopleCanSee: true,
+    //   },
+    // },
   ],
 };
 
