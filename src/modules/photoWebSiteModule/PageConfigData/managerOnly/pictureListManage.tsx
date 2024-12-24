@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-28 22:29:05
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-11-04 01:02:39
- * @FilePath: \github\config-for-desktop-page\src\modules\photoWebSiteModule\PageConfigData\managerOnly\pictureListManage.tsx
+ * @LastEditors: CZH
+ * @LastEditTime: 2024-12-24 09:01:41
+ * @FilePath: /ConfigForDesktopPage/src/modules/photoWebSiteModule/PageConfigData/managerOnly/pictureListManage.tsx
  */
 
 import {
@@ -428,7 +428,7 @@ export const PictureListManage = async () => {
       {
         props: {
           searchItemTemplate: [],
-          showItemTemplate: photoInfoStorage.getAll(),
+          showItemTemplate: photoInfoStorage.getAll(['tags','asd','url']),
           searchFunc: async (query, that) =>
             await useCacheHook().getDataByKey(photoListKey),
           defaultQuery: {

@@ -2,8 +2,25 @@
   <div class="basic_container">
     <div class="tool">
       <el-button @click="handlePenClick">钢笔</el-button>
+      <el-button type="primary" @click="handleConfirm">确认裁剪</el-button>
     </div>
-    <div class="dialog_wrap">
+    <el-upload
+      drag
+      :auto-upload="true"
+      :show-file-list="false"
+      :multiple="false"
+      :http-request="upload"
+      style="height: 100%"
+      v-if="canUpload"
+    >
+      <el-icon class="el-icon--upload">
+        <upload-filled />
+      </el-icon>
+      <div class="el-upload__text">上传需要风格迁移的图片</div>
+      <!-- <div class="dialog_wrap"></div> -->
+    </el-upload>
+
+    <div v-else class="dialog_wrap">
       <div class="image_wrap">
         <cropper-canvas ref="croppercanvas" background>
           <cropper-image
@@ -26,17 +43,13 @@
           ></canvas>
         </cropper-canvas>
       </div>
-      <div class="info_wrap" >
+      <div class="info_wrap">
         <div class="cropper_preview" style="opacity: 0">
           <div>实际效果：img/canvas</div>
           <canvas ref="resultCanvas"></canvas>
         </div>
         <div>
           <img :src="realShow" style="width: 200px" />
-        </div>
-        <div class="btn_wrap">
-          <input type="file" ref="input_form" @change="handleUploadSuccess" />
-          <button type="primary" @click="handleConfirm">确认裁剪</button>
         </div>
       </div>
     </div>
@@ -46,8 +59,11 @@
 <script setup>
 import "cropperjs";
 import { computed, nextTick, ref, onMounted } from "vue";
+import { ElLoading, ElMessageBox } from "element-plus";
+import { uploadFile } from "@/modules/photoWebSiteModule/api/upload";
 
 const fileObj = ref({});
+const canUpload = ref(true);
 
 const croppercanvas = ref();
 const cropperimage = ref();
@@ -317,21 +333,30 @@ function dataURLtoFile(dataurl, filename) {
 /**
  * 文件上传
  */
-const input_form = ref();
-async function handleUploadSuccess() {
-  const files = input_form.value.files;
+const props = defineProps({
+  imageId: {
+    type: String,
+    default: "",
+  },
+});
 
-  if (files.length) {
-    fileObj.value = {
-      name: files[0].name,
-      file: files[0],
-      fileShow: URL.createObjectURL(files[0]),
-    };
-  }
+const input_form = ref();
+async function upload(data) {
+  let loading = ElLoading.service({
+    text: "图像上传中",
+  });
+  let re = await uploadFile(data.file);
+  fileObj.value = {
+    name: re.data.name,
+    file: data.file,
+    fileShow: re.data.url,
+  };
+  canUpload.value = false;
+  loading.close();
 }
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .drawing_canvas {
   position: absolute;
   top: 0;
@@ -342,6 +367,12 @@ async function handleUploadSuccess() {
 
 .dialog_wrap {
   display: flex;
+  position: absolute;
+  background: gray;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
   .image_wrap {
     width: 400px;
     height: 300px;

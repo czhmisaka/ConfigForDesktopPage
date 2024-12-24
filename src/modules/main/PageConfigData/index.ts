@@ -60,7 +60,7 @@ let pageConfig = {
       margin: 6,
     }
   },
-  TransImge: {
+  TRANSIMAGE: {
     name: 'trans',
     desktopData: uploadImage_new,
     gridColNum: 12,
